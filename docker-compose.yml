@@ -1,0 +1,47 @@
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: pawgress-client
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    networks:
+      - react-express
+    depends_on:
+      - server
+    ports:
+      - "5173:5173"
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+    container_name: pawgress-server
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - express-mongo
+      - react-express
+    ports:
+      - "3001:3001"
+
+  mongo:
+    restart: always
+    image: mongo:latest
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - express-mongo
+    expose:
+      - 27017
+
+networks:
+  react-express:
+  express-mongo:
+
+volumes:
+  mongo_data:
