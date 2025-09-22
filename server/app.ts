@@ -1,15 +1,14 @@
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+import indexRouter from './routes/index';
+import usersRouter from './routes/users';
 
 const app = express();
 
 const port = 3001;
-
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -23,4 +22,3 @@ app.use('/users', usersRouter);
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
-module.exports = app;
