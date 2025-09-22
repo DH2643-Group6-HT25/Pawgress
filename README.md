@@ -8,8 +8,7 @@ Stay PRRductive
 2. start docker desktop
 3. run `docker compose up -d` via terminal on the project root folder to run the apps on background
 4. for shutting down docker image: run `docker compose stop`
-5. if any new change on dockerfile / compose is added, run `docker compose up -d --build`
-
+5. if you pull any new changes on dockerfile / compose / package.json / package-lock.json, run `docker compose up -d --build`
 
 ### Local Access
 

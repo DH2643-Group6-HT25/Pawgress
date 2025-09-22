@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "npx nodemon --legacy-watch app.js"
+    "start": "tsc && node dist/app.js",
+    "dev": "npx nodemon --legacy-watch - exec"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -13,6 +13,10 @@
     "morgan": "^1.10.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
