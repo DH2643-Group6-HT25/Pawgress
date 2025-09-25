@@ -5,9 +5,13 @@ import logger from 'morgan';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors'; 
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 import indexRouter from './src/routes/index';
 import usersRouter from './src/routes/users';
+import affirmRouter from './src/routes/affirmation';
 
 const app = express();
 
@@ -22,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/affirmation', affirmRouter);
 
 const server = http.createServer(app);
 const io = new Server(server, { 
