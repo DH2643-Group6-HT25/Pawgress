@@ -17,7 +17,13 @@ export interface IUser {
 // Schema
 const Userschema = new Schema<IUser>({
   name: { type: String, required: true, unique: true, trim: true},
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true, trim: true, lowercase: true, 
+    validate: {
+      validator: function (value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      },
+      message: 'Invalid email address format',
+    }, },
   passwordHash:{ type: String, required: true},
   pet: { type: Schema.Types.ObjectId, ref: 'Pet' },
   todo: [{ type: Schema.Types.ObjectId, ref: 'ITodoList' }],
