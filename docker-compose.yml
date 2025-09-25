@@ -17,10 +17,11 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./server
+    env_file:
+      - ./server/.env
     container_name: pawgress-server
     volumes:
       - ./server:/server
-      - /server/node_modules
     depends_on:
       - mongo
     networks:
