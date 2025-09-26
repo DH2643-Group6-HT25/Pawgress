@@ -3,12 +3,17 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
+import mongoose from 'mongoose';
+
 import indexRouter from './src/routes/index';
 import usersRouter from './src/routes/users';
 
 const app = express();
 
 const port = 3001;
+
+// TODO: add username and password for database
+const mongoDBUrl = 'mongodb://mongo:27017/pawgressDB';
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -18,6 +23,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+
+
+// connect mongodb to server
+const connectDB = async () => {
+  try {
+    await mongoose.connect(mongoDBUrl);
+    console.log('Connected to MongoDB successfully.');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+};
+
+connectDB();
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
