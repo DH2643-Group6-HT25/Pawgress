@@ -28,4 +28,25 @@ router.post('/register', async (req, res) => {
   }
 });
 
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password)
+    return res.status(400).json({ error: 'Email and password required' });
+
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user)
+      return res.status(401).json({ error: 'Invalid email or password' });
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid)
+      return res.status(401).json({ error: 'Invalid email or password' });
+
+    // Optionally, you can return a token or user info here
+    res.json({ message: 'Login successful', user: { name: user.name, email: user.email, id: user._id } });
+  } catch (err) {
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
 export default router;
