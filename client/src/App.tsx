@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import reactLogo from './assets/react.svg';  // Reserved for future use??
 import './App.css';
 import { socket } from './socket';
-import { BrowserRouter as Router } from "react-router-dom";
-import ReactRoot from "./ReactRoot";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,11 +19,7 @@ function App() {
     };
   }, []);
 
-  return (
-    <Router>
-      <ReactRoot />
-    </Router>
-  );
+  return < div/ >;
 }
 
 export default App;

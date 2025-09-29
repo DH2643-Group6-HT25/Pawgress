@@ -1,5 +1,6 @@
-import styled from "styled-components";
+
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 function WelcomePage() {
   return (
@@ -28,12 +29,7 @@ function WelcomePage() {
   );
 }
 
-const WelcomePageContent = () => {
-  // Use WelcomePage locally
-  return <WelcomePage />;
-};
-
-export default WelcomePageContent;
+export default WelcomePage;
 
 /* ---------- styles ---------- */
 const Wrapper = styled.div`
