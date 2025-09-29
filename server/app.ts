@@ -13,7 +13,7 @@ import indexRouter from './src/routes/index';
 import usersRouter from './src/routes/users';
 import affirmRouter from './src/routes/affirmation';
 
-import {connectDB} from './Service';
+import {connectDB} from './src/service/databse.service';
 
 const app = express();
 
