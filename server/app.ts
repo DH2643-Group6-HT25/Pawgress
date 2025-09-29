@@ -9,18 +9,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import mongoose from 'mongoose';
-
 import indexRouter from './src/routes/index';
 import usersRouter from './src/routes/users';
 import affirmRouter from './src/routes/affirmation';
+
+import {connectDB} from './Service';
 
 const app = express();
 
 const port = 3001;
 
-// TODO: add username and password for database
-const mongoDBUrl = 'mongodb://mongo:27017/pawgressDB';
 
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(logger('dev'));
@@ -34,19 +32,8 @@ app.use('/users', usersRouter);
 app.use('/affirmation', affirmRouter);
 
 
-
-// connect mongodb to server
-const connectDB = async () => {
-  try {
-    await mongoose.connect(mongoDBUrl);
-    console.log('Connected to MongoDB successfully.');
-  } catch (err) {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-  }
-};
-
 connectDB();
+
 
 const server = http.createServer(app);
 const io = new Server(server, { 
