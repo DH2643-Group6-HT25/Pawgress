@@ -8,13 +8,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "motion": "^12.23.22",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.3",
+    "react-router": "^7.9.3",
     "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.19"
   },
