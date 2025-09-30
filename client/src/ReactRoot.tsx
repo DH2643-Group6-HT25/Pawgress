@@ -1,25 +1,62 @@
-import { createHashRouter, RouterProvider } from "react-router-dom";
-import { WelcomePage } from "./presenters/WelcomePagePresenter";
+import { createHashRouter, RouterProvider, Outlet } from 'react-router'
+import LayoutWrapper from './components/Wrappers/LayoutWrapper'
+import { WelcomePage } from './presenters/WelcomePagePresenter'
+import { DashboardPage } from './presenters/DashboardPagePresenter'
+import { DashboardJournal } from './presenters/DashboardJournalPresenter'
+import { DashboardHistory } from './presenters/DashboardHistoryPresenter'
+import { DashboardAffirmation } from './presenters/DashboardAffirmationPresenter'
+import { DashboardGuide } from './presenters/DashboardGuidePresenter'
 
+function Layout() {
+  return (
+    <LayoutWrapper>
+      <Outlet />
+    </LayoutWrapper>
+  )
+}
 
-const ReactRoot = () => 
- {
+const ReactRoot = () => {
   const router = createHashRouter([
     {
-      path: "/",
-      element: <WelcomePage />,
+      path: '/',
+      element: <Layout />,
+      children: [
+        { path: '', element: <WelcomePage /> },
+        {
+          path: 'register',
+          element: <div>register</div>, //change to the correct presenter
+        },
+        {
+          path: 'login',
+          element: <div>login</div>, //change to the correct presenter
+        },
+        {
+          path: 'dashboard',
+          element: <DashboardPage />,
+          children: [
+            {
+              path: 'journal',
+              element: <DashboardJournal />,
+            },
+            {
+              path: 'history',
+              element: <DashboardHistory />,
+            },
+            {
+              path: 'affirmation',
+              element: <DashboardAffirmation />,
+            },
+            {
+              path: 'guide',
+              element: <DashboardGuide />,
+            },
+          ],
+        },
+      ],
     },
-    {
-      path: "/WelcomePage",
-      element: <WelcomePage />,
-    },
-    
-    // Add more routes as needed
-  ]);
+  ])
 
-  return (
-      <RouterProvider router={router} />
-  );
-};
+  return <RouterProvider router={router} />
+}
 
-export default ReactRoot;
+export default ReactRoot
