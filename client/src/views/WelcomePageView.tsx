@@ -36,7 +36,9 @@ function WelcomePage() {
       <div>
         <ThemeProvider theme={theme}>
           <MyButton primary>Test</MyButton>
-          <MyButton>Default</MyButton>
+          <MyButton as={Link} to={'/dashboard'}>
+            Dashboard
+          </MyButton>
         </ThemeProvider>
 
         <ThemeProvider theme={theme}>

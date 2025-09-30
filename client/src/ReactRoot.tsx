@@ -1,6 +1,11 @@
 import { createHashRouter, RouterProvider, Outlet } from 'react-router'
+import LayoutWrapper from './components/Wrappers/LayoutWrapper'
 import { WelcomePage } from './presenters/WelcomePagePresenter'
-import LayoutWrapper from './components/LayoutWrapper'
+import { DashboardPage } from './presenters/DashboardPagePresenter'
+import { DashboardJournal } from './presenters/DashboardJournalPresenter'
+import { DashboardHistory } from './presenters/DashboardHistoryPresenter'
+import { DashboardAffirmation } from './presenters/DashboardAffirmationPresenter'
+import { DashboardGuide } from './presenters/DashboardGuidePresenter'
 
 function Layout() {
   return (
@@ -19,34 +24,31 @@ const ReactRoot = () => {
         { path: '', element: <WelcomePage /> },
         {
           path: 'register',
-          element: <div>register</div>,
+          element: <div>register</div>, //change to the correct presenter
         },
         {
           path: 'login',
-          element: <div>login</div>,
+          element: <div>login</div>, //change to the correct presenter
         },
         {
           path: 'dashboard',
+          element: <DashboardPage />,
           children: [
             {
-              path: '',
-              element: <div>dashboard root</div>,
-            },
-            {
               path: 'journal',
-              element: <div>dashboard journal</div>,
+              element: <DashboardJournal />,
             },
             {
               path: 'history',
-              element: <div>dashboard history</div>,
+              element: <DashboardHistory />,
             },
             {
               path: 'affirmation',
-              element: <div>dashboard affirmation</div>,
+              element: <DashboardAffirmation />,
             },
             {
               path: 'guide',
-              element: <div>dashboard guide</div>,
+              element: <DashboardGuide />,
             },
           ],
         },
