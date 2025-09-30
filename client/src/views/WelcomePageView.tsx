@@ -2,6 +2,11 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import { ThemeProvider } from "styled-components";
+import { theme } from "./components/theme";
+import { MyButton } from './components/MyButton';
+import { MenuCard } from './components/MenuCard';
+
 function WelcomePage() {
   return (
     <Wrapper>
@@ -25,7 +30,22 @@ function WelcomePage() {
 
       {/* Optional decorative icons — replace paths with your assets */}
       {/* <BgIcon className="cat" src="/icons/cat.png" alt="" /> */}
+
+      {/* Test for the styled-components */}
+      <div>
+        <ThemeProvider theme={theme}>
+            <MyButton primary>Test</MyButton>
+            <MyButton>Default</MyButton>
+        </ThemeProvider>
+      
+        <ThemeProvider theme={theme}>
+            <MenuCard></MenuCard>
+        </ThemeProvider> 
+      </div>
+
     </Wrapper>
+  
+
   );
 }
 
