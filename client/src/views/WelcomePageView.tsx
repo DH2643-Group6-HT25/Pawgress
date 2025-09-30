@@ -1,10 +1,7 @@
 import { Link } from 'react-router'
 import styled from 'styled-components'
 
-import { ThemeProvider } from 'styled-components'
-import { theme } from '../components/theme'
 import { MyButton } from '../components/MyButton'
-import { MenuCard } from '../components/MenuCard'
 
 function WelcomePage() {
   return (
@@ -34,16 +31,10 @@ function WelcomePage() {
 
       {/* Test for the styled-components */}
       <div>
-        <ThemeProvider theme={theme}>
-          <MyButton primary>Test</MyButton>
-          <MyButton as={Link} to={'/dashboard'}>
-            Dashboard
-          </MyButton>
-        </ThemeProvider>
-
-        <ThemeProvider theme={theme}>
-          <MenuCard></MenuCard>
-        </ThemeProvider>
+        <MyButton primary>Test</MyButton>
+        <MyButton as={Link} to={'/dashboard'}>
+          Dashboard
+        </MyButton>
       </div>
     </Wrapper>
   )
