@@ -1,31 +1,30 @@
 import axios from 'axios'
-import { baseAffirmationURL, baseAffirmationHeaders } from './config';
+import { baseAffirmationURL, baseAffirmationHeaders } from './config'
+import { BasicResponse, ErrorResponse } from '../../@types/response'
 
 const options = {
   method: 'GET',
   url: baseAffirmationURL + '/random',
   headers: {
-    ...baseAffirmationHeaders
-  }
+    ...baseAffirmationHeaders,
+  },
 }
 
-async function getRandomAffirmation(){
+async function getRandomAffirmation(): Promise<BasicResponse | ErrorResponse> {
   try {
-    const response = await axios.request(options);
+    const response = await axios.request(options)
     return {
-      result: {
-        text: response.data?.text ?? " ",
+      content: {
+        text: response.data?.text ?? ' ',
       },
-      status: 200
+      status: 200,
     }
-  } catch (error) {
+  } catch (error: any) {
     return {
       status: error.status,
-      result: {
-        error: error.message
-      }
+      error: error.message,
     }
   }
 }
 
-export default getRandomAffirmation;
+export default getRandomAffirmation
