@@ -1,6 +1,9 @@
 import { Link, Outlet } from 'react-router'
 import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import styled from 'styled-components'
+import cat from '../assets/cat_happy_1.png';
+import { MyPet, PetContainer } from '../components/MyPet';
+
 
 function DashboardPageView() {
   return (
@@ -33,7 +36,12 @@ function DashboardPageView() {
           </Link>
         </RightDashboard>
       </DashboardBody>
-      <div>Pet</div>
+      <DashboardCatFooter>
+        <PetContainer>
+          <MyPet src={cat} alt="pet_image"/>
+        </PetContainer>
+      </DashboardCatFooter>
+      <Footer />
     </DashboardWrapper>
   )
 }
@@ -70,3 +78,23 @@ const DashboardHeader = styled.div`
   align-items: center;
   width: 100%;
 `
+const Footer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 15%; 
+  display: flex;
+  background-color: ${(props) => props.theme.colors.light_grey};
+  z-index: 1; 
+`
+const DashboardCatFooter = styled.div`
+  position: fixed;
+  bottom: 15%;  
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center; 
+  z-index: 2; 
+`
+
