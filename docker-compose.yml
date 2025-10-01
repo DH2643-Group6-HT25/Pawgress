@@ -6,13 +6,15 @@ services:
     container_name: pawgress-client
     volumes:
       - ./client:/client
-      - /client/node_modules
+      - client_node_modules:/client/node_modules
     networks:
       - react-express
     depends_on:
       - server
     ports:
       - "5173:5173"
+    environment:
+      - VITE_SERVER_URL=http://localhost:3001/users/login
   server:
     build:
       dockerfile: Dockerfile
@@ -47,3 +49,4 @@ networks:
 
 volumes:
   mongo_data:
+  client_node_modules:
