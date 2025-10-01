@@ -8,6 +8,7 @@ import { DashboardAffirmation } from "./presenters/DashboardAffirmationPresenter
 import { DashboardGuide } from "./presenters/DashboardGuidePresenter";
 import LoginPage from "./views/LoginPageView"; // <-- add this import
 import SignupPage from "./views/SignupPageView"; // <-- add this import
+import LoadingPage from "./views/LoadingPageView";
 
 function Layout() {
   return (
@@ -35,6 +36,10 @@ const ReactRoot = () => {
         {
           path: "signup",
           element: <SignupPage />, // <-- use your signup page component here
+        },
+        {
+          path: "loading",
+          element: <LoadingPage />, // <-- use your signup page component here
         },
         {
           path: "dashboard",
