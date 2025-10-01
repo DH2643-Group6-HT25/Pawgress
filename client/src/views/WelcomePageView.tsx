@@ -33,6 +33,9 @@ function WelcomePage() {
         <MyButton primary as={Link} to={'/dashboard'}>
           Dashboard
         </MyButton>
+        <MyButton primary as={Link} to={'/loading'}>
+          Loading Page
+        </MyButton>
       </div>
     </Wrapper>
   )
