@@ -29,10 +29,8 @@ function WelcomePage() {
       {/* Optional decorative icons — replace paths with your assets */}
       {/* <BgIcon className="cat" src="/icons/cat.png" alt="" /> */}
 
-      {/* Test for the styled-components */}
       <div>
-        <MyButton primary>Test</MyButton>
-        <MyButton as={Link} to={'/dashboard'}>
+        <MyButton primary as={Link} to={'/dashboard'}>
           Dashboard
         </MyButton>
       </div>
