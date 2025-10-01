@@ -6,6 +6,7 @@ import { DashboardJournal } from './presenters/DashboardJournalPresenter'
 import { DashboardHistory } from './presenters/DashboardHistoryPresenter'
 import { DashboardAffirmation } from './presenters/DashboardAffirmationPresenter'
 import { DashboardGuide } from './presenters/DashboardGuidePresenter'
+import LoginPage from './views/LoginPageView' // <-- add this import
 
 function Layout() {
   return (
@@ -28,28 +29,16 @@ const ReactRoot = () => {
         },
         {
           path: 'login',
-          element: <div>login</div>, //change to the correct presenter
+          element: <LoginPage />, // <-- use your login page component here
         },
         {
           path: 'dashboard',
           element: <DashboardPage />,
           children: [
-            {
-              path: 'journal',
-              element: <DashboardJournal />,
-            },
-            {
-              path: 'history',
-              element: <DashboardHistory />,
-            },
-            {
-              path: 'affirmation',
-              element: <DashboardAffirmation />,
-            },
-            {
-              path: 'guide',
-              element: <DashboardGuide />,
-            },
+            { path: 'journal', element: <DashboardJournal /> },
+            { path: 'history', element: <DashboardHistory /> },
+            { path: 'affirmation', element: <DashboardAffirmation /> },
+            { path: 'guide', element: <DashboardGuide /> },
           ],
         },
       ],
