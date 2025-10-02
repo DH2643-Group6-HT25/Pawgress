@@ -13,6 +13,7 @@ import indexRouter from "./src/routes/index";
 import usersRouter from "./src/routes/users";
 import affirmRouter from "./src/routes/affirmation";
 import todoRouter from "./src/routes/todo";
+import journalRouter from "./src/routes/journal";
 
 import { connectDB } from "./src/service/databse.service";
 
@@ -36,6 +37,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/affirmation", affirmRouter);
 app.use("/todo", todoRouter);
+app.use("/journal", journalRouter);
 
 connectDB();
 
