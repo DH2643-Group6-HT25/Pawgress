@@ -23,4 +23,28 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: "Todo deleted" });
 });
 
+// Updates a todo item by editing its text or marking it as done
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { todo, done } = req.body;
+  const updated = await TodoModel.findByIdAndUpdate(
+    id,
+    { ...(todo && { todo }), ...(done !== undefined && { done }) },
+    { new: true }
+  );
+  res.json(updated);
+});
+
+// Update todo order
+router.put("/:id/order", async (req, res) => {
+  const { id } = req.params;
+  const { order } = req.body;
+  const updated = await TodoModel.findByIdAndUpdate(
+    id,
+    { order },
+    { new: true }
+  );
+  res.json(updated);
+});
+
 export default router;
