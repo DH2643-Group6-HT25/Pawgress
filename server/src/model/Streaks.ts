@@ -5,7 +5,7 @@ import { Schema, model, Types } from "mongoose";
 // But no Mongoose document arrays or subdocuments.
 export interface IStreakHistory {
   date: Date;
-  todoNumber: number;
+  finishedTodos: number;
 }
 
 export interface IStreak {
@@ -18,7 +18,7 @@ export interface IStreak {
 // Schema
 const StreakHistoryschema = new Schema<IStreakHistory>({
   date: { type: Date, required: true },
-  todoNumber: { type: Number, default: 0 },
+  finishedTodos: { type: Number, default: 0 },
 });
 
 const Streakschema = new Schema<IStreak>({
