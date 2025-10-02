@@ -7,13 +7,15 @@ export interface ITodoList {
   todo: string;
   date: Date;
   user: Types.ObjectId;
+  order: number;
 }
 
 // Schema
 const Todoschema = new Schema<ITodoList>({
-  todo: { type: String, required: true},
+  todo: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  order: { type: Number, default: 0 }
 });
 
 const TodoModel = model('ITodoList', Todoschema);

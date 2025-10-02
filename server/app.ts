@@ -12,6 +12,7 @@ dotenv.config();
 import indexRouter from "./src/routes/index";
 import usersRouter from "./src/routes/users";
 import affirmRouter from "./src/routes/affirmation";
+import todoRouter from "./src/routes/todo";
 
 import { connectDB } from "./src/service/databse.service";
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/affirmation", affirmRouter);
+app.use("/todo", todoRouter);
 
 connectDB();
 
