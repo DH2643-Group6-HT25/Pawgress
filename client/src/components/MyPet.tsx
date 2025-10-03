@@ -1,22 +1,20 @@
-
-
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const PetContainer = styled.div`
-  width: auto;       /* beskärningsbredd */
-  height: 93px;      /* beskärningshöjd */
-  overflow: hidden;   /* döljer allt utanför boxen */
+  width: auto; /* beskärningsbredd */
+  height: 93px; /* beskärningshöjd */
+  overflow: hidden; /* döljer allt utanför boxen */
   position: relative;
-`;
+  z-index: 1000;
+`
 
 export const MyPet = styled.img`
   width: auto;
-  height: 100px; 
+  height: 100px;
   cursor: pointer;
   object-fit: cover;
 
   &:active {
     transform: translate(-5px, -5px);
   }
-`;
-
+`
