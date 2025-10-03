@@ -13,8 +13,6 @@ services:
       - server
     ports:
       - '5173:5173'
-    environment:
-      - VITE_SERVER_URL=http://localhost:3001/users/login
   server:
     build:
       dockerfile: Dockerfile
