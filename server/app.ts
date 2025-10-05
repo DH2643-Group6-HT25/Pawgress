@@ -12,10 +12,11 @@ dotenv.config();
 import indexRouter from "./src/routes/index";
 import usersRouter from "./src/routes/users";
 import affirmRouter from "./src/routes/affirmation";
+import streakRouter from "./src/routes/streak";
 import todoRouter from "./src/routes/todo";
 import journalRouter from "./src/routes/journal";
 
-import { connectDB } from "./src/service/databse.service";
+import { connectDB } from "./src/service/databseService";
 
 const app = express();
 
@@ -36,9 +37,11 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/affirmation", affirmRouter);
+app.use("/streak", streakRouter);
 app.use("/todo", todoRouter);
 app.use("/journal", journalRouter);
 
+/* Connect to databse */
 connectDB();
 
 const server = http.createServer(app);

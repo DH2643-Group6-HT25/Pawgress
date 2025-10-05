@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model, Types } from "mongoose";
 
 // Raw document interface. Contains the data type as it will be stored
 // in MongoDB. So you can ObjectId, Buffer, and other custom primitive data types.
@@ -15,17 +15,17 @@ export interface IDailyJournal {
   formatting?: IFormatting[];
   imageUrl?: string; // store the img to the cloud?
   date: Date;
-  user: Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
 // Schema
 const Journalschema = new Schema<IDailyJournal>({
-  journal: { type: String, required: true},
-  imageUrl: {type: String},
+  journal: { type: String, required: true },
+  imageUrl: { type: String },
   date: { type: Date, default: Date.now },
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
-const JournalModel = model('IDailyJournal', Journalschema);
+const JournalModel = model("IDailyJournal", Journalschema);
 
 export default JournalModel;

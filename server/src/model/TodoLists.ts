@@ -6,7 +6,7 @@ import { Schema, model, Types } from "mongoose";
 export interface ITodoList {
   todo: string;
   date: Date;
-  user: Types.ObjectId;
+  userId: Types.ObjectId;
   order: number;
 }
 
@@ -14,7 +14,7 @@ export interface ITodoList {
 const Todoschema = new Schema<ITodoList>({
   todo: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   order: { type: Number, default: 0 },
 });
 
