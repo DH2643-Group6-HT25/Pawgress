@@ -12,7 +12,7 @@ export interface IStreak {
   currentStreak: number;
   bestStreak: number;
   history: IStreakHistory[];
-  user: Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
 // Schema
@@ -25,7 +25,7 @@ const Streakschema = new Schema<IStreak>({
   currentStreak: { type: Number, default: 0 },
   bestStreak: { type: Number, default: 0 },
   history: [StreakHistoryschema],
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 const StreakModel = model("IStreak", Streakschema);

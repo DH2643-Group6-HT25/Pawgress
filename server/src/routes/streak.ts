@@ -4,7 +4,7 @@ import * as streakService from "../service/streakService";
 const router = express.Router();
 
 /* GET users streak info. */
-router.get("/streak", async (req, res) => {
+router.get("/", async (req, res) => {
   const { userId } = req.query;
   if (!userId) return res.status(400).json({ error: "userId required" });
 
@@ -24,8 +24,8 @@ router.get("/streak", async (req, res) => {
 });
 
 /*Update users streak info*/
-router.post("/streak/update", async (req, res) => {
-  const { userId } = req.query;
+router.post("/update", async (req, res) => {
+  const { userId } = req.body;
   if (!userId) return res.status(400).json({ error: "userId required" });
 
   try {

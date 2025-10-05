@@ -1,5 +1,5 @@
 export async function getStreak(userId: string) {
-  const res = await fetch(`/streak?userId=${userId}`, {
+  const res = await fetch(`/?userId=${userId}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -9,7 +9,7 @@ export async function getStreak(userId: string) {
 }
 
 export async function updateStreak(userId: string) {
-  const res = await fetch(`/streak/update`, {
+  const res = await fetch(`/update`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId }),
