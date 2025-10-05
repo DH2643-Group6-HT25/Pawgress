@@ -6,15 +6,13 @@ services:
     container_name: pawgress-client
     volumes:
       - ./client:/client
-      - client_node_modules:/client/node_modules
+      - /client/node_modules
     networks:
       - react-express
     depends_on:
       - server
     ports:
-      - "5173:5173"
-    environment:
-      - VITE_SERVER_URL=http://localhost:3001/users/login
+      - '5173:5173'
   server:
     build:
       dockerfile: Dockerfile
@@ -31,7 +29,7 @@ services:
       - express-mongo
       - react-express
     ports:
-      - "3001:3001"
+      - '3001:3001'
 
   mongo:
     restart: always
@@ -42,6 +40,8 @@ services:
       - express-mongo
     expose:
       - 27017
+    ports:
+      - '27017:27017'
 
 networks:
   react-express:
