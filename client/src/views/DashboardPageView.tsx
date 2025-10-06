@@ -1,9 +1,10 @@
-import { Link, Outlet } from 'react-router'
+import { Outlet } from 'react-router'
 import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import styled from 'styled-components'
 import cat from '../assets/cat_happy_1.png'
 import { MyPet, PetContainer } from '../components/MyPet'
 import Header from '../components/Header'
+import DashboardMenu from '../components/DashboardMenu'
 
 interface PropTypes {
   petName: string
@@ -18,22 +19,11 @@ function DashboardPageView({ petName }: PropTypes) {
         <MiddleDashboard>
           <h3>{petName}</h3>
           <Outlet />
-          
         </MiddleDashboard>
         <RightDashboard>
-          <Link to={'/dashboard/journal'} viewTransition>
-            Journal
-          </Link>
-          <Link to={'/dashboard/history'} viewTransition>
-            History
-          </Link>
-          <Link to={'/dashboard/affirmation'} viewTransition>
-            Affirmation
-          </Link>
-          <Link to={'/dashboard/guide'} viewTransition>
-            Guide
-          </Link>
+          <DashboardMenu />
         </RightDashboard>
+        
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
@@ -58,10 +48,13 @@ const MiddleDashboard = styled.div`
 `
 
 const RightDashboard = styled.div`
-  flex: 0 0 15%;
+  flex: 0 0 7%;
   display: flex;
   flex-direction: column;
-`
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
 
 const DashboardBody = styled.div`
   display: flex;

@@ -8,7 +8,7 @@ import {
   CardIcon,
   InsideCardContainer,
 } from './CardComponents'
-import closeIcon from '../assets/close.svg'
+import closeIcon from '../assets/icons/close.svg'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 
