@@ -41,7 +41,7 @@ const ReactRoot = () => {
         },
         {
           path: 'loading',
-          element: <LoadingPage />, // <-- use your signup page component here
+          element: <LoadingPage />, // <-- use your loading page component here
         },
         {
           path: 'dashboard',

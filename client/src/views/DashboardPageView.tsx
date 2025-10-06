@@ -3,6 +3,7 @@ import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import styled from 'styled-components'
 import cat from '../assets/cat_happy_1.png'
 import { MyPet, PetContainer } from '../components/MyPet'
+import Header from '../components/Header'
 
 interface PropTypes {
   petName: string
@@ -11,18 +12,13 @@ interface PropTypes {
 function DashboardPageView({ petName }: PropTypes) {
   return (
     <DashboardWrapper>
-      <DashboardHeader>
-        <div>
-          <Link to='/'>Pawgress</Link>
-        </div>
-        <div>
-          <h2>Dashboard Header</h2>
-        </div>
-      </DashboardHeader>
+      <Header primary/>
       <DashboardBody>
         <LeftDashboard>Section for todo list</LeftDashboard>
         <MiddleDashboard>
+          <h3>{petName}</h3>
           <Outlet />
+          
         </MiddleDashboard>
         <RightDashboard>
           <Link to={'/dashboard/journal'} viewTransition>
@@ -41,7 +37,6 @@ function DashboardPageView({ petName }: PropTypes) {
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
-          <h3>{petName}</h3>
           <MyPet src={cat} alt='pet_image' />
         </PetContainer>
       </DashboardCatFooter>
@@ -74,13 +69,6 @@ const DashboardBody = styled.div`
   align-items: center;
   width: 100%;
   height: 60%;
-`
-
-const DashboardHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
 `
 const Footer = styled.div`
   position: fixed;

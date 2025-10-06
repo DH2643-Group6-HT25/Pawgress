@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 export const PetContainer = styled.div`
-  width: auto; /* beskärningsbredd */
-  height: 93px; /* beskärningshöjd */
-  overflow: hidden; /* döljer allt utanför boxen */
+  width: auto; 
+  height: 93px; 
+  overflow: hidden;
   position: relative;
   z-index: 1000;
 `
