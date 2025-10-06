@@ -51,6 +51,7 @@ const ReactRoot = () => {
             { path: 'history', element: <DashboardHistory /> },
             { path: 'affirmation', element: <DashboardAffirmation /> },
             { path: 'guide', element: <DashboardGuide /> },
+            { path: 'fish', element: <DashboardJournal /> },
           ],
         },
       ],
