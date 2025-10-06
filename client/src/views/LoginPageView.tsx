@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../api/auth";
+import Header from "../components/Header";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ const LoginPage = () => {
 
   return (
     <div>
+      <Header />
       <h1>Login</h1>
       <p>Please log in to continue.</p>
       <form onSubmit={handleSubmit}>

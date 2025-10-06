@@ -5,7 +5,6 @@ import cat from '../assets/cat_happy_1.png';
 function DashboardPageView() {
   return (
     <Wrapper>
-      <Header>PAWGRESS</Header>
       <Content>
         <Headline>Loading ...</Headline>
         <MyPet src={cat} alt="pet_image"></MyPet>
@@ -25,13 +24,6 @@ const Wrapper = styled.div`
   align-items: center;     
   background: linear-gradient(180deg, #f4f1df 0%, #cddcd8 100%);
   padding: 16px;
-`
-
-const Header = styled.div`
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  font-size: 18px;
 `
 
 const Headline = styled.h1`

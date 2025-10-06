@@ -2,11 +2,12 @@ import { Link } from 'react-router'
 import styled from 'styled-components'
 
 import { MyButton } from '../components/MyButton'
+import Header from '../components/Header'
 
 function WelcomePage() {
   return (
     <Wrapper>
-      <Header>PAWGRESS</Header>
+      <Header></Header>
 
       <Content>
         <Headline>Stay PRRductive by taking care of your pixel pet!</Headline>
@@ -30,10 +31,10 @@ function WelcomePage() {
       {/* <BgIcon className="cat" src="/icons/cat.png" alt="" /> */}
 
       <div>
-        <MyButton primary as={Link} to={'/dashboard'}>
+        <MyButton primary as={Link} to='/dashboard'>
           Dashboard
         </MyButton>
-        <MyButton primary as={Link} to={'/loading'}>
+        <MyButton primary as={Link} to='/loading'>
           Loading Page
         </MyButton>
       </div>
@@ -50,13 +51,6 @@ const Wrapper = styled.div`
   display: grid;
   place-items: center;
   background: linear-gradient(180deg, #f4f1df 0%, #cddcd8 100%);
-`
-
-const Header = styled.div`
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  font-size: 18px;
 `
 
 const Content = styled.div`
