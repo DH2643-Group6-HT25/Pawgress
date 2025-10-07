@@ -89,7 +89,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
         </StyledForm>
         <SmallText>
           Don't have an account?
-          <RegisterLink to="/signup">Register</RegisterLink>
+          <RegisterLink to="/signup">Sign Up</RegisterLink>
         </SmallText>
         {msg && <ErrorMsg>{msg}</ErrorMsg>}
       </Card>
