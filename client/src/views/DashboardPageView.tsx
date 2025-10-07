@@ -5,6 +5,8 @@ import cat from '../assets/cat_happy_1.png'
 import { MyPet, PetContainer } from '../components/MyPet'
 import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
+import PetSateHeader from '../components/PetStateHeader'
+import ToDoListCard from '../components/ToDoListCard'
 
 interface PropTypes {
   petName: string
@@ -14,8 +16,11 @@ function DashboardPageView({ petName }: PropTypes) {
   return (
     <DashboardWrapper>
       <Header primary/>
+      <PetSateHeader></PetSateHeader>
       <DashboardBody>
-        <LeftDashboard>Section for todo list</LeftDashboard>
+        <LeftDashboard>
+          <ToDoListCard/>
+        </LeftDashboard>
         <MiddleDashboard>
           <h3>{petName}</h3>
           <Outlet />
@@ -40,7 +45,10 @@ export default DashboardPageView
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
   display: flex;
-`
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
 
 const MiddleDashboard = styled.div`
   flex: 1 1 55%;
@@ -68,14 +76,14 @@ const Footer = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 15%;
+  height: 10%;
   display: flex;
   background-color: ${(props) => props.theme.colors.light_grey};
   z-index: 1;
 `
 const DashboardCatFooter = styled.div`
   position: fixed;
-  bottom: 15%;
+  bottom: 10%;
   left: 0;
   width: 100%;
   display: flex;
