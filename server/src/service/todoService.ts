@@ -7,15 +7,15 @@ const toObjId = (id: string) => {
 };
 
 export async function getTodosForUser(userId: string) {
-  const user = toObjId(userId);
-  return todoRepo.findByUser(user);
+  const uid = toObjId(userId);
+  return todoRepo.findByUser(uid);
 }
 
 export async function createTodoAtTop(todo: string, userId: string) {
   if (!todo?.trim()) throw new Error("todo required");
-  const user = toObjId(userId);
-  await todoRepo.updateMany({ user }, { $inc: { order: 1 } });
-  return todoRepo.create({ todo, user, order: 1 });
+  const uid = toObjId(userId);
+  await todoRepo.updateMany({ userId: uid }, { $inc: { order: 1 } });
+  return todoRepo.create({ todo, userId: uid, order: 1 });
 }
 
 export async function editTodo(
@@ -32,7 +32,7 @@ export async function editTodo(
 
 export async function updateTodoOrder(id: string, userId: string, order: number) {
   if (!Number.isFinite(order)) throw new Error("order must be a number");
-  toObjId(userId);              // validera userId (används inte mer här)
+  toObjId(userId);              
   const _id = toObjId(id);
   return todoRepo.findByIdAndUpdate(_id.toString(), { $set: { order } });
 }
