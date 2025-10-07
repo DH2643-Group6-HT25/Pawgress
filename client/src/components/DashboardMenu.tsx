@@ -14,7 +14,7 @@ import guideIconPressed from '../assets/icons/info-solid.svg'
 
 
 const MenuWrapper = styled.nav`
-  width: 80px;
+  width: 100px;
   margin-top: 50px;
   display: flex;
   flex-direction: column;
@@ -45,11 +45,11 @@ const Icon = styled.img`
   filter: brightness(0) saturate(100%);
 `;
 
-const Label = styled.span<{ pressed?: boolean }>`
+const Label = styled.span<{ $pressed?: boolean }>`
   margin-top: 6px;
   font-size: 0.9rem;
   text-align: center;
-  font-weight: ${({ pressed }) => (pressed ? 'bold' : 'normal')};
+  font-weight: ${({ $pressed }) => ($pressed ? 'bold' : 'normal')};
   color: ${({ theme }) => theme.colors.black};
   font-family: ${({ theme }) => theme.fonts.pixel};
 `;
@@ -71,42 +71,38 @@ const DashboardMenu: React.FC = () => {
   return (
     <MenuWrapper>
       <MenuItem
-        pressed={getPressed("fish")}
         onClick={() => handleMenuClick("fish")}
       >
         <FishIcon src={getPressed("fish") ? fishIconPressed : fishIcon}
           alt="Fish" />
-        <Label pressed={getPressed("fish")}> 4 Fish</Label>
+        <Label $pressed={getPressed("fish")}> 4 Fish</Label>
       </MenuItem>
       <MenuItem
-        pressed={getPressed("journal")}
         onClick={() => handleMenuClick("journal")}
       >
         <Icon
           src={getPressed("journal") ? journalIconPressed : journalIcon}
           alt="Journal"
         />
-        <Label pressed={getPressed("journal")}>Journal</Label>
+        <Label $pressed={getPressed("journal")}>Journal</Label>
       </MenuItem>
       <MenuItem
-        pressed={getPressed("history")}
         onClick={() => handleMenuClick("history")}
       >
         <Icon
           src={getPressed("history") ? historyIconPressed : historyIcon}
           alt="History"
         />
-        <Label pressed={getPressed("history")}>History</Label>
+        <Label $pressed={getPressed("history")}>History</Label>
       </MenuItem>
       <MenuItem
-        pressed={getPressed("guide")}
         onClick={() => handleMenuClick("guide")}
       >
         <Icon
           src={getPressed("guide") ? guideIconPressed : guideIcon}
           alt="Guide"
         />
-        <Label pressed={getPressed("guide")}>Guide</Label>
+        <Label $pressed={getPressed("guide")}>Guide</Label>
       </MenuItem>
     </MenuWrapper>
   );

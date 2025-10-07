@@ -16,10 +16,10 @@ export const theme: DefaultTheme = {
     shadowOffset: '3px',
   },
   size: {
-    card_width: '600px',
-    card_height: '300px',
-    small_card_width: '250px',
-    small_card_height: '350px',
+    card_width: '30%',
+    card_height: '25%',
+    small_card_width: '100%',
+    small_card_height: '90%',
     card_border_radius: '20px',
   },
 }
