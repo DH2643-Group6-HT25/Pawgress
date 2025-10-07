@@ -1,8 +1,5 @@
 import { Schema, model, Types } from "mongoose";
 
-// Raw document interface. Contains the data type as it will be stored
-// in MongoDB. So you can ObjectId, Buffer, and other custom primitive data types.
-// But no Mongoose document arrays or subdocuments.
 export interface IUser {
   name: string;
   email: string;
@@ -14,7 +11,6 @@ export interface IUser {
   food: number;
 }
 
-// Schema
 const Userschema = new Schema<IUser>({
   name: { type: String, required: true, unique: true, trim: true },
   email: {
@@ -38,11 +34,6 @@ const Userschema = new Schema<IUser>({
   food: { type: Number, required: true, default: 0 },
 });
 
-const UserModel = model("User", Userschema);
-
-const doc = new UserModel({ name: "test", email: "test" });
-
-console.log(doc.name); // string
-console.log(doc.email); // string
+const UserModel = model<IUser>("User", Userschema);
 
 export default UserModel;
