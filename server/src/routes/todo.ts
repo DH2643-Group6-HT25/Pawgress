@@ -13,7 +13,12 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { todo, user } = req.body;
   if (!todo || !user) return res.status(400).json({ error: "Missing fields" });
-  const newTodo = await TodoModel.create({ todo, user });
+
+  
+  await TodoModel.updateMany({ user }, { $inc: { order: 1 } });
+
+ 
+  const newTodo = await TodoModel.create({ todo, user, order: 1 });
   res.status(201).json(newTodo);
 });
 
@@ -23,7 +28,6 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: "Todo deleted" });
 });
 
-// Updates a todo item by editing its text or marking it as done
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { todo, done } = req.body;
@@ -35,7 +39,6 @@ router.put("/:id", async (req, res) => {
   res.json(updated);
 });
 
-// Update todo order
 router.put("/:id/order", async (req, res) => {
   const { id } = req.params;
   const { order } = req.body;
