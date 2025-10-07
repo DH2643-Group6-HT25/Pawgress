@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface CardProps {
   primary?: boolean;
+  large?: boolean;
 }
 
 export const CardIcon = styled.img`
@@ -44,13 +45,21 @@ export const InsideCardContainer = styled.div`
 `;
 
 export const InsideCard = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "primary",
+  shouldForwardProp: (prop) => prop !== "primary" && prop !== "large",
 })<CardProps>`
   display: flex;
   flex-direction: column;
   text-align: left;
-  width: ${(props) => props.theme.size.small_card_width};
-  height: ${(props) => props.theme.size.small_card_height};
+
+  width: ${(props) =>
+    props.large
+      ? props.theme.size.large_card_width
+      : props.theme.size.small_card_width};
+
+  height: ${(props) =>
+    props.large
+      ? props.theme.size.large_card_heigth
+      : props.theme.size.small_card_height};
 
   border-radius: ${(props) => props.theme.size.card_border_radius};
   background-color: ${(props) =>

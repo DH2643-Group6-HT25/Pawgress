@@ -10,7 +10,7 @@ export interface IUser {
   pet: Types.ObjectId;
   todo: Types.ObjectId[];
   dailyJournal: Types.ObjectId[];
-  streak: Types.ObjectId[];
+  streak: Types.ObjectId;
   food: number;
 }
 
@@ -34,7 +34,7 @@ const Userschema = new Schema<IUser>({
   pet: { type: Schema.Types.ObjectId, ref: "Pet" },
   todo: [{ type: Schema.Types.ObjectId, ref: "ITodoList" }],
   dailyJournal: [{ type: Schema.Types.ObjectId, ref: "IDailyJournal" }],
-  streak: [{ type: Schema.Types.ObjectId, ref: "IStreak" }],
+  streak: { type: Schema.Types.ObjectId, ref: "IStreak" },
   food: { type: Number, required: true, default: 0 },
 });
 
