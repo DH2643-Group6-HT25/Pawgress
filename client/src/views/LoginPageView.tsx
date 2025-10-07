@@ -1,43 +1,100 @@
-import { useState } from "react";
-import { login } from "../api/auth";
+import { useMemo } from "react";
 import Header from "../components/Header";
+import { MyButton } from "../components/MyButton";
+import {
+  Background,
+  SquaresContainer,
+  Square,
+  Card,
+  Title,
+  StyledForm,
+  Label,
+  Input,
+  SmallText,
+  ErrorMsg,
+  RegisterLink,
+} from "../components/AuthUI";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+export type LoginPageViewProps = {
+  email: string;
+  setEmail: (v: string) => void;
+  password: string;
+  setPassword: (v: string) => void;
+  msg: string;
+  handleSubmit: (e: React.FormEvent) => void;
+};
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = await login(email, password);
-    setMsg(result.message || result.error);
-  };
+const LoginPageView: React.FC<LoginPageViewProps> = ({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  msg,
+  handleSubmit,
+}) => {
+  const squares = useMemo(
+    () =>
+      Array.from({ length: 20 }, () => ({
+        top: `${Math.random() * 95}%`,
+        left: `${Math.random() * 95}%`,
+      })),
+    []
+  );
 
   return (
-    <div>
+    <Background>
+      <SquaresContainer>
+        {squares.map((pos, i) => (
+          <Square key={i} style={pos} />
+        ))}
+      </SquaresContainer>
       <Header />
-      <h1>Login</h1>
-      <p>Please log in to continue.</p>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
-        <button type="submit">Login</button>
-      </form>
-      <p>{msg}</p>
-    </div>
+      <Card>
+        <Title>Login</Title>
+        <StyledForm onSubmit={handleSubmit}>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <MyButton
+            primary
+            type="submit"
+            style={{
+              width: "100%",
+              marginTop: "10px",
+              height: "40px",
+              fontSize: "1.1rem",
+            }}
+          >
+            Login
+          </MyButton>
+        </StyledForm>
+        <SmallText>
+          Don't have an account?
+          <RegisterLink to="/signup">Register</RegisterLink>
+        </SmallText>
+        {msg && <ErrorMsg>{msg}</ErrorMsg>}
+      </Card>
+    </Background>
   );
 };
 
-export default LoginPage;
+export default LoginPageView;
