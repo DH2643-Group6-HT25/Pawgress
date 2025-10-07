@@ -10,6 +10,7 @@ import { DashboardGuide } from './presenters/DashboardGuidePresenter'
 import LoginPage from './views/LoginPageView' // <-- add this import
 import SignupPage from './views/SignupPageView' // <-- add this import
 import LoadingPage from './views/LoadingPageView'
+import { OnboardingPage } from './presenters/OnboardingPagePresenter'
 import { store } from './models'
 
 function Layout() {
@@ -42,6 +43,10 @@ const ReactRoot = () => {
         {
           path: 'loading',
           element: <LoadingPage />, // <-- use your loading page component here
+        },
+        {
+          path: 'onboarding',
+          element: <OnboardingPage />,
         },
         {
           path: 'dashboard',
