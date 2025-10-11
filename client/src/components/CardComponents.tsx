@@ -75,6 +75,7 @@ export const MyCard = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'primary',
 })<CardProps>`
   position: fixed;
+  flex-direction: row; 
   right: 100px;
   top: 50%;
   transform: translateY(-50%);
@@ -92,6 +93,7 @@ export const MyCard = styled.div.withConfig({
   text-transform: lowercase;
   margin: 5px;
   box-sizing: border-box;
+
   @media (max-width: 900px) {
     width: 96vw;
     right: 2vw;
