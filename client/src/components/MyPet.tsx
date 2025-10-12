@@ -1,7 +1,4 @@
 import styled from "styled-components";
-// import happyCat from "../assets/cat_happy_1.png";
-// import normalCat from "../assets/cat_normal_1.png";
-// import sleepyCat from "../assets/cat_sleepy_1.png";
 import cat_happy_1 from "../assets/cat_happy_1.png";
 import cat_happy_2 from "../assets/cat_happy_2.png";
 import cat_normal_1 from "../assets/cat_normal_1.png";
