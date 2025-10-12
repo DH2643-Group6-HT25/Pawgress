@@ -1,25 +1,24 @@
-import { Outlet } from 'react-router'
-import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
-import styled from 'styled-components'
-import cat from '../assets/cat_happy_1.png'
-import { MyPet, PetContainer } from '../components/MyPet'
-import Header from '../components/Header'
-import DashboardMenu from '../components/DashboardMenu'
-import PetSateHeader from '../components/PetStateHeader'
-import ToDoListCard from '../components/ToDoListCard'
+import { Outlet } from "react-router";
+import DashboardWrapper from "../components/Wrappers/DashboardWrapper";
+import styled from "styled-components";
+import { MyPet, PetContainer } from "../components/MyPet";
+import Header from "../components/Header";
+import DashboardMenu from "../components/DashboardMenu";
+import PetSateHeader from "../components/PetStateHeader";
+import ToDoListCard from "../components/ToDoListCard";
 
 interface PropTypes {
-  petName: string
+  petName: string;
 }
 
 function DashboardPageView({ petName }: PropTypes) {
   return (
     <DashboardWrapper>
-      <Header primary/>
+      <Header primary />
       <PetSateHeader></PetSateHeader>
       <DashboardBody>
         <LeftDashboard>
-          <ToDoListCard/>
+          <ToDoListCard />
         </LeftDashboard>
         <MiddleDashboard>
           <h3>{petName}</h3>
@@ -28,19 +27,18 @@ function DashboardPageView({ petName }: PropTypes) {
         <RightDashboard>
           <DashboardMenu />
         </RightDashboard>
-        
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
-          <MyPet src={cat} alt='pet_image' />
+          <MyPet health={10} color="red" />
         </PetContainer>
       </DashboardCatFooter>
       <Footer />
     </DashboardWrapper>
-  )
+  );
 }
 
-export default DashboardPageView
+export default DashboardPageView;
 
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
@@ -53,7 +51,7 @@ const LeftDashboard = styled.div`
 const MiddleDashboard = styled.div`
   flex: 1 1 55%;
   display: flex;
-`
+`;
 
 const RightDashboard = styled.div`
   flex: 0 0 7%;
@@ -70,7 +68,7 @@ const DashboardBody = styled.div`
   align-items: center;
   width: 100%;
   height: 60%;
-`
+`;
 const Footer = styled.div`
   position: fixed;
   bottom: 0;
@@ -80,13 +78,14 @@ const Footer = styled.div`
   display: flex;
   background-color: ${(props) => props.theme.colors.light_grey};
   z-index: 1;
-`
+`;
 const DashboardCatFooter = styled.div`
   position: fixed;
-  bottom: 10%;
+  bottom: 20px;
   left: 0;
   width: 100%;
+  height: 120px;
   display: flex;
   justify-content: center;
   z-index: 2;
-`
+`;
