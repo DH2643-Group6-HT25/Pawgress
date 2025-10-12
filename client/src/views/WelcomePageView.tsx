@@ -2,13 +2,67 @@ import { Link } from "react-router";
 import styled from "styled-components";
 
 import { MyButton } from "../components/MyButton";
-import Header from "../components/Header";
+
+// 🔽 import your pixel icons (replace paths)
+import cat from "../assets/cat_happy_2.png";
+import heart from "../assets/heart_5.png";
+import fish from "../assets/fish.png";
+import poop from "../assets/poop.png";
+
+const sizes = {
+  cat: "clamp(48px, 8vw, 120px)", // smaller
+  poop: "clamp(40px, 6vw, 90px)", // smaller
+  fish: "clamp(64px, 10vw, 160px)", // bigger, matches heart/visual weight
+  heart: "clamp(52px, 8vw, 120px)", // unchanged, still ~same as fish now
+};
+
+type DecoItem = {
+  src: string;
+  xPct: number; // left %
+  yPct: number; // top %
+  size?: string; // css size (use clamp)
+  rotate?: number;
+  flipX?: boolean;
+};
+
+const decorations: DecoItem[] = [
+  { src: cat, xPct: 7, yPct: 10, size: sizes.cat },
+  { src: heart, xPct: 28, yPct: 12, size: sizes.heart },
+  { src: fish, xPct: 59, yPct: 12, size: sizes.fish },
+  { src: heart, xPct: 87, yPct: 18, size: sizes.heart },
+  { src: poop, xPct: 46, yPct: 22, size: sizes.poop },
+  { src: heart, xPct: 8, yPct: 43, size: sizes.heart },
+  { src: fish, xPct: 9, yPct: 69, size: sizes.fish, flipX: true },
+  { src: heart, xPct: 26, yPct: 72, size: sizes.heart },
+  { src: poop, xPct: 8, yPct: 84, size: sizes.poop },
+  { src: fish, xPct: 46, yPct: 83, size: sizes.fish },
+  { src: poop, xPct: 71, yPct: 82, size: sizes.poop },
+  { src: heart, xPct: 81, yPct: 66, size: sizes.heart },
+  { src: cat, xPct: 90, yPct: 85, size: sizes.cat },
+];
 
 function WelcomePage() {
   return (
     <Wrapper>
-      <Header></Header>
+      <Header>PAWGRESS</Header>
 
+      {/* Decorative icons */}
+      {decorations.map((d, i) => (
+        <Deco
+          key={i}
+          src={d.src}
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          loading="lazy"
+          style={{
+            left: `${d.xPct}%`,
+            top: `${d.yPct}%`,
+            width: d.size ?? "clamp(32px, 5vw, 64px)",
+            transform: `translate(-50%, -50%) rotate(${d.rotate ?? 0}deg) scaleX(${d.flipX ? -1 : 1})`,
+          }}
+        />
+      ))}
       <Content>
         <Headline>Stay PRRductive by taking care of your pixel pet!</Headline>
 
@@ -18,17 +72,14 @@ function WelcomePage() {
 
         <ButtonRow>
           {/* Use Links so routing works */}
-          <Primary as={Link} to="/signup">
+          <MyButton primary as={Link} to="/signup">
             Sign Up
-          </Primary>
-          <Secondary as={Link} to="/login">
+          </MyButton>
+          <MyButton primary as={Link} to="/login">
             Log In
-          </Secondary>
+          </MyButton>
         </ButtonRow>
       </Content>
-
-      {/* Optional decorative icons — replace paths with your assets */}
-      {/* <BgIcon className="cat" src="/icons/cat.png" alt="" /> */}
 
       <div>
         <MyButton primary as={Link} to="/dashboard">
@@ -58,8 +109,9 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   text-align: center;
-  max-width: 720px;
+  max-width: 820px;
   padding: 0 24px;
+  z-index: 1;
 `;
 
 const Headline = styled.h1`
@@ -103,4 +155,16 @@ const Secondary = styled(BaseBtn)`
   opacity: 0.95;
 `;
 
-// const BgIcon = styled.img` ... optional absolute positions ... `;
+const Deco = styled.img`
+  position: absolute;
+  pointer-events: none;
+`;
+
+const Header = styled.div`
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+`;
