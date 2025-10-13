@@ -57,6 +57,7 @@ export const InsideCard = styled.div.withConfig({
   display: flex;
   flex-direction: column;
   text-align: left;
+  overflow: hidden;
 
   width: ${(props) =>
     props.large

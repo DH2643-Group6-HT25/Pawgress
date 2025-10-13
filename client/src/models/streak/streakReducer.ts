@@ -10,7 +10,7 @@ interface StreakState {
 
 // fake data to test
 const initialState: StreakState = {
-  currentStreak: 3,
+  currentStreak: 1,
   bestStreak: 3,
   streakHistory: [
     { date: new Date("2025-09-29"), finishedTodos: 3 },
@@ -18,7 +18,10 @@ const initialState: StreakState = {
     { date: new Date("2025-10-03"), finishedTodos: 4 },
     { date: new Date("2025-10-04"), finishedTodos: 7 },
     { date: new Date("2025-10-05"), finishedTodos: 6 },
-    { date: new Date("2025-10-07"), finishedTodos: 6 },
+    { date: new Date("2025-10-08"), finishedTodos: 6 },
+    { date: new Date("2025-10-09"), finishedTodos: 7 },
+    { date: new Date("2025-10-10"), finishedTodos: 3 },
+    { date: new Date("2025-10-13"), finishedTodos: 4 },
   ],
 };
 

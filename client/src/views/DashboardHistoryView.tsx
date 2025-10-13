@@ -10,6 +10,7 @@ import {
   InsideCardTitle,
   InsideCardContainer,
 } from "../components/CardComponents";
+import { theme } from "../components/theme";
 
 interface PropTypes {
   currentStreak: number;
@@ -30,36 +31,57 @@ const DashboardHistoryView = ({
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // remove previous img
-
-    const width = 260;
-    const height = 200;
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-
-    // draw white background
-    svg
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", width)
-      .attr("height", height)
-      .attr("rx", 16) // rounded corners for x axis
-      .attr("ry", 16) // rounded corners for y axis
-      .attr("fill", "white")
-      .attr("stroke", "#ddd") // gray stroke
-      .attr("stroke-width", 1);
+    const defaultwidth = 275;
+    const defaultheight = 250;
+    const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
     const [minDate, maxDate] = d3.extent(streakHistory, (d) => d.date) as [
       Date,
       Date,
     ];
 
+    // dynamic width for x-axis based on the date range, the min width for canvas is the default width
+    const daySpan =
+      (maxDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24);
+    const tickXInterval = 32;
+    const width = Math.max(defaultwidth, daySpan * tickXInterval);
+
+    // dynamic height for y-axis
+    const maxTodoValue = d3.max(streakHistory, (d) => d.finishedTodos)!;
+    const tickYInterval = 10;
+    const height = Math.max(defaultheight, maxTodoValue * tickYInterval);
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove(); // remove previous img
+
+    //size of svg
+    svg
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+    // draw white background
+    svg
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("rx", 16) // rounded corners for x axis
+      .attr("ry", 16) // rounded corners for y axis
+      .attr("fill", "white")
+      .attr("stroke", "#ddd") // gray stroke
+      .attr("stroke-width", 1);
+
+    // draw line chart within g
+    const g = svg
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
     // X scale - dates
     const x = d3
       .scaleTime()
       .domain([minDate, maxDate]) // Date[]
-      .range([margin.left, width - margin.right]); // number[]
+      .range([0, width]); // number[]
 
     const tickDates: Date[] = streakHistory.map((d) => d.date);
 
@@ -74,11 +96,10 @@ const DashboardHistoryView = ({
       .scaleLinear()
       .domain([0, d3.max(streakHistory, (d) => d.finishedTodos)!])
       .nice()
-      .range([height - margin.bottom, margin.top]);
+      .range([height, 0]);
 
     // Y axis with integers
-    const maxValue = d3.max(streakHistory, (d) => d.finishedTodos)!;
-    const yTicks = d3.range(0, maxValue + 1, 1); // 0,1,2,...,maxValue
+    const yTicks = d3.range(0, maxTodoValue + 1, 1); // 0,1,2,...,maxValue
     const yAxis = d3.axisLeft(y).tickValues(yTicks).tickFormat(d3.format("d"));
 
     // Generate lines
@@ -88,8 +109,7 @@ const DashboardHistoryView = ({
       .y((d) => y(d.finishedTodos));
 
     // draw lines
-    svg
-      .append("path")
+    g.append("path")
       .datum(streakHistory)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -97,8 +117,7 @@ const DashboardHistoryView = ({
       .attr("d", line);
 
     // draw points
-    svg
-      .selectAll("circle")
+    g.selectAll("circle")
       .data(streakHistory)
       .join("circle")
       .attr("cx", (d) => x(d.date))
@@ -107,32 +126,24 @@ const DashboardHistoryView = ({
       .attr("fill", "steelblue");
 
     // draw X axis
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${height - margin.bottom})`)
-      .call(xAxis);
+    g.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
 
     // draw Y axis
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left},0)`)
-      .call(yAxis);
+    g.append("g").call(yAxis);
 
     // draw title for X axis
-    svg
-      .append("text")
-      .attr("x", (width - margin.left - margin.right) / 2 + margin.left) // center
-      .attr("y", height - 5)
+    g.append("text")
+      .attr("x", width / 2) // center
+      .attr("y", height + 25)
       .attr("text-anchor", "middle") // text in center
       .attr("font-size", "12px")
       .text("Dates");
 
     // draw title for Y axis
-    svg
-      .append("text")
+    g.append("text")
       .attr("transform", "rotate(-90)") // rotate
-      .attr("x", -(height - margin.top - margin.bottom) / 2 - margin.top) // center
-      .attr("y", 15) // leave space for left
+      .attr("x", -(height / 2)) // center
+      .attr("y", -20) // leave space for left
       .attr("text-anchor", "middle")
       .attr("font-size", "12px")
       .text("Amount of Todos");
@@ -147,14 +158,14 @@ const DashboardHistoryView = ({
               <InsideCardContainerVertical>
                 <InsideCardTitle>Best Streak</InsideCardTitle>
                 <CardImage src={streakImg} alt="Streak" />
-                <InsideCardText>{bestStreak}Days</InsideCardText>
+                <InsideCardText>{bestStreak}-Day Streak</InsideCardText>
               </InsideCardContainerVertical>
             </InsideCard>
             <InsideCard primary>
               <InsideCardContainerVertical>
                 <InsideCardTitle>Current Streak</InsideCardTitle>
                 <CardImage src={streakImg} alt="Streak" />
-                <InsideCardText>{currentStreak}Days</InsideCardText>
+                <InsideCardText>{currentStreak}-Day Streak</InsideCardText>
               </InsideCardContainerVertical>
             </InsideCard>
           </LeftColumnWrapper>
@@ -164,13 +175,9 @@ const DashboardHistoryView = ({
           <RightCardWrapper>
             <InsideCard large>
               <InsideCardTitle>Weekly Progress</InsideCardTitle>
-              <svg
-                ref={svgRef}
-                style={{
-                  height: "100%",
-                  display: "block",
-                }}
-              ></svg>
+              <ChartContainer>
+                <svg ref={svgRef}></svg>
+              </ChartContainer>
             </InsideCard>
           </RightCardWrapper>
         </RightColumn>
@@ -225,4 +232,14 @@ const RightCardWrapper = styled.div`
 const CardImage = styled.img`
   width: 48px;
   height: 48px;
+`;
+
+const ChartContainer = styled.div`
+  overflow-x: auto;
+  overflow-y: auto;
+  border-radius: 20px;
+  svg text {
+    font-family: ${(props) => props.theme.fonts.pixel};
+  }
+  text-transform: uppercase;
 `;
