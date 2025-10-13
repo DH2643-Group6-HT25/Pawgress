@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import cat1 from "../assets/cat_normal_1.png";
 import cat2 from "../assets/cat_normal_2.png";
 import styled from "styled-components";
@@ -16,38 +16,45 @@ export default function SuspenseView() {
   return (
     <MyCard>
       <SuspenseViewContainer>
-        <AnimatePresence mode="wait">
-          {shownImg ? (
-            <SuspenseViewImg
-              key="cat1"
-              src={cat1}
-              alt="loading image 1"
-              transition={{ duration: 0.25 }}
-            />
-          ) : (
-            <SuspenseViewImg
-              key="cat2"
-              src={cat2}
-              alt="loading image 1"
-              transition={{ duration: 0.25 }}
-            />
-          )}
-        </AnimatePresence>
+        <SuspenseViewImg
+          key="cat1"
+          src={cat1}
+          alt="loading image 1"
+          animate={{ opacity: shownImg ? 1 : 0 }}
+          transition={{ duration: 0 }}
+        />
+        <SuspenseViewImg
+          key="cat2"
+          src={cat2}
+          alt="loading image 1"
+          animate={{ opacity: shownImg ? 0 : 1 }}
+          transition={{ duration: 0 }}
+        />
       </SuspenseViewContainer>
     </MyCard>
   );
 }
 
 const SuspenseViewContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
 `;
 
 const SuspenseViewImg = styled(motion.img)`
-  width: 40%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /*Prevent images from being stretched*/
+  width: auto;
   height: auto;
+  max-width: 80%;
+  max-height: 80%;
   object-fit: contain;
 `;
