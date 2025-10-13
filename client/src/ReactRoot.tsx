@@ -3,7 +3,8 @@ import { Provider } from "react-redux";
 import LayoutWrapper from "./components/Wrappers/LayoutWrapper";
 import { WelcomePage } from "./presenters/WelcomePagePresenter";
 import { DashboardPage } from "./presenters/DashboardPagePresenter";
-import { DashboardJournal } from "./presenters/DashboardJournalPresenter";
+import JournalPagePresenter from "./presenters/JournalPagePresenter";
+//import DashboardJournalView from "./views/DashboardJournalView";
 import { DashboardHistory } from "./presenters/DashboardHistoryPresenter";
 import { DashboardAffirmation } from "./presenters/DashboardAffirmationPresenter";
 import { DashboardGuide } from "./presenters/DashboardGuidePresenter";
@@ -57,11 +58,11 @@ const ReactRoot = () => {
           path: "dashboard",
           element: <DashboardPage />,
           children: [
-            { path: "journal", element: <DashboardJournal /> },
+            { path: "journal", element: <JournalPagePresenter /> },
             { path: "history", element: <DashboardHistory /> },
             { path: "affirmation", element: <DashboardAffirmation /> },
             { path: "guide", element: <DashboardGuide /> },
-            { path: "fish", element: <DashboardJournal /> },
+            // { path: "fish", element: <DashboardJournal /> },
           ],
         },
       ],

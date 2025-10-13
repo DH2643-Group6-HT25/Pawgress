@@ -42,18 +42,30 @@ const Editor = styled.div`
 	background: #fff;
 `;
 
-function JournalFormik({ userId }: { userId?: string }) {
+
+interface JournalFormikProps {
+	userId?: string;
+	initialValue?: string;
+	onSave?: (text: string, formatting: any) => Promise<void>;
+}
+
+function JournalFormik({ userId, initialValue = '', onSave }: JournalFormikProps) {
 	const editorRef = useRef<HTMLDivElement>(null);
 
 	const formik = useFormik({
-		initialValues: { journal: '' },
+		initialValues: { journal: initialValue },
+		enableReinitialize: true,
 		onSubmit: async (values, { resetForm }) => {
-			// Skicka journalen som HTML till API
-			await fetch('/api/journal', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ journal: values.journal, user: userId }),
-			});
+			if (onSave) {
+				await onSave(values.journal, undefined); // Skicka med formatting om du har det
+			} else {
+				// Fallback: spara direkt till API
+				await fetch('/api/journal', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ journal: values.journal, user: userId }),
+				});
+			}
 			resetForm();
 			if (editorRef.current) editorRef.current.innerHTML = '';
 		},
@@ -74,25 +86,25 @@ function JournalFormik({ userId }: { userId?: string }) {
 	};
 
 	return (
-    <EditorContainer>
-      <form onSubmit={formik.handleSubmit}>
-        <Toolbar>
-          <MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('bold')}><b>B</b></MyButton>
-          <MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('italic')}><i>I</i></MyButton>
-          <MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('underline')}><u>U</u></MyButton>
-        </Toolbar>
-        <Editor
-          ref={editorRef}
-          contentEditable
-          suppressContentEditableWarning
-          onInput={handleInput}
-          aria-label="Journal text editor"
-        />
-        <MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={formik.isSubmitting}>
-          Save
-        </MyButton>
-      </form>
-    </EditorContainer>
+		<EditorContainer>
+			<form onSubmit={formik.handleSubmit}>
+				<Toolbar>
+					<MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('bold')}><b>B</b></MyButton>
+					<MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('italic')}><i>I</i></MyButton>
+					<MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('underline')}><u>U</u></MyButton>
+				</Toolbar>
+				<Editor
+					ref={editorRef}
+					contentEditable
+					suppressContentEditableWarning
+					onInput={handleInput}
+					aria-label="Journal text editor"
+				/>
+				<MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={formik.isSubmitting}>
+					Save
+				</MyButton>
+			</form>
+		</EditorContainer>
 	);
 }
 
