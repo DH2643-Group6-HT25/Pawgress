@@ -1,8 +1,8 @@
-
-import styled from 'styled-components';
+import styled from "styled-components";
 
 interface CardProps {
   primary?: boolean;
+  large?: boolean;
 }
 
 export const CardIcon = styled.img`
@@ -12,29 +12,30 @@ export const CardIcon = styled.img`
 `;
 
 export const CardTitle = styled.h2`
-    font-family: ${(props) => props.theme.fonts.pixel};
-    text-transform: uppercase;
-    margin-top: 5px;
-    font-size: 1.5rem;
+  font-family: ${(props) => props.theme.fonts.pixel};
+  text-transform: uppercase;
+  margin-top: 5px;
+  font-size: 1.5rem;
 `;
 
 export const InsideCardTitle = styled.h3`
   font-family: ${(props) => props.theme.fonts.pixel}, bold;
   text-transform: uppercase;
   margin-top: 5px;
-  font-size: 1.0rem;
+  font-size: 1rem;
   word-break: break-word;
 `;
 export const InsideCardText = styled.p`
-    font-family: ${(props) => props.theme.fonts.pixel};
-    text-transform: lowercase;
-    margin-top: 5px;
-    font-size: 0.9rem;
-    word-break: break-word;
-    width: 100%;
-    @media (max-width: 600px) {
-      font-size: 0.8rem;
-    }
+  font-family: ${(props) => props.theme.fonts.pixel};
+  text-transform: lowercase;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 0.9rem;
+  word-break: break-word;
+  width: 100%;
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const CardHeader = styled.div`
@@ -44,26 +45,41 @@ export const CardHeader = styled.div`
 `;
 
 export const InsideCardContainer = styled.div`
-  width: 100%;              
-  height: 90%; 
+  width: 100%;
+  height: 90%;
   display: flex;
   flex-direction: row;
 `;
 
 export const InsideCard = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'primary',
+  shouldForwardProp: (prop) => prop !== "primary" && prop !== "large",
 })<CardProps>`
   display: flex;
   flex-direction: column;
   text-align: left;
+  overflow: hidden;
+
+  width: ${(props) =>
+    props.large
+      ? props.theme.size.large_card_width
+      : props.theme.size.small_card_width};
+
+  height: ${(props) =>
+    props.large
+      ? props.theme.size.large_card_heigth
+      : props.theme.size.small_card_height};
+
   width: 100%;
   height: 100%;
   border-radius: ${(props) => props.theme.size.card_border_radius};
-  background-color: ${(props) => (props.primary ? props.theme.colors.light_grey : props.theme.colors.dark_grey)};
+  background-color: ${(props) =>
+    props.primary
+      ? props.theme.colors.light_grey
+      : props.theme.colors.dark_grey};
   color: ${(props) => props.theme.colors.black};
   padding: 10px 20px;
   text-transform: lowercase;
-  margin: 5px 0;   
+  margin: 5px 0;
   box-sizing: border-box;
   @media (max-width: 600px) {
     padding: 8px 6px;
@@ -72,10 +88,10 @@ export const InsideCard = styled.div.withConfig({
 `;
 
 export const MyCard = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'primary',
+  shouldForwardProp: (prop) => prop !== "primary",
 })<CardProps>`
   position: fixed;
-  flex-direction: row; 
+  flex-direction: row;
   right: 100px;
   top: 50%;
   transform: translateY(-50%);
@@ -85,7 +101,8 @@ export const MyCard = styled.div.withConfig({
   max-width: 80vw;
   max-height: 50vh;
   aspect-ratio: 720 / 470;
-  border: ${(props) => props.theme.border.thickness} solid ${(props) => props.theme.colors.black};
+  border: ${(props) => props.theme.border.thickness} solid
+    ${(props) => props.theme.colors.black};
   border-radius: ${(props) => props.theme.size.card_border_radius};
   background-color: ${(props) => props.theme.colors.light_grey};
   color: ${(props) => props.theme.colors.black};
@@ -107,5 +124,3 @@ export const MyCard = styled.div.withConfig({
     aspect-ratio: unset;
   }
 `;
-
-
