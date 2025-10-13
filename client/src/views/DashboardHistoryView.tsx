@@ -10,7 +10,6 @@ import {
   InsideCardTitle,
   InsideCardContainer,
 } from "../components/CardComponents";
-import { theme } from "../components/theme";
 
 interface PropTypes {
   currentStreak: number;
@@ -193,6 +192,7 @@ const InsideCardContainerVertical = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  text-align: center;
   align-items: center;
 `;
 
