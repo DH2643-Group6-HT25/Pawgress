@@ -6,7 +6,7 @@ services:
     container_name: pawgress-client
     volumes:
       - ./client:/client
-      - /client/node_modules
+      - client_node_modules:/client/node_modules
     networks:
       - react-express
     depends_on:
@@ -22,7 +22,7 @@ services:
     container_name: pawgress-server
     volumes:
       - ./server:/server
-      - /server/node_modules
+      - server_node_modules:/server/node_modules
     depends_on:
       - mongo
     networks:
@@ -50,3 +50,4 @@ networks:
 volumes:
   mongo_data:
   client_node_modules:
+  server_node_modules:

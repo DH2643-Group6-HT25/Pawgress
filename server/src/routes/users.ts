@@ -1,6 +1,7 @@
 import express from "express";
 import UserModel from "../model/Users";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -23,14 +24,33 @@ router.post("/login", async (req, res) => {
     if (!valid)
       return res.status(401).json({ error: "Invalid email or password" });
 
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || "your_jwt_secret",
+      { expiresIn: "7d" }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     res.json({
       message: "Login successful",
       user: { name: user.name, email: user.email, id: user._id },
+      hasPet: !!user.pet,
     });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Login failed" });
   }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
 });
 
 router.post("/signup", async (req, res) => {

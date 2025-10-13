@@ -7,9 +7,11 @@ import { DashboardJournal } from "./presenters/DashboardJournalPresenter";
 import { DashboardHistory } from "./presenters/DashboardHistoryPresenter";
 import { DashboardAffirmation } from "./presenters/DashboardAffirmationPresenter";
 import { DashboardGuide } from "./presenters/DashboardGuidePresenter";
-import LoginPage from "./views/LoginPageView"; // <-- add this import
-import SignupPage from "./views/SignupPageView"; // <-- add this import
+import { LoginPage } from "./presenters/LoginPagePresenter";
+import { SignupPage } from "./presenters/SignupPagePresenter";
 import LoadingPage from "./views/LoadingPageView";
+import SuspenseView from "./views/SuspenseView";
+import { OnboardingPage } from "./presenters/OnboardingPagePresenter";
 import { store } from "./models";
 
 function Layout() {
@@ -33,15 +35,23 @@ const ReactRoot = () => {
         },
         {
           path: "login",
-          element: <LoginPage />, // <-- use your login page component here
+          element: <LoginPage />,
         },
         {
           path: "signup",
-          element: <SignupPage />, // <-- use your signup page component here
+          element: <SignupPage />,
         },
         {
           path: "loading",
           element: <LoadingPage />, // <-- use your loading page component here
+        },
+        {
+          path: "onsuspense",
+          element: <SuspenseView />, //TODO: delete it after finishing dashboard
+        },
+        {
+          path: "onboarding",
+          element: <OnboardingPage />,
         },
         {
           path: "dashboard",
@@ -51,6 +61,7 @@ const ReactRoot = () => {
             { path: "history", element: <DashboardHistory /> },
             { path: "affirmation", element: <DashboardAffirmation /> },
             { path: "guide", element: <DashboardGuide /> },
+            { path: "fish", element: <DashboardJournal /> },
           ],
         },
       ],

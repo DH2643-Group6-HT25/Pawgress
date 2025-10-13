@@ -1,44 +1,31 @@
 
 import express from "express";
-import JournalModel from "../model/DailyJournals";
+import * as journalService from "../service/journalService";
 
 const router = express.Router();
 
 // Get all journals for a user, sorted by date desc
 router.get("/", async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.query as { userId?: string };
   if (!userId) return res.status(400).json({ error: "Missing userId" });
-  const journals = await JournalModel.find({ user: userId }).sort({ date: -1 });
+  const journals = await journalService.getJournalsForUser(userId);
   res.json(journals);
 });
 
 // Add or update today's journal for a user (one per day)
 router.post("/", async (req, res) => {
-  const { journal, formatting, user } = req.body;
+  const { journal, formatting, user } = req.body as { journal?: string; formatting?: any; user?: string };
   if (!journal || !user) return res.status(400).json({ error: "Missing fields" });
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
-  // Upsert: if a journal exists for today, update it; else create new
-  const updated = await JournalModel.findOneAndUpdate(
-    { user, date: { $gte: today, $lt: tomorrow } },
-    { journal, formatting, date: new Date(), user },
-    { new: true, upsert: true }
-  );
+  const updated = await journalService.upsertTodayJournal(journal, formatting, user);
   res.status(201).json(updated);
 });
 
-// Edit a journal by ID
+// Edit a journal by ID (only today's journal should be editable in UI)
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { journal, formatting } = req.body;
+  const { journal, formatting } = req.body as { journal?: string; formatting?: any };
   if (!journal) return res.status(400).json({ error: "Missing journal text" });
-  const updated = await JournalModel.findByIdAndUpdate(
-    id,
-    { journal, formatting },
-    { new: true }
-  );
+  const updated = await journalService.editJournal(id, { journal, formatting });
   if (!updated) return res.status(404).json({ error: "Journal not found" });
   res.json(updated);
 });
@@ -46,7 +33,7 @@ router.put("/:id", async (req, res) => {
 // Delete a journal by ID
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  await JournalModel.findByIdAndDelete(id);
+  await journalService.removeJournal(id);
   res.json({ message: "Journal deleted" });
 });
 

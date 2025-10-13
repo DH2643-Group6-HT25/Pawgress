@@ -33,7 +33,7 @@ const DashboardHistoryView = ({
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // remove previous img
 
-    const width = 300;
+    const width = 260;
     const height = 200;
     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 

@@ -1,23 +1,20 @@
 import { Schema, model, Types } from "mongoose";
 
-// Raw document interface. Contains the data type as it will be stored
-// in MongoDB. So you can ObjectId, Buffer, and other custom primitive data types.
-// But no Mongoose document arrays or subdocuments.
 export interface ITodoList {
   todo: string;
   date: Date;
-  userId: Types.ObjectId;
+  userId: Types.ObjectId;        
   order: number;
+  done: boolean;
 }
 
-// Schema
 const Todoschema = new Schema<ITodoList>({
-  todo: { type: String, required: true },
-  date: { type: Date, default: Date.now },
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  order: { type: Number, default: 0 },
+  todo:  { type: String, required: true },
+  date:  { type: Date, default: Date.now },
+  userId:  { type: Schema.Types.ObjectId, ref: "User", required: true }, // ⬅️ user
+  order: { type: Number, default: 1 },
+  done:  { type: Boolean, default: false },
 });
 
-const TodoModel = model("ITodoList", Todoschema);
-
-export default TodoModel;
+Todoschema.index({ userId: 1, order: 1 }); // snabb sortering per user
+export default model<ITodoList>("ITodoList", Todoschema);

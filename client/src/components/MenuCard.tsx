@@ -8,7 +8,7 @@ import {
   CardIcon,
   InsideCardContainer,
 } from './CardComponents'
-import closeIcon from '../assets/close.svg'
+import closeIcon from '../assets/icons/close.svg'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 
@@ -36,18 +36,16 @@ export function MenuCard({
         )}
       </CardHeader>
       <InsideCardContainer>
-        {children && <>{children}</>}
-        {!children && (
+        {children ? children : (
           <>
-            <InsideCard primary>
-              <InsideCardTitle>InsideCardTitle</InsideCardTitle>
-            </InsideCard>
+            <InsideCard primary/>
             <InsideCard>
-              <InsideCardText>Text normal and small</InsideCardText>
+                <InsideCardTitle>InsideCardTitle</InsideCardTitle>
+                <InsideCardText>Text normal and small</InsideCardText>
             </InsideCard>
-          </>
+        </>
         )}
       </InsideCardContainer>
     </MyCard>
-  )
+  );
 }
