@@ -7,32 +7,31 @@ import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
 import PetSateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
+import type { DashboardState } from '../maps/dashboardMap'
 
-interface PropTypes {
-  petName: string
+interface PropTypes extends DashboardState {
+  loading: boolean
 }
 
-function DashboardPageView({ petName }: PropTypes) {
+function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {
   return (
     <DashboardWrapper>
-      <Header primary/>
-      <PetSateHeader></PetSateHeader>
+      <Header primary />
+      <PetSateHeader name={petName} health={petHealth} />
       <DashboardBody>
         <LeftDashboard>
-          <ToDoListCard/>
+          <ToDoListCard />
         </LeftDashboard>
         <MiddleDashboard>
-          <h3>{petName}</h3>
           <Outlet />
         </MiddleDashboard>
         <RightDashboard>
           <DashboardMenu />
         </RightDashboard>
-        
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
-          <MyPet src={cat} alt='pet_image' />
+          <MyPet src={cat} color={petColor} alt="pet_image" />
         </PetContainer>
       </DashboardCatFooter>
       <Footer />
@@ -48,7 +47,7 @@ const LeftDashboard = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-`;
+`
 
 const MiddleDashboard = styled.div`
   flex: 1 1 55%;
@@ -62,7 +61,7 @@ const RightDashboard = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-`;
+`
 
 const DashboardBody = styled.div`
   display: flex;

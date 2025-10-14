@@ -1,8 +1,7 @@
-
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 interface ButtonProps {
-  primary?: boolean;
+  primary?: boolean
 }
 
 export const MyButton = styled.button.withConfig({
@@ -33,7 +32,7 @@ export const MyButton = styled.button.withConfig({
   &:hover {
     filter: brightness(1.1);
   }
-  
-`;
-
-
+  &:disabled {
+    box-shadow: 1px 1px 0 0 ${(props) => props.theme.colors.black}};
+  }
+`

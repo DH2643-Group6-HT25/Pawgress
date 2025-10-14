@@ -1,7 +1,5 @@
 import moment from 'moment'
 import { createPet, getPetById, getPetByUserId } from '../repository/petRepo'
-import { findUserById, updateUser } from '../repository/usersRepo'
-import { ObjectId } from 'mongoose'
 
 const updatePetHealth = () => {}
 

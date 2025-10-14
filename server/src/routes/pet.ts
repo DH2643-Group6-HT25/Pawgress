@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       throw new NoPetFoundError(`No pet with id: ${id}`)
     }
     res.status(200).json({ pet })
-  } catch (err) {
+  } catch (err: any) {
     if (err instanceof NoPetFoundError) {
       res.status(404).json({ error: err.message })
     }
@@ -30,17 +30,17 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/create', async (req, res) => {
-  const decoded = decodeAuth(req)
+  const userId = decodeAuth(req)
 
-  if (decoded && decoded['userId']) {
+  if (userId) {
     const {
       body: { color, name },
     } = req
 
     try {
-      const pet = await assignPet(decoded['userId'], color, name)
+      const pet = await assignPet(userId, color, name)
       res.status(200).json({ pet })
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({ error: err.message || 'Server error' })
     }
   } else {

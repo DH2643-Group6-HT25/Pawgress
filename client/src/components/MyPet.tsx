@@ -38,12 +38,12 @@ const petFilter: PetFilter = {
 interface PropTypes {
   src?: string
   health?: number
-  color?: keyof PetFilter
+  color: string | null
   alt?: string
 }
 export function MyPet({ src, health, color }: PropTypes) {
   const imageSrc = src ?? happyCat
-  const filter = color ? petFilter[color] : 'none'
+  const filter = color ? petFilter[color as keyof PetFilter] : 'none'
   if (health) {
     if (health >= 75) {
       return <ImgPet $filter={filter} src={happyCat} />
