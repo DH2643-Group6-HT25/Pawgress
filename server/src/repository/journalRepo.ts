@@ -1,5 +1,9 @@
+
 import JournalModel, { IDailyJournal } from "../model/DailyJournals";
 import { FilterQuery, Types, UpdateQuery } from "mongoose";
+
+export const findById = (id: string) =>
+  JournalModel.findById(id).lean();
 
 export const findByUser = (userId: Types.ObjectId) =>
   JournalModel.find({ userId }).sort({ date: -1 }).lean();
@@ -12,9 +16,6 @@ export const create = (doc: Partial<IDailyJournal>) =>
 
 export const findOneAndUpdate = (filter: FilterQuery<IDailyJournal>, update: UpdateQuery<IDailyJournal>) =>
   JournalModel.findOneAndUpdate(filter, update, { new: true, upsert: true }).lean();
-
-export const findByIdAndUpdate = (id: string, update: UpdateQuery<IDailyJournal>) =>
-  JournalModel.findByIdAndUpdate(id, update, { new: true }).lean();
 
 export const findByIdAndDelete = (id: string) =>
   JournalModel.findByIdAndDelete(id).lean();

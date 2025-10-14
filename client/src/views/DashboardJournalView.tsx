@@ -1,4 +1,4 @@
-import { InsideCard, InsideCardContainer, InsideCardText } from '../components/CardComponents'
+import { InsideCard, InsideCardContainer } from '../components/CardComponents'
 import JournalFormik from '../components/JournalFormik'
 import { MenuCard } from '../components/MenuCard'
 
