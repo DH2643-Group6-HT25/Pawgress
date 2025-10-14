@@ -7,6 +7,7 @@ export interface IPet {
   name: string
   color: string
   health: number
+  lastUpdate: Date
   userId: Types.ObjectId
 }
 
@@ -15,6 +16,7 @@ const Petschema = new Schema<IPet>({
   name: { type: String, required: true, unique: true, trim: true },
   color: { type: String, required: true, enum: ['red', 'pink', 'green'] },
   health: { type: Number, required: true },
+  lastUpdate: { type: Date },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 })
 

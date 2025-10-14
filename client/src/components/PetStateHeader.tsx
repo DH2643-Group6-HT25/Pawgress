@@ -1,8 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 import streakIcon from '../assets/streak.png'
 import heartIcon from '../assets/heart_5.png'
-
 
 const HeaderWrapper = styled.header`
   width: 100%;
@@ -13,7 +12,7 @@ const HeaderWrapper = styled.header`
   justify-content: center;
   gap: 5px;
   margin-top: 30px;
-`;
+`
 
 const Name = styled.p`
   font-size: 1.3rem;
@@ -24,13 +23,13 @@ const Name = styled.p`
   background: none;
   border: none;
   text-align: center;
-`;
+`
 
 const StateIcon = styled.img`
   width: 28px;
   height: 28px;
   margin: 0 4px;
-`;
+`
 
 const StateWrapper = styled.div`
   display: flex;
@@ -43,21 +42,25 @@ const StateWrapper = styled.div`
   border: none;
   padding: 0 12px;
   gap: 6px;
-`;
+`
 
+interface PropTypes {
+  name: string
+  health: number
+}
 
-const PetStateHeader = () => {
+const PetStateHeader = ({ name, health }: PropTypes) => {
   return (
     <HeaderWrapper>
-      <Name>Pelle</Name>
+      <Name>{name}</Name>
       <StateWrapper>
         <StateIcon src={heartIcon} alt="Heart" />
-        <span>100%</span>
+        <span>{health}%</span>
         <StateIcon src={streakIcon} alt="Streak" />
         <span>4 days</span>
       </StateWrapper>
     </HeaderWrapper>
-  );
-};
+  )
+}
 
-export default PetStateHeader;
+export default PetStateHeader

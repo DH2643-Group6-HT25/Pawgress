@@ -1,12 +1,12 @@
 import type { RootState } from '../models'
 import type { TodoObject } from '../models/todo/type'
 
-interface DashboardState {
+export interface DashboardState {
   todos: Array<TodoObject>
   currentUser: string
   petName: string
   petHealth: number
-  petColor: string
+  petColor: string | null
 }
 
 export function mapStateToDashboardProps(state: RootState): DashboardState {
