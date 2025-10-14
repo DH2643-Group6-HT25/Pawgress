@@ -2,7 +2,7 @@ import styled from "styled-components";
 import cat1 from "../assets/cat_happy_1.png";
 import cat2 from "../assets/cat_happy_2.png";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 function DashboardPageView() {
   const [shownImg, setShownImg] = useState(true);
@@ -16,23 +16,22 @@ function DashboardPageView() {
     <Wrapper>
       <Content>
         <Headline>Loading ...</Headline>
-        <AnimatePresence mode="wait">
-          {shownImg ? (
-            <MyPet
-              key="cat1"
-              src={cat1}
-              alt="loading image 1"
-              transition={{ duration: 0.25 }}
-            />
-          ) : (
-            <MyPet
-              key="cat2"
-              src={cat2}
-              alt="loading image 1"
-              transition={{ duration: 0.25 }}
-            />
-          )}
-        </AnimatePresence>
+        <AnimContainer>
+          <MyPet
+            key="cat1"
+            src={cat1}
+            alt="loading image 1"
+            animate={{ opacity: shownImg ? 1 : 0 }}
+            transition={{ duration: 0 }}
+          />
+          <MyPet
+            key="cat2"
+            src={cat2}
+            alt="loading image 1"
+            animate={{ opacity: shownImg ? 0 : 1 }}
+            transition={{ duration: 0 }}
+          />
+        </AnimContainer>
         <AffirmationCard>Here you will have an affirmation</AffirmationCard>
       </Content>
     </Wrapper>
@@ -58,10 +57,25 @@ const Headline = styled.h1`
   letter-spacing: -0.02em;
   margin: 0 0 16px 0;
 `;
+
+const AnimContainer = styled.div`
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const MyPet = styled(motion.img)`
-  max-width: 10%;
-  height: auto;
-  margin: 16px 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
 `;
 const AffirmationCard = styled.div`
   text-align: center;

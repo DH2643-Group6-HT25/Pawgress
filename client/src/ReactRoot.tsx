@@ -7,8 +7,8 @@ import { DashboardJournal } from "./presenters/DashboardJournalPresenter";
 import { DashboardHistory } from "./presenters/DashboardHistoryPresenter";
 import { DashboardAffirmation } from "./presenters/DashboardAffirmationPresenter";
 import { DashboardGuide } from "./presenters/DashboardGuidePresenter";
-import { LoginPage } from "./presenters/LoginPagePresenter"; 
-import { SignupPage } from "./presenters/SignupPagePresenter"; 
+import { LoginPage } from "./presenters/LoginPagePresenter";
+import { SignupPage } from "./presenters/SignupPagePresenter";
 import LoadingPage from "./views/LoadingPageView";
 import SuspenseView from "./views/SuspenseView";
 import { OnboardingPage } from "./presenters/OnboardingPagePresenter";
@@ -35,11 +35,11 @@ const ReactRoot = () => {
         },
         {
           path: "login",
-          element: <LoginPage />, 
+          element: <LoginPage />,
         },
         {
           path: "signup",
-          element: <SignupPage />, 
+          element: <SignupPage />,
         },
         {
           path: "loading",

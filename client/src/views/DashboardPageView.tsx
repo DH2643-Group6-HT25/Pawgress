@@ -31,7 +31,7 @@ function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
-          <MyPet src={cat} color={petColor} alt="pet_image" />
+          <MyPet src={cat} color={petColor} />
         </PetContainer>
       </DashboardCatFooter>
       <Footer />
@@ -82,9 +82,10 @@ const Footer = styled.div`
 `
 const DashboardCatFooter = styled.div`
   position: fixed;
-  bottom: 10%;
+  bottom: 20px;
   left: 0;
   width: 100%;
+  height: 120px;
   display: flex;
   justify-content: center;
   z-index: 2;
