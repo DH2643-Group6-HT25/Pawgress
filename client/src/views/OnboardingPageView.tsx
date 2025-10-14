@@ -1,5 +1,5 @@
 import { MyButton } from '../components/MyButton'
-import { MyPet } from '../components/MyPet'
+import { MyPet, PetContainer } from '../components/MyPet'
 import CenteredWrapper from '../components/Wrappers/CenteredWrapper'
 import { Field, Form, Formik, type FormikHelpers } from 'formik'
 import type { OnboardingDispatch, OnboardingState } from '../maps/onboardingMap'
@@ -20,7 +20,9 @@ function OnboardingPageView({
     <CenteredWrapper>
       <h1>Welcome To Pawgress!</h1>
       <h3>This is your pet</h3>
-      <MyPet alt="pet-image" health={50} />
+      <PetContainer>
+        <MyPet color={petColor} alt="pet-image" health={50} />
+      </PetContainer>
       <Formik
         initialValues={{
           petName: petName,

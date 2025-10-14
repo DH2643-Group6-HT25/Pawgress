@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router'
 import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import styled from 'styled-components'
-import cat from '../assets/cat_happy_1.png'
 import { MyPet, PetContainer } from '../components/MyPet'
 import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
@@ -31,7 +30,7 @@ function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
-          <MyPet src={cat} color={petColor} />
+          <MyPet health={petHealth} color={petColor} />
         </PetContainer>
       </DashboardCatFooter>
       <Footer />
