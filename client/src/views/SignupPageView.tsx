@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import { useMemo } from "react";
+import { Navigate } from "react-router-dom";
 import Header from "../components/Header";
 import { MyButton } from "../components/MyButton";
 import {
@@ -24,7 +25,8 @@ export type SignupPageViewProps = {
   password: string;
   setPassword: (v: string) => void;
   msg: string;
-  handleSubmit: (e: FormEvent) => void;
+  loggedIn: boolean;
+  handleSubmit: (e: FormEvent, email: string, password: string, name: string) => void;
 };
 
 export const SignupPageView: React.FC<SignupPageViewProps> = ({
@@ -35,6 +37,7 @@ export const SignupPageView: React.FC<SignupPageViewProps> = ({
   password,
   setPassword,
   msg,
+  loggedIn,
   handleSubmit,
 }) => {
   // Generate positions only once (UI concern is fine here)
@@ -47,6 +50,10 @@ export const SignupPageView: React.FC<SignupPageViewProps> = ({
     []
   );
 
+  if (loggedIn) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
   return (
     <Background>
       <SquaresContainer>
@@ -57,7 +64,7 @@ export const SignupPageView: React.FC<SignupPageViewProps> = ({
       <Header />
       <Card>
         <Title>Sign Up</Title>
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm onSubmit={(e) => handleSubmit(e, email, password, name)}>
           <div>
             <Label htmlFor="name">User Name</Label>
             <Input
