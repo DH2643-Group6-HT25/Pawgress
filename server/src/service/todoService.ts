@@ -12,10 +12,11 @@ export async function getTodosForUser(userId: string) {
 }
 
 export async function createTodoAtTop(todo: string, userId: string) {
+  console.log("createTodoAtTop called with:", { todo, userId }); 
   if (!todo?.trim()) throw new Error("todo required");
   const uid = toObjId(userId);
   await todoRepo.updateMany({ userId: uid }, { $inc: { order: 1 } });
-  return todoRepo.create({ todo, userId: uid, order: 1 });
+  return todoRepo.create({ todo, userId: uid, order: 0 });
 }
 
 export async function editTodo(
@@ -30,11 +31,30 @@ export async function editTodo(
   return todoRepo.findByIdAndUpdate(_id.toString(), { $set: update });
 }
 
-export async function updateTodoOrder(id: string, userId: string, order: number) {
+export async function updateTodoOrder(
+  id: string,
+  userId: string,
+  order: number
+) {
   if (!Number.isFinite(order)) throw new Error("order must be a number");
-  toObjId(userId);              
   const _id = toObjId(id);
+  toObjId(userId); 
   return todoRepo.findByIdAndUpdate(_id.toString(), { $set: { order } });
+}
+
+export async function bulkReorder(
+  userId: string,
+  updates: { id: string; order: number }[]
+) {
+  const uid = toObjId(userId);
+  const ops = updates.map(u => ({
+    updateOne: {
+      filter: { _id: toObjId(u.id), userId: uid },
+      update: { $set: { order: u.order } },
+    }
+  }));
+  if (ops.length) await todoRepo.bulkWrite(ops as any[]);
+  return todoRepo.findByUser(uid);
 }
 
 export async function removeTodo(id: string) {
