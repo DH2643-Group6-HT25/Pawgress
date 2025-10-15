@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Navigate } from "react-router-dom";
 import Header from "../components/Header";
 import { MyButton } from "../components/MyButton";
 import {
@@ -21,7 +22,8 @@ export type LoginPageViewProps = {
   password: string;
   setPassword: (v: string) => void;
   msg: string;
-  handleSubmit: (e: React.FormEvent) => void;
+  loggedIn: boolean;
+  handleSubmit: (e: React.FormEvent, email: string, password: string) => void;
 };
 
 const LoginPageView: React.FC<LoginPageViewProps> = ({
@@ -30,6 +32,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
   password,
   setPassword,
   msg,
+  loggedIn,
   handleSubmit,
 }) => {
   const squares = useMemo(
@@ -41,6 +44,10 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
     []
   );
 
+  if (loggedIn) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <Background>
       <SquaresContainer>
@@ -51,7 +58,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
       <Header />
       <Card>
         <Title>Login</Title>
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm onSubmit={(e) => handleSubmit(e, email, password)}>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
