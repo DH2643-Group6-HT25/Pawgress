@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export interface BasicPetInfo {
   name: string | null
-  color: string | null
+  color: string
 }
 interface PetState extends BasicPetInfo {
   health: number | null
@@ -13,7 +13,7 @@ interface PetState extends BasicPetInfo {
 
 const initialState: PetState = {
   name: null,
-  color: null,
+  color: 'black',
   health: null,
   maxHealth: 100,
   loading: false,

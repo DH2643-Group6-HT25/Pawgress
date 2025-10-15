@@ -3,7 +3,7 @@ import { createPetThunk } from '../models/pet/petThunks'
 
 export interface OnboardingState {
   petName: string
-  petColor: string | null
+  petColor: string
   isLoading: boolean
 }
 
