@@ -1,19 +1,30 @@
 import CenteredWrapper from '../components/Wrappers/CenteredWrapper'
-import { Formik, type FormikHelpers } from 'formik'
+import {
+  ErrorMessage,
+  Field,
+  Form,
+  Formik,
+  type FormikHelpers,
+  type FormikProps,
+} from 'formik'
 import type { OnboardingDispatch, OnboardingState } from '../maps/onboardingMap'
-import { PetSettingForm } from '../components/Pet/PetSettingForm'
+import { MyPet, PetContainer } from '../components/MyPet'
+import { MyButton } from '../components/MyButton'
+import { Input } from '../components/AuthUI'
 
 interface PropTypes extends OnboardingState, OnboardingDispatch {}
 interface Values {
   petName: string
   colorChoice: string
   isLoading: boolean
+  petError: string | null
 }
 
 function OnboardingPageView({
   petName,
   petColor,
   isLoading,
+  petError,
   submitPetInfoACB,
 }: PropTypes) {
   return (
@@ -25,10 +36,53 @@ function OnboardingPageView({
           petName: petName,
           colorChoice: petColor,
           isLoading: isLoading,
+          petError: petError,
         }}
         onSubmit={handleNativeOnSubmit}
+        validate={handleValidate}
       >
-        {PetSettingForm}
+        {({ values }: FormikProps<Values>) => (
+          <>
+            <PetContainer>
+              <MyPet
+                color={values.colorChoice || 'black'}
+                alt="pet-image"
+                health={50}
+              />
+            </PetContainer>
+            <Form>
+              <label htmlFor="petName">How do you want to name your pet?</label>
+              <br />
+              <Field id="petName" name="petName" placeholder="" as={Input} />
+              <br />
+              <ErrorMessage name="petName" component="div" />
+              <br />
+              <div>Choose color for your pet</div>
+              <div role="group" aria-labelledby="colorChoice" id="colorChoice">
+                <label>
+                  <Field type="radio" name="colorChoice" value="black" />
+                  Black
+                </label>
+                <label>
+                  <Field type="radio" name="colorChoice" value="red" />
+                  Red
+                </label>
+                <label>
+                  <Field type="radio" name="colorChoice" value="pink" />
+                  Pink
+                </label>
+                <label>
+                  <Field type="radio" name="colorChoice" value="green" />
+                  Green
+                </label>
+              </div>
+              <MyButton primary type="submit" disabled={isLoading}>
+                {isLoading ? 'Loading...' : 'Save'}
+              </MyButton>
+              {petError != null && <div>{petError}</div>}
+            </Form>
+          </>
+        )}
       </Formik>
     </CenteredWrapper>
   )
@@ -38,6 +92,14 @@ function OnboardingPageView({
   ) {
     await submitPetInfoACB(values.petName, values.colorChoice)
     if (!isLoading) setSubmitting(false)
+  }
+
+  function handleValidate(values: Values) {
+    const errors: { petName?: string } = {}
+    if (!values.petName) {
+      errors.petName = 'Pet Name Required'
+    }
+    return errors
   }
 }
 

@@ -9,7 +9,7 @@ import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardState } from '../maps/dashboardMap'
 
 interface PropTypes extends DashboardState {
-  loading: boolean
+  loading?: boolean
 }
 
 function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {

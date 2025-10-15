@@ -13,7 +13,7 @@ export interface IPet {
 
 // Schema
 const Petschema = new Schema<IPet>({
-  name: { type: String, required: true, unique: true, trim: true },
+  name: { type: String, required: true, trim: true },
   color: {
     type: String,
     required: true,
