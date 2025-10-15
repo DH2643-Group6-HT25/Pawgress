@@ -1,10 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
+import { connect } from "react-redux";
+import {
+  mapStateToHeaderProps,
+  mapDispatchToHeaderProps,
+} from "../maps/headerMap";
 
 
 interface HeaderProps {
   primary?: boolean;
+  loggedIn?: boolean;
   onLogout?: () => void;
 }
 
@@ -42,7 +48,7 @@ const Logout = styled.div`
   font-weight: 500;
 `;
 
-const Header: React.FC<HeaderProps> = ({ primary, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ primary, loggedIn, onLogout }) => {
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -65,7 +71,12 @@ const Header: React.FC<HeaderProps> = ({ primary, onLogout }) => {
     </HeaderWrapper>
   );
 };
-export default Header;
+const ConnectedHeader = connect(
+  mapStateToHeaderProps,
+  mapDispatchToHeaderProps
+)(Header);
+
+export default ConnectedHeader;
 
 
 
