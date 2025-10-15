@@ -1,8 +1,9 @@
 
-import React, { useRef } from 'react';
-import { useFormik } from 'formik';
+import React, { useRef, useState } from 'react';
+// Ingen formik-hook behövs
 import styled from 'styled-components';
 import { MyButton } from './MyButton';
+
 
 export const EditorContainer = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const Toolbar = styled.div`
 const Editor = styled.div`
 	display: flex;
 	width: 90%;
-  height: 100%; 
+  height: 30%; 
 	border: 2px solid ${(props) => props.theme.colors.black};
 	border-radius: 6px;
 	padding: 8px;
@@ -42,60 +43,129 @@ const Editor = styled.div`
 	background: #fff;
 `;
 
-function JournalFormik({ userId }: { userId?: string }) {
-	const editorRef = useRef<HTMLDivElement>(null);
 
-	const formik = useFormik({
-		initialValues: { journal: '' },
-		onSubmit: async (values, { resetForm }) => {
-			// Skicka journalen som HTML till API
-			await fetch('/api/journal', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ journal: values.journal, user: userId }),
+import type { Journal } from '../models/journal/journalType';
+
+interface Props {
+	userId?: string;
+	today?: Journal | null;
+	loading?: boolean;
+	error?: string | null;
+	saveJournalEntry?: (data: any) => void;
+}
+
+
+export default function JournalFormik({ userId, today, loading, error, saveJournalEntry }: Props) {
+	const editorRef = useRef<HTMLDivElement>(null);
+	const [image, setImage] = useState<File | null>(null);
+	const [imagePreview, setImagePreview] = useState<string | null>(today?.imageUrl || null);
+	const [formatting, setFormatting] = useState<any[]>([]); // [{start, end, type}]
+	const [success, setSuccess] = useState(false);
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		setSuccess(false);
+		const data = {
+			journal: editorRef.current?.innerHTML || '',
+			userId: userId || today?.userId || '',
+			formatting,
+			...(image ? { image } : {}),
+		};
+		if (typeof saveJournalEntry === 'function') {
+			Promise.resolve(saveJournalEntry(data)).then(() => {
+				setSuccess(true);
+				setImage(null);
+				setImagePreview(null);
+				setFormatting([]);
+				if (editorRef.current) editorRef.current.innerHTML = '';
 			});
-			resetForm();
-			if (editorRef.current) editorRef.current.innerHTML = '';
-		},
-	});
+		}
+	};
 
 	// Hantera rich text-formattering
 	const handleFormat = (cmd: 'bold' | 'italic' | 'underline') => {
 		document.execCommand(cmd, false);
-		// Uppdatera Formik med HTML
 		if (editorRef.current) {
-			formik.setFieldValue('journal', editorRef.current.innerHTML);
+			// Spara formateringsinfo (exempel: hela texten får formatet)
+			const selection = window.getSelection();
+			if (selection && selection.rangeCount > 0) {
+				const range = selection.getRangeAt(0);
+				setFormatting(prev => ([
+					...prev,
+					{
+						start: range.startOffset,
+						end: range.endOffset,
+						type: cmd
+					}
+				]));
+			}
 		}
 	};
 
-	// Hantera input i contentEditable
-	const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-		formik.setFieldValue('journal', e.currentTarget.innerHTML);
+	// Hantera input i contentEditable (kan användas för framtida validering)
+	const handleInput = (_e: React.FormEvent<HTMLDivElement>) => {
+		// Kan lägga till validering här om du vill
+	};
+
+	// Hantera bildval och preview
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files && e.target.files[0];
+		if (file) {
+			setImage(file);
+			setImagePreview(URL.createObjectURL(file));
+		} else {
+			setImage(null);
+			setImagePreview(null);
+		}
 	};
 
 	return (
-    <EditorContainer>
-      <form onSubmit={formik.handleSubmit}>
-        <Toolbar>
-          <MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('bold')}><b>B</b></MyButton>
-          <MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('italic')}><i>I</i></MyButton>
-          <MyButton style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={() => handleFormat('underline')}><u>U</u></MyButton>
-        </Toolbar>
-        <Editor
-          ref={editorRef}
-          contentEditable
-          suppressContentEditableWarning
-          onInput={handleInput}
-          aria-label="Journal text editor"
-        />
-        <MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={formik.isSubmitting}>
-          Save
-        </MyButton>
-      </form>
-    </EditorContainer>
+		<EditorContainer>
+			<form onSubmit={handleSubmit}>
+				<Toolbar>
+					<MyButton type="button" style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={e => { e.preventDefault(); handleFormat('bold'); }}><b>B</b></MyButton>
+					<MyButton type="button" style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={e => { e.preventDefault(); handleFormat('italic'); }}><i>I</i></MyButton>
+					<MyButton type="button" style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} onClick={e => { e.preventDefault(); handleFormat('underline'); }}><u>U</u></MyButton>
+				</Toolbar>
+				<Editor
+					ref={editorRef}
+					contentEditable
+					suppressContentEditableWarning
+					onInput={handleInput}
+					aria-label="Journal text editor"
+				/>
+				<div style={{ margin: '10px 0' }}>
+					<input
+						type="file"
+						accept="image/*"
+						id="journal-image-upload"
+						style={{ display: 'none' }}
+						onChange={handleImageChange}
+					/>
+					<label htmlFor="journal-image-upload">
+						<MyButton type="button" as="span" style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}}>
+							{image ? 'Change Image' : 'Upload Image'}
+						</MyButton>
+					</label>
+					{imagePreview && (
+						<div style={{ marginTop: 8 }}>
+							<img src={imagePreview} alt="Preview" style={{ maxWidth: 120, maxHeight: 120, borderRadius: 8, border: '1px solid #ccc' }} />
+						</div>
+					)}
+				</div>
+				<MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={loading}>
+					{loading ? 'Saving...' : 'Save'}
+				</MyButton>
+				{error && (
+					<div style={{ marginTop: 8, color: 'red', fontSize: '0.9em' }}>{error}</div>
+				)}
+				{success && !error && (
+					<div style={{ marginTop: 8, color: 'green', fontSize: '0.9em' }}>Journal saved!</div>
+				)}
+			</form>
+		</EditorContainer>
 	);
 }
 
-export default JournalFormik;
 
 

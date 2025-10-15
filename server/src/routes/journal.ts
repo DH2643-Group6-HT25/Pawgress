@@ -19,31 +19,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Upload or replace today's journal image
-router.post("/image", upload.single("image"), async (req, res) => {
-  try {
-    const { user } = req.body;
-    const file = (req as any).file;
-    if (!user || !file) {
-      // Delete uploaded file if present but validation fails
-      if (file && file.path) {
-        fs.unlink(file.path, () => {});
-      }
-      return res.status(400).json({ error: "Missing user or image" });
-    }
-    const imageUrl = `/images/uploads/${file.filename}`;
-    const updated = await journalService.upsertTodayJournalImage(user, imageUrl);
-    res.status(201).json(updated);
-  } catch (err) {
-    // Delete uploaded file if error
-    const file = (req as any).file;
-    if (file && file.path) {
-      fs.unlink(file.path, () => {});
-    }
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
 
 // Get all journals for a user, sorted by date desc
 router.get("/", async (req, res) => {
@@ -59,15 +34,25 @@ router.get("/", async (req, res) => {
 
 // Add or update today's journal for a user (one per day), with optional image
 router.post("/", upload.single("image"), async (req, res) => {
+  console.log('POST /journal body:', req.body);
+  if ((req as any).file) {
+    console.log('POST /journal file:', (req as any).file.originalname, (req as any).file.mimetype);
+  }
   let file;
   try {
-    const { journal, formatting, user } = req.body as { journal?: string; formatting?: any; user?: string };
+    const { journal, formatting, userId } = req.body as { journal?: string; formatting?: any; userId?: string };
     file = (req as any).file;
-    if (!journal || !user) {
+    // Kontrollera att userId är en giltig ObjectId-sträng
+    console.log('POST /journal userId:', userId, 'typeof:', typeof userId);
+    const isValidObjectId = userId && typeof userId === 'string' && userId.match(/^[a-f\d]{24}$/i);
+    if (!journal) console.log('Validation fail: journal saknas eller tom');
+    if (!userId) console.log('Validation fail: userId saknas eller tom');
+    if (!isValidObjectId) console.log('Validation fail: userId är inte giltig ObjectId');
+    if (!journal || !userId || !isValidObjectId) {
       if (file && file.path) {
         fs.unlink(file.path, () => {});
       }
-      return res.status(400).json({ error: "Missing fields" });
+      return res.status(400).json({ error: "Missing or invalid fields" });
     }
     // Only allow upsert for today's journal
     let imageUrl;
@@ -86,12 +71,17 @@ router.post("/", upload.single("image"), async (req, res) => {
         return res.status(400).json({ error: "Invalid formatting" });
       }
     }
-    const updated = await journalService.upsertTodayJournal(journal, parsedFormatting, user, imageUrl);
+    // Se till att formatting alltid är en array
+    if (!Array.isArray(parsedFormatting)) {
+      parsedFormatting = [];
+    }
+    const updated = await journalService.upsertTodayJournal(journal, parsedFormatting, userId, imageUrl);
     res.status(201).json(updated);
   } catch (err) {
     if (file && file.path) {
       fs.unlink(file.path, () => {});
     }
+    console.error('Journal POST error:', err); // Logga stacktrace
     res.status(500).json({ error: "Internal server error" });
   }
 });

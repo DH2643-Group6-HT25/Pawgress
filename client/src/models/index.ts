@@ -4,6 +4,7 @@ import userReducer from "./user/userReducer";
 import petReducer from "./pet/petReducer";
 import streakReducer from "./streak/streakReducer";
 import affirmationReducer from "./affirmation/affirmationReducer";
+import journalReducer from "./journal/journalReducer";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     pet: petReducer,
     streak: streakReducer,
     affirmation: affirmationReducer,
+    journal: journalReducer,
   },
 });
 

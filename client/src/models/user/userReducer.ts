@@ -55,6 +55,7 @@ export const userSlice = createSlice({
         state.loading = false
         state.msg = action.payload.message || 'Login successful'
         state.loggedIn = true
+        state.userID = action.payload.user?.id || null;
       })
       .addCase(userLoginThunk.rejected, (state, action) => {
         state.loading = false
@@ -68,6 +69,7 @@ export const userSlice = createSlice({
         state.loading = false
         state.msg = action.payload.message || 'Signup successful'
         state.loggedIn = true
+        state.userID = action.payload.user?.id || null;
       })
       .addCase(userSignupThunk.rejected, (state, action) => {
         state.loading = false
