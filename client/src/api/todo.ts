@@ -1,39 +1,39 @@
-export async function getTodos(userId: string) {
-  const res = await fetch(`/todo?userId=${userId}`);
-  return res.json();
+const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
+
+export async function getTodos() {
+  const r = await fetch(`${BASE}/todo`, { credentials: "include" });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 
-export async function addTodo(todo: string, user: string) {
-  const res = await fetch("/todo", {
+export async function addTodo(name: string) {
+  console.log("API addTodo →", name);
+  const r = await fetch(`${BASE}/todo`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ todo, user }),
+    credentials: "include",
+    body: JSON.stringify({ todo: name }),
   });
-  return res.json();
+  console.log("API addTodo status ←", r.status);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
 }
 
 export async function deleteTodo(id: string) {
-  const res = await fetch(`/todo/${id}`, { method: "DELETE" });
-  return res.json();
+  const r = await fetch(`${BASE}/todo/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!r.ok) throw new Error(await r.text());
 }
 
-export async function updateTodo(
-  id: string,
-  data: { todo?: string; done?: boolean }
-) {
-  const res = await fetch(`/todo/${id}`, {
+export async function reorderTodos(items: { id: string; order: number }[]) {
+  const r = await fetch(`${BASE}/todo/reorder`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    credentials: "include",
+    body: JSON.stringify({ items }),
   });
-  return res.json();
-}
-
-export async function updateTodoOrder(id: string, order: number) {
-  const res = await fetch(`/todo/${id}/order`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ order }),
-  });
-  return res.json();
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
 }
