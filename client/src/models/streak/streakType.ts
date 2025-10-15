@@ -1,4 +1,4 @@
 export interface StreakHistoryObject {
-  date: Date;
-  finishedTodos: number;
+  date: string
+  finishedTodos: number
 }
