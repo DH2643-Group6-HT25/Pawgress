@@ -1,10 +1,11 @@
-import type { AppDispatch, RootState } from '../models'
+import type { AppThunkDispatch, RootState } from '../models'
 import { createPetThunk } from '../models/pet/petThunks'
 
 export interface OnboardingState {
   petName: string
-  petColor: string | null
+  petColor: string
   isLoading: boolean
+  petError: string | null
 }
 
 export function mapStateToOnboardingProps(state: RootState): OnboardingState {
@@ -12,6 +13,7 @@ export function mapStateToOnboardingProps(state: RootState): OnboardingState {
     petName: state.pet.name ?? '',
     petColor: state.pet.color,
     isLoading: state.pet.loading,
+    petError: state.pet.error,
   }
 }
 
@@ -20,7 +22,7 @@ export interface OnboardingDispatch {
 }
 
 export function mapDispatchToOnboardingProps(
-  dispatch: AppDispatch
+  dispatch: AppThunkDispatch
 ): OnboardingDispatch {
   return {
     submitPetInfoACB(name: string, color: string) {

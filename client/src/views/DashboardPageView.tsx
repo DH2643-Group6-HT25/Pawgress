@@ -8,7 +8,6 @@ import PetSateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardState } from '../maps/dashboardMap'
 
-
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
   display: flex;
