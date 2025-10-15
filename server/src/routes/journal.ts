@@ -20,8 +20,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-
-
 // Get all journals for a user, sorted by date desc
 router.get("/", async (req, res) => {
   try {

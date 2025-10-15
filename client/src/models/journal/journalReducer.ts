@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Journal } from './journalType';
-import { saveJournalEntry } from './journalThunks';
+import { saveJournalEntry, fetchJournalsForUser } from './journalThunks';
 
 interface JournalState {
   journals: Journal[];
@@ -49,6 +49,20 @@ export const journalSlice = createSlice({
       .addCase(saveJournalEntry.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Failed to save journal';
+      })
+      // Add fetchJournalsForUser cases
+      .addCase(fetchJournalsForUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchJournalsForUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.journals = action.payload;
+      })
+      .addCase(fetchJournalsForUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to fetch journals';
       });
   },
 });
