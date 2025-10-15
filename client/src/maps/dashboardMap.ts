@@ -1,5 +1,6 @@
-import type { RootState } from '../models'
+import type { RootState, AppDispatch } from '../models'
 import type { TodoObject } from '../models/todo/type'
+import { mapDispatchToStreakProps } from '../maps/streakMap'
 
 export interface DashboardState {
   todos: Array<TodoObject>
@@ -16,5 +17,24 @@ export function mapStateToDashboardProps(state: RootState): DashboardState {
     petName: state.pet.name ?? 'PetName',
     petHealth: state.pet.health ?? 0,
     petColor: state.pet.color,
+  }
+}
+
+export interface DashboardDispatch {
+  updateStreakTestACB: CallableFunction
+  getStreakTestACB: CallableFunction
+}
+
+export function mapDispatchToDashboardProps(
+  dispatch: AppDispatch
+): DashboardDispatch {
+  const streakDispatch = mapDispatchToStreakProps(dispatch)
+  return {
+    updateStreakTestACB() {
+      streakDispatch.updateStreakACB()
+    },
+    getStreakTestACB() {
+      streakDispatch.getStreakACB()
+    },
   }
 }

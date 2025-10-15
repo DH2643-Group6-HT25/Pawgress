@@ -6,17 +6,27 @@ import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
 import PetSateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
-import type { DashboardState } from '../maps/dashboardMap'
+import type { DashboardState, DashboardDispatch } from '../maps/dashboardMap'
 
-interface PropTypes extends DashboardState {
+import { MyButton } from '../components/MyButton'
+
+interface PropTypes extends DashboardState, DashboardDispatch {
   loading: boolean
 }
 
-function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {
+function DashboardPageView({
+  petName,
+  petHealth,
+  petColor,
+  updateStreakTestACB,
+  getStreakTestACB,
+}: PropTypes) {
   return (
     <DashboardWrapper>
       <Header primary />
       <PetSateHeader name={petName} health={petHealth} />
+      <MyButton onClick={handleupdateStreakTest}> Test update Streak</MyButton>
+      <MyButton onClick={handlegetStreakTest}> Test get Streak</MyButton>
       <DashboardBody>
         <LeftDashboard>
           <ToDoListCard />
@@ -36,6 +46,13 @@ function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {
       <Footer />
     </DashboardWrapper>
   )
+
+  async function handleupdateStreakTest() {
+    updateStreakTestACB()
+  }
+  async function handlegetStreakTest() {
+    getStreakTestACB()
+  }
 }
 
 export default DashboardPageView

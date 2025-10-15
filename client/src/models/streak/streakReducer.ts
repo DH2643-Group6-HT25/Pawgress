@@ -1,46 +1,54 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { StreakHistoryObject } from "./streakType";
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
+import type { StreakHistoryObject } from './streakType'
 
-interface StreakState {
-  currentStreak: number;
-  bestStreak: number;
-  streakHistory: Array<StreakHistoryObject>;
+export interface BasicStreakInfo {
+  currentStreak: number
+  bestStreak: number
+  streakHistory: Array<StreakHistoryObject>
+}
+
+interface StreakState extends BasicStreakInfo {
+  loading: boolean
+  isStreakNewUser: boolean
+  error: string | null
 }
 
 // fake data to test
 const initialState: StreakState = {
-  currentStreak: 1,
-  bestStreak: 3,
-  streakHistory: [
-    { date: new Date("2025-09-29"), finishedTodos: 3 },
-    { date: new Date("2025-10-01"), finishedTodos: 5 },
-    { date: new Date("2025-10-03"), finishedTodos: 4 },
-    { date: new Date("2025-10-04"), finishedTodos: 7 },
-    { date: new Date("2025-10-05"), finishedTodos: 6 },
-    { date: new Date("2025-10-08"), finishedTodos: 6 },
-    { date: new Date("2025-10-09"), finishedTodos: 7 },
-    { date: new Date("2025-10-10"), finishedTodos: 3 },
-    { date: new Date("2025-10-13"), finishedTodos: 4 },
-  ],
-};
+  currentStreak: 0,
+  bestStreak: 0,
+  streakHistory: [],
+  loading: false,
+  isStreakNewUser: true,
+  error: null,
+}
 
 export const streakSlice = createSlice({
-  name: "streak",
+  name: 'streak',
   initialState,
   reducers: {
-    setCurrentStreak: (state, action: PayloadAction<number>) => {
-      state.currentStreak = action.payload;
+    setBasicStreakInfo: (state, action: PayloadAction<BasicStreakInfo>) => {
+      state.currentStreak = action.payload.currentStreak
+      state.bestStreak = action.payload.bestStreak
+      state.streakHistory = action.payload.streakHistory
     },
-    setBestStreak: (state, action: PayloadAction<number>) => {
-      state.currentStreak = action.payload;
+    setStreakLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload
     },
-    setHistory: (state, action: PayloadAction<StreakHistoryObject[]>) => {
-      state.streakHistory = action.payload;
+    setIsStreakNewUser(state, action: PayloadAction<boolean>) {
+      state.isStreakNewUser = action.payload
+    },
+    setStreakError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload
     },
   },
-});
+})
 
-export default streakSlice.reducer;
-export const { setCurrentStreak, setBestStreak, setHistory } =
-  streakSlice.actions;
+export default streakSlice.reducer
+export const {
+  setStreakLoading,
+  setIsStreakNewUser,
+  setStreakError,
+  setBasicStreakInfo,
+} = streakSlice.actions

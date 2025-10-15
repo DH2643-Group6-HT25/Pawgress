@@ -1,7 +1,11 @@
 import { connect } from 'react-redux'
 import DashboardPageView from '../views/DashboardPageView'
-import { mapStateToDashboardProps } from '../maps/dashboardMap'
+import {
+  mapStateToDashboardProps,
+  mapDispatchToDashboardProps,
+} from '../maps/dashboardMap'
 
-export const DashboardPage = connect(mapStateToDashboardProps)(
-  DashboardPageView
-)
+export const DashboardPage = connect(
+  mapStateToDashboardProps,
+  mapDispatchToDashboardProps
+)(DashboardPageView)
