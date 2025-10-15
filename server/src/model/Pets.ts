@@ -13,8 +13,12 @@ export interface IPet {
 
 // Schema
 const Petschema = new Schema<IPet>({
-  name: { type: String, required: true, unique: true, trim: true },
-  color: { type: String, required: true, enum: ['red', 'pink', 'green'] },
+  name: { type: String, required: true, trim: true },
+  color: {
+    type: String,
+    required: true,
+    enum: ['red', 'pink', 'green', 'black'],
+  },
   health: { type: Number, required: true },
   lastUpdate: { type: Date },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },

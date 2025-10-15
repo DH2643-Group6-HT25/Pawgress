@@ -38,12 +38,14 @@ export interface PetFilter {
   red: string
   pink: string
   green: string
+  black: string
 }
 
 const petFilter: PetFilter = {
   red: `invert(19%) sepia(37%) saturate(6758%) hue-rotate(352deg) brightness(87%) contrast(102%);`,
   pink: `invert(92%) sepia(39%) saturate(3963%) hue-rotate(276deg) brightness(89%) contrast(109%);`,
   green: `invert(93%) sepia(19%) saturate(5409%) hue-rotate(120deg) brightness(87%) contrast(87%);`,
+  black: `none`,
 }
 
 const imageAnimations = {

@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export interface BasicPetInfo {
   name: string | null
-  color: string | null
+  color: string
 }
 interface PetState extends BasicPetInfo {
   health: number | null
@@ -13,7 +13,7 @@ interface PetState extends BasicPetInfo {
 
 const initialState: PetState = {
   name: null,
-  color: null,
+  color: 'black',
   health: null,
   maxHealth: 100,
   loading: false,
@@ -24,16 +24,19 @@ export const petSlice = createSlice({
   name: 'pet',
   initialState,
   reducers: {
-    setPetLoading(state, action: PayloadAction<boolean>) {
-      state.loading = action.payload
+    startPetSubmission(state) {
+      state.loading = true
+      state.error = null
     },
-    setPetError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload
-    },
-    setInitialPetInfo(state, action: PayloadAction<BasicPetInfo>) {
+    petCreationSubmitted(state, action: PayloadAction<BasicPetInfo>) {
       state.name = action.payload.name
       state.color = action.payload.color
       state.health = state.maxHealth
+      state.loading = false
+    },
+    petSubmissionFailed(state, action: PayloadAction<string | null>) {
+      state.error = action.payload
+      state.loading = false
     },
     setInitialPetHealth(state) {
       state.health = state.maxHealth
@@ -45,10 +48,9 @@ export const petSlice = createSlice({
 })
 
 export const {
-  setPetLoading,
-  setPetError,
-  setInitialPetInfo,
-  setInitialPetHealth,
+  petSubmissionFailed,
+  startPetSubmission,
+  petCreationSubmitted,
   setPetHealth,
 } = petSlice.actions
 export default petSlice.reducer

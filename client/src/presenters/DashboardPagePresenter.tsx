@@ -5,7 +5,9 @@ import {
   mapDispatchToDashboardProps,
 } from '../maps/dashboardMap'
 
+const DashboardPagePresenter = (props: any) => <DashboardPageView {...props} />
+
 export const DashboardPage = connect(
   mapStateToDashboardProps,
   mapDispatchToDashboardProps
-)(DashboardPageView)
+)(DashboardPagePresenter)
