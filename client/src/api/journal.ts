@@ -1,4 +1,6 @@
 
+import { INTERNAL_API_URL } from './config';
+
 export interface Formatting {
   start: number;
   end: number;
@@ -14,26 +16,54 @@ export interface Journal {
   userId: string;
 }
 
+const JOURNAL_API_URL = INTERNAL_API_URL + '/journal';
+
 // Get all journals for a user (sorted by date desc)
 export async function getJournalsForUser(userId: string): Promise<Journal[]> {
-  const res = await fetch(`/api/journal?userId=${userId}`);
-  if (!res.ok) throw new Error('Could not fetch journals');
+  const res = await fetch(`${JOURNAL_API_URL}?userId=${userId}`, {
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error(await res.text() || 'Could not fetch journals');
   return res.json();
 }
 
-// Create or update today's journal (upsert logic)
-export async function upsertTodayJournal(journal: string, formatting: Formatting[] | undefined, userId: string): Promise<Journal> {
-  const res = await fetch('/api/journal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ journal, formatting, user: userId }),
-  });
-  if (!res.ok) throw new Error('Could not save journal');
+// Save (create or update) journal, supports both FormData (with image) and JSON (without image)
+export async function saveJournal(
+  data: { journal: string; formatting?: Formatting[]; userId: string; image?: File }
+): Promise<Journal> {
+  let res: Response;
+  if (data.image) {
+    const formData = new FormData();
+    formData.append('journal', data.journal);
+    formData.append('userId', data.userId);
+    formData.append('formatting', JSON.stringify(data.formatting || []));
+    formData.append('image', data.image);
+    res = await fetch(JOURNAL_API_URL, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+  } else {
+    res = await fetch(JOURNAL_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        journal: data.journal,
+        userId: data.userId,
+        formatting: data.formatting || [],
+      }),
+      credentials: 'include',
+    });
+  }
+  if (!res.ok) throw new Error(await res.text() || 'Could not save journal');
   return res.json();
 }
 
 // Delete journal by ID
 export async function deleteJournal(id: string): Promise<void> {
-  const res = await fetch(`/api/journal/${id}`, { method: 'DELETE' });
-  if (!res.ok) throw new Error('Could not delete journal');
+  const res = await fetch(`${JOURNAL_API_URL}/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error(await res.text() || 'Could not delete journal');
 }

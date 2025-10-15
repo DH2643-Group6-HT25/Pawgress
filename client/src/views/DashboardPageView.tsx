@@ -1,44 +1,12 @@
 import { Outlet } from 'react-router'
-import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import styled from 'styled-components'
+import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import { MyPet, PetContainer } from '../components/MyPet'
 import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
 import PetSateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardState } from '../maps/dashboardMap'
-
-interface PropTypes extends DashboardState {
-  loading?: boolean
-}
-
-function DashboardPageView({ petName, petHealth, petColor }: PropTypes) {
-  return (
-    <DashboardWrapper>
-      <Header primary />
-      <PetSateHeader name={petName} health={petHealth} />
-      <DashboardBody>
-        <LeftDashboard>
-          <ToDoListCard />
-        </LeftDashboard>
-        <MiddleDashboard>
-          <Outlet />
-        </MiddleDashboard>
-        <RightDashboard>
-          <DashboardMenu />
-        </RightDashboard>
-      </DashboardBody>
-      <DashboardCatFooter>
-        <PetContainer>
-          <MyPet health={petHealth} color={petColor} />
-        </PetContainer>
-      </DashboardCatFooter>
-      <Footer />
-    </DashboardWrapper>
-  )
-}
-
-export default DashboardPageView
 
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
@@ -47,12 +15,10 @@ const LeftDashboard = styled.div`
   justify-content: center;
   height: 100%;
 `
-
 const MiddleDashboard = styled.div`
   flex: 1 1 55%;
   display: flex;
 `
-
 const RightDashboard = styled.div`
   flex: 0 0 7%;
   display: flex;
@@ -61,7 +27,6 @@ const RightDashboard = styled.div`
   justify-content: center;
   height: 100%;
 `
-
 const DashboardBody = styled.div`
   display: flex;
   flex-direction: row;
@@ -89,3 +54,62 @@ const DashboardCatFooter = styled.div`
   justify-content: center;
   z-index: 2;
 `
+
+type Actions = {
+  fetchTodos: () => any
+  addTodo: (name: string) => any
+  deleteTodo: (id: string) => any
+  reorderLocal: (from: number, to: number) => any
+  reorderTodosBulk: (items: { id: string; order: number }[]) => any
+}
+
+interface PropTypes extends DashboardState, Actions {
+  loading: boolean
+}
+
+function DashboardPageView({
+  petName,
+  petHealth,
+  petColor,
+  todos,
+  loading,
+  fetchTodos,
+  addTodo,
+  deleteTodo,
+  reorderLocal,
+  reorderTodosBulk,
+}: PropTypes) {
+  return (
+    <DashboardWrapper>
+      <Header primary />
+      <PetSateHeader name={petName} health={petHealth} />
+      <DashboardBody>
+        <LeftDashboard>
+          <ToDoListCard
+            todos={todos}
+            loading={loading}
+            fetchTodos={fetchTodos}
+            addTodo={addTodo}
+            deleteTodo={deleteTodo}
+            reorderLocal={reorderLocal}
+            reorderTodosBulk={reorderTodosBulk}
+          />
+        </LeftDashboard>
+        <MiddleDashboard>
+          <Outlet />
+        </MiddleDashboard>
+        <RightDashboard>
+          <DashboardMenu />
+        </RightDashboard>
+      </DashboardBody>
+      <DashboardCatFooter>
+        <PetContainer>
+          <MyPet health={petHealth} color={petColor} />
+        </PetContainer>
+      </DashboardCatFooter>
+      <Footer />
+    </DashboardWrapper>
+  )
+}
+
+export default DashboardPageView

@@ -1,6 +1,8 @@
 
 import { Types } from "mongoose";
 import * as journalRepo from "../repository/journalRepo";
+import * as usersRepo from "../repository/usersRepo";
+import UserModel from "../model/Users";
 
 const toObjId = (id: string) => {
   if (!Types.ObjectId.isValid(id)) throw new Error("Invalid ObjectId");
@@ -25,10 +27,20 @@ export async function upsertTodayJournal(
   tomorrow.setDate(today.getDate() + 1);
   const update: any = { journal, formatting, date: new Date(), userId: uid };
   if (imageUrl) update.imageUrl = imageUrl;
-  return journalRepo.findOneAndUpdate(
+  // Upsert the journal
+  const updatedJournal = await journalRepo.findOneAndUpdate(
     { userId: uid, date: { $gte: today, $lt: tomorrow } },
     update
   );
+  // If the journal exists and has an _id, push it to the user's dailyJournal array if not already present
+  if (updatedJournal && updatedJournal._id) {
+    // Use the Mongoose model directly to allow $addToSet
+    await UserModel.updateOne(
+      { _id: uid },
+      { $addToSet: { dailyJournal: updatedJournal._id } }
+    );
+  }
+  return updatedJournal;
 }
 
 export async function getJournalById(id: string) {

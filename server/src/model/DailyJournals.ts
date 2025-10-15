@@ -13,17 +13,23 @@ export interface IFormatting {
 export interface IDailyJournal {
   journal: string;
   formatting?: IFormatting[];
-  imageUrl?: string; // store the img to the cloud?
+  imageUrl?: string; 
   date: Date;
   userId: Types.ObjectId;
 }
 
-// Schema
 const Journalschema = new Schema<IDailyJournal>({
   journal: { type: String, required: true },
   imageUrl: { type: String },
   date: { type: Date, default: Date.now },
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  formatting: [
+    {
+      start: Number,
+      end: Number,
+      type: { type: String, enum: ["bold", "italic", "underline"] }
+    }
+  ]
 });
 
 const JournalModel = model("IDailyJournal", Journalschema);
