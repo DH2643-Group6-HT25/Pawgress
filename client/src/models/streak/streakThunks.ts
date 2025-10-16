@@ -18,6 +18,7 @@ const handleStreakAsync = async (
 
   try {
     const data = await apiCall()
+    console.log('Streak successfully:', data.streak)
 
     if (data && data.streak) {
       const basicInfo: BasicStreakInfo = {
@@ -34,6 +35,7 @@ const handleStreakAsync = async (
       } else {
         dispatch(setIsStreakNewUser(false))
       }
+
       return
     }
     throw new Error('Invalid data from server')

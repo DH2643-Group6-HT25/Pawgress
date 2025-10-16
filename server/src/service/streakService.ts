@@ -50,7 +50,11 @@ export const updateStreak = async (userId: string) => {
   }
 
   // save streak data
-  await streak.save()
+  await streakRepo.updateStreak(userId, {
+    currentStreak: streak.currentStreak,
+    bestStreak: streak.bestStreak,
+    streakHistory: streak.streakHistory,
+  })
 
   return streak
 }

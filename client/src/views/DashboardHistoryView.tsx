@@ -9,7 +9,10 @@ import {
 } from '../components/CardComponents'
 import DashboardStreakHistoryChart from './DashboardStreakHistoryChart'
 import SuspenseView from './SuspenseView'
-import type { StreakState } from '../maps/streakMap'
+import type { StreakState, StreakDispatch } from '../maps/streakMap'
+import { useEffect } from 'react'
+
+interface PropTypes extends StreakState, StreakDispatch {}
 
 const DashboardHistoryView = ({
   currentStreak,
@@ -17,11 +20,20 @@ const DashboardHistoryView = ({
   streakHistory,
   isLoading,
   isStreakNewUser,
-}: StreakState) => {
+  getStreakACB,
+}: PropTypes) => {
+  useEffect(() => {
+    getStreakACB()
+  }, [getStreakACB])
+
   if (isLoading) {
     return <SuspenseView />
   }
 
+  console.log('currentStreak', currentStreak)
+  console.log('isStreakNewUser', isStreakNewUser)
+  console.log('StreakHistory', streakHistory)
+  // console.log('finishedTodos in view', streakHistory[1].finishedTodos)
   return (
     <MenuCard title="History" isUsingCloseButton linkCloseButton="/dashboard">
       <InsideCardContainer>

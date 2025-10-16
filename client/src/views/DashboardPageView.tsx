@@ -123,7 +123,7 @@ function DashboardPageView({
   }
 
   async function handlegetStreakTest() {
-    updateStreakACB()
+    getStreakACB()
   }
 }
 

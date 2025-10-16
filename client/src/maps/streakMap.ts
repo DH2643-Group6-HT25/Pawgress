@@ -1,4 +1,4 @@
-import type { RootState, AppDispatch } from '../models'
+import type { RootState, AppThunkDispatch } from '../models'
 import {
   fetchStreakThunk,
   updateStreakThunk,
@@ -31,7 +31,7 @@ export interface StreakDispatch {
 }
 
 export function mapDispatchToStreakProps(
-  dispatch: AppDispatch
+  dispatch: AppThunkDispatch
 ): StreakDispatch {
   return {
     getStreakACB() {

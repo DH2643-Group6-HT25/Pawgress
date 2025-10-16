@@ -8,6 +8,7 @@ export async function getStreak() {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   })
+
   if (!res.ok) throw new Error('Fail to fetch streaks')
 
   return res.json()

@@ -9,17 +9,24 @@ interface PropTypes {
 const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
   const svgRef = useRef<SVGSVGElement | null>(null)
 
+  console.log('Chart for history', streakHistory)
+  // console.log('finishedTodos', streakHistory[0].finishedTodos)
+
   useEffect(() => {
-    if (!svgRef.current) return
+    if (!svgRef.current || streakHistory.length === 0) return
+
+    // remove previous img
+    const svg = d3.select(svgRef.current)
+    svg.selectAll('*').remove()
 
     const defaultwidth = 275
     const defaultheight = 250
     const margin = { top: 20, right: 30, bottom: 30, left: 40 }
 
-    const [minDate, maxDate] = d3.extent(streakHistory, (d) => d.date) as [
-      Date,
-      Date,
-    ]
+    const [minDate, maxDate] = d3.extent(
+      streakHistory,
+      (d) => new Date(d.date)
+    ) as [Date, Date]
 
     // dynamic width for x-axis based on the date range, the min width for canvas is the default width
     const daySpan =
@@ -29,11 +36,9 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
 
     // dynamic height for y-axis
     const maxTodoValue = d3.max(streakHistory, (d) => d.finishedTodos)!
+
     const tickYInterval = 10
     const height = Math.max(defaultheight, maxTodoValue * tickYInterval)
-
-    const svg = d3.select(svgRef.current)
-    svg.selectAll('*').remove() // remove previous img
 
     //size of svg
     svg
@@ -64,7 +69,7 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
       .domain([minDate, maxDate]) // Date[]
       .range([0, width]) // number[]
 
-    const tickDates: Date[] = streakHistory.map((d) => d.date)
+    const tickDates: Date[] = streakHistory.map((d) => new Date(d.date))
 
     // X axis with dates
     const xAxis = d3
@@ -86,7 +91,7 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
     // Generate lines
     const line = d3
       .line<StreakHistoryObject>()
-      .x((d) => x(d.date))
+      .x((d) => x(new Date(d.date)))
       .y((d) => y(d.finishedTodos))
 
     // draw lines
@@ -101,7 +106,7 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
     g.selectAll('circle')
       .data(streakHistory)
       .join('circle')
-      .attr('cx', (d) => x(d.date))
+      .attr('cx', (d) => x(new Date(d.date)))
       .attr('cy', (d) => y(d.finishedTodos))
       .attr('r', 4)
       .attr('fill', 'steelblue')
