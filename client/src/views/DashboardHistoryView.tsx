@@ -1,5 +1,6 @@
-import { MenuCard } from '../components/MenuCard'
+import { useEffect } from 'react'
 import styled from 'styled-components'
+import type { StreakState, StreakDispatch } from '../maps/streakMap'
 import streakImg from '../assets/streak.png'
 import {
   InsideCard,
@@ -7,10 +8,9 @@ import {
   InsideCardTitle,
   InsideCardContainer,
 } from '../components/CardComponents'
+import { MenuCard } from '../components/MenuCard'
 import DashboardStreakHistoryChart from './DashboardStreakHistoryChart'
 import SuspenseView from './SuspenseView'
-import type { StreakState, StreakDispatch } from '../maps/streakMap'
-import { useEffect } from 'react'
 
 interface PropTypes extends StreakState, StreakDispatch {}
 
@@ -30,12 +30,14 @@ const DashboardHistoryView = ({
     return <SuspenseView />
   }
 
-  console.log('currentStreak', currentStreak)
-  console.log('isStreakNewUser', isStreakNewUser)
-  console.log('StreakHistory', streakHistory)
-  // console.log('finishedTodos in view', streakHistory[1].finishedTodos)
   return (
-    <MenuCard title="History" isUsingCloseButton linkCloseButton="/dashboard">
+    <MenuCard
+      title="History"
+      isUsingCloseButton
+      isUsingRefreshButton
+      linkCloseButton="/dashboard"
+      linkRefreshButton={handleFetchStreak}
+    >
       <InsideCardContainer>
         <LeftColumn>
           <LeftColumnWrapper>
@@ -73,6 +75,10 @@ const DashboardHistoryView = ({
       </InsideCardContainer>
     </MenuCard>
   )
+
+  function handleFetchStreak() {
+    getStreakACB()
+  }
 }
 
 export default DashboardHistoryView

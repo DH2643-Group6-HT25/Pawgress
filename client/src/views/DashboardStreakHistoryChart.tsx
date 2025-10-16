@@ -9,9 +9,6 @@ interface PropTypes {
 const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
   const svgRef = useRef<SVGSVGElement | null>(null)
 
-  console.log('Chart for history', streakHistory)
-  // console.log('finishedTodos', streakHistory[0].finishedTodos)
-
   useEffect(() => {
     if (!svgRef.current || streakHistory.length === 0) return
 
@@ -19,8 +16,8 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const defaultwidth = 275
-    const defaultheight = 250
+    const defaultwidth = 200
+    const defaultheight = 120
     const margin = { top: 20, right: 30, bottom: 30, left: 40 }
 
     const [minDate, maxDate] = d3.extent(
@@ -39,6 +36,9 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
 
     const tickYInterval = 10
     const height = Math.max(defaultheight, maxTodoValue * tickYInterval)
+
+    console.log(width)
+    console.log(height)
 
     //size of svg
     svg

@@ -6,10 +6,7 @@ import {
   deleteTodoThunk,
   reorderTodosBulkThunk,
 } from '../models/todo/todoThunks'
-import {
-  fetchStreakThunk,
-  updateStreakThunk,
-} from '../models/streak/streakThunks'
+
 import { reorderLocal } from '../models/todo/todoReducer'
 
 export interface DashboardState {
@@ -40,6 +37,4 @@ export const mapDispatchToDashboardProps = (dispatch: any) => ({
     dispatch(reorderLocal({ from, to })),
   reorderTodosBulk: (items: { id: string; order: number }[]) =>
     dispatch(reorderTodosBulkThunk({ items })),
-  getStreakACB: () => dispatch(fetchStreakThunk()),
-  updateStreakACB: () => dispatch(updateStreakThunk()),
 })

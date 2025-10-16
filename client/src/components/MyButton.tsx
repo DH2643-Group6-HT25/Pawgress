@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 interface ButtonProps {
@@ -35,4 +36,35 @@ export const MyButton = styled.button.withConfig({
   &:disabled {
     box-shadow: 1px 1px 0 0 ${(props) => props.theme.colors.black}};
   }
+`
+export const RefreshButton = styled.button`
+  background: ${(props) => props.theme.colors.light_grey};
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    filter: brightness(0.9);
+  }
+`
+export const CloseLink = styled(Link)`
+  background: ${(props) => props.theme.colors.light_grey};
+  padding: 4px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  border-radius: 8px;
 `

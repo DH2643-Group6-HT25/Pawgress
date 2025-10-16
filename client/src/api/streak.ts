@@ -20,6 +20,7 @@ export async function updateStreak() {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   })
+
   if (!res.ok) throw new Error('Fail to update streaks')
 
   return res.json()

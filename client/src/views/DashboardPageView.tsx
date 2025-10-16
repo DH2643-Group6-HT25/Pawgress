@@ -7,7 +7,6 @@ import DashboardMenu from '../components/DashboardMenu'
 import PetSateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardState } from '../maps/dashboardMap'
-import { MyButton } from '../components/MyButton'
 
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
@@ -81,15 +80,11 @@ function DashboardPageView({
   deleteTodo,
   reorderLocal,
   reorderTodosBulk,
-  getStreakACB,
-  updateStreakACB,
 }: PropTypes) {
   return (
     <DashboardWrapper>
       <Header primary />
       <PetSateHeader name={petName} health={petHealth} />
-      <MyButton onClick={handleupdateStreakTest}> Test update Streak</MyButton>
-      <MyButton onClick={handlegetStreakTest}> Test get Streak</MyButton>
       <DashboardBody>
         <LeftDashboard>
           <ToDoListCard
@@ -117,14 +112,6 @@ function DashboardPageView({
       <Footer />
     </DashboardWrapper>
   )
-
-  async function handleupdateStreakTest() {
-    updateStreakACB()
-  }
-
-  async function handlegetStreakTest() {
-    getStreakACB()
-  }
 }
 
 export default DashboardPageView
