@@ -44,6 +44,12 @@ export const petSlice = createSlice({
     setPetHealth(state, action: PayloadAction<number>) {
       state.health = action.payload
     },
+    resetPet(state) {
+      state.health = initialState.health
+      state.maxHealth = initialState.maxHealth
+      state.loading = initialState.loading
+      state.error = initialState.error
+    },
   },
 })
 
@@ -52,5 +58,6 @@ export const {
   startPetSubmission,
   petCreationSubmitted,
   setPetHealth,
+  resetPet,
 } = petSlice.actions
 export default petSlice.reducer

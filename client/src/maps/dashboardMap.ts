@@ -1,4 +1,4 @@
-import type { RootState } from '../models'
+import type { AppThunkDispatch, RootState } from '../models'
 import type { TodoObject } from '../models/todo/type'
 import {
   fetchTodosThunk,
@@ -18,6 +18,12 @@ export interface DashboardState {
   loading: boolean
 }
 
+export interface InitialDashboardState extends DashboardState {
+  isInitialProtectedRender: boolean
+  isCredentialLoading: boolean
+  isSessionError: boolean
+}
+
 export function mapStateToDashboardProps(state: RootState): DashboardState {
   return {
     todos: state.todo.todoList,
@@ -29,7 +35,15 @@ export function mapStateToDashboardProps(state: RootState): DashboardState {
   }
 }
 
-export const mapDispatchToDashboardProps = (dispatch: any) => ({
+export type DashboardActions = {
+  fetchTodos: () => AppThunkDispatch
+  addTodo: (name: string) => AppThunkDispatch
+  deleteTodo: (id: string) => AppThunkDispatch
+  reorderLocal: (from: number, to: number) => AppThunkDispatch
+  reorderTodosBulk: (items: { id: string; order: number }[]) => AppThunkDispatch
+}
+
+export const mapDispatchToDashboardProps = (dispatch: AppThunkDispatch) => ({
   fetchTodos: () => dispatch(fetchTodosThunk()),
   addTodo: (name: string) => dispatch(addTodoThunk({ name })),
   deleteTodo: (id: string) => dispatch(deleteTodoThunk({ id })),

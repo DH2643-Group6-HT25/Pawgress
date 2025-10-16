@@ -9,8 +9,6 @@ services:
       - client_node_modules:/client/node_modules
     networks:
       - react-express
-    depends_on:
-      - server
     ports:
       - '5173:5173'
   server:
@@ -33,7 +31,7 @@ services:
 
   mongo:
     restart: always
-    image: mongo:latest
+    image: mongo:8.0.15
     volumes:
       - mongo_data:/data/db
     networks:

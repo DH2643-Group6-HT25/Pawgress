@@ -2,8 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 
-import fishIcon from '../assets/fish.png'
-import fishIconPressed from '../assets/fish_eaten.png'
 import journalIcon from '../assets/icons/pencil.svg'
 import journalIconPressed from '../assets/icons/pencil-solid.png'
 import historyIcon from '../assets/icons/history.svg'
@@ -33,11 +31,6 @@ const MenuItem = styled.button<{ pressed?: boolean }>`
   cursor: pointer;
   transition: opacity 0.2s;
   z-index: 10;
-`
-const FishIcon = styled.img`
-  width: 65px;
-  height: 65px;
-  filter: brightness(0) saturate(100%);
 `
 
 const Icon = styled.img`
@@ -71,13 +64,6 @@ const DashboardMenu: React.FC = () => {
 
   return (
     <MenuWrapper>
-      <MenuItem onClick={() => handleMenuClick('fish')}>
-        <FishIcon
-          src={getPressed('fish') ? fishIconPressed : fishIcon}
-          alt="Fish"
-        />
-        <Label $pressed={getPressed('fish')}> 4 Fish</Label>
-      </MenuItem>
       <MenuItem onClick={() => handleMenuClick('journal')}>
         <Icon
           src={getPressed('journal') ? journalIconPressed : journalIcon}

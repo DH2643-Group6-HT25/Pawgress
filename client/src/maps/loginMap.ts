@@ -1,6 +1,6 @@
-import type { RootState } from "../models";
-import { userLoginThunk } from "../models/user/userThunks";
-import { setEmail, setPassword, setMsg } from "../models/user/userReducer";
+import type { RootState } from '../models'
+import { userLoginThunk } from '../models/user/userThunks'
+import { setEmail, setPassword, setMsg } from '../models/user/userReducer'
 
 export function mapStateToLoginProps(state: RootState) {
   return {
@@ -9,7 +9,9 @@ export function mapStateToLoginProps(state: RootState) {
     msg: state.user.msg,
     loading: state.user.loading,
     loggedIn: state.user.loggedIn,
-  };
+    sessionError: state.user.sessionError,
+    hasPet: state.user.hasPet,
+  }
 }
 
 export function mapDispatchToLoginProps(dispatch: any) {
@@ -18,8 +20,8 @@ export function mapDispatchToLoginProps(dispatch: any) {
     setPassword: (password: string) => dispatch(setPassword(password)),
     setMsg: (msg: string) => dispatch(setMsg(msg)),
     handleSubmit: (e: React.FormEvent, email: string, password: string) => {
-      e.preventDefault();
-      dispatch(userLoginThunk({ email, pass: password }));
+      e.preventDefault()
+      dispatch(userLoginThunk({ email, pass: password }))
     },
-  };
+  }
 }
