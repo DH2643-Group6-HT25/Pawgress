@@ -1,8 +1,5 @@
 import { Schema, model, Types } from 'mongoose'
 
-// Raw document interface. Contains the data type as it will be stored
-// in MongoDB. So you can ObjectId, Buffer, and other custom primitive data types.
-// But no Mongoose document arrays or subdocuments.
 export interface IPet {
   name: string
   color: string

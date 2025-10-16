@@ -10,6 +10,7 @@ import streakReducer from './streak/streakReducer'
 import affirmationReducer from './affirmation/affirmationReducer'
 import journalReducer from './journal/journalReducer'
 import { petListenerMiddleware } from './pet/petListener'
+import { userListenerMiddleware } from './user/userListener'
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +22,9 @@ export const store = configureStore({
     journal: journalReducer,
   },
   middleware(getDefaultMiddleware) {
-    return getDefaultMiddleware().prepend(petListenerMiddleware.middleware)
+    return getDefaultMiddleware()
+      .prepend(userListenerMiddleware.middleware)
+      .prepend(petListenerMiddleware.middleware)
   },
 })
 
