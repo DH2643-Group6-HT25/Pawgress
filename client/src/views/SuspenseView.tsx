@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import cat1 from "../assets/cat_normal_1.png";
-import cat2 from "../assets/cat_normal_2.png";
-import styled from "styled-components";
-import { MyCard } from "../components/CardComponents";
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import cat1 from '../assets/cat_normal_1.png'
+import cat2 from '../assets/cat_normal_2.png'
+import styled from 'styled-components'
+import { MyCard } from '../components/CardComponents'
 
 export default function SuspenseView() {
-  const [shownImg, setShownImg] = useState(true);
+  const [shownImg, setShownImg] = useState(true)
   useEffect(() => {
     const timer = setInterval(() => {
-      setShownImg((prev) => !prev);
-    }, 500);
-    return () => clearInterval(timer);
-  }, []);
+      setShownImg((prev) => !prev)
+    }, 500)
+    return () => clearInterval(timer)
+  }, [])
   return (
     <MyCard>
       <SuspenseViewContainer>
@@ -32,7 +32,7 @@ export default function SuspenseView() {
         />
       </SuspenseViewContainer>
     </MyCard>
-  );
+  )
 }
 
 const SuspenseViewContainer = styled.div`
@@ -43,7 +43,7 @@ const SuspenseViewContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const SuspenseViewImg = styled(motion.img)`
   position: absolute;
@@ -57,4 +57,4 @@ const SuspenseViewImg = styled(motion.img)`
   max-width: 80%;
   max-height: 80%;
   object-fit: contain;
-`;
+`

@@ -9,7 +9,7 @@ export const JournalListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 18px;
-`;
+`
 
 // Single journal card
 export const JournalEntryCard = styled.div`
@@ -23,19 +23,19 @@ export const JournalEntryCard = styled.div`
   position: relative;
   box-sizing: border-box;
   padding: 8px;
-`;
+`
 
 export const JournalEntryHeader = styled.div`
   font-size: 1.1rem;
   font-weight: bold;
   margin-bottom: 8px;
-`;
+`
 
 export const JournalEntryText = styled.div`
   font-size: 1rem;
   margin-bottom: 8px;
   word-break: break-word;
-`;
+`
 
 export const JournalEntryImage = styled.img`
   width: 90px;
@@ -47,34 +47,36 @@ export const JournalEntryImage = styled.img`
   top: 18px;
   right: 18px;
   background: repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50% / 20px 20px;
-`;
+`
 
-import styled from "styled-components";
+import styled from 'styled-components'
 
 interface CardProps {
-  primary?: boolean;
-  large?: boolean;
+  primary?: boolean
+  large?: boolean
 }
 
 export const CardIcon = styled.img`
   width: 15px;
   height: 15px;
   cursor: pointer;
-`;
+`
 
 export const CardTitle = styled.h2`
   font-family: ${(props) => props.theme.fonts.pixel};
   text-transform: uppercase;
   margin-top: 5px;
   font-size: 1.2rem;
-`;
+  margin: 0;
+  lineheight: 1;
+`
 
 export const InsideCardTitle = styled.h3`
   font-family: ${(props) => props.theme.fonts.pixel}, bold;
   text-transform: uppercase;
   font-size: 0.8rem;
   word-break: break-word;
-`;
+`
 export const InsideCardText = styled.p`
   font-family: ${(props) => props.theme.fonts.pixel};
   text-transform: lowercase;
@@ -86,23 +88,24 @@ export const InsideCardText = styled.p`
   @media (max-width: 600px) {
     font-size: 0.8rem;
   }
-`;
+`
 
 export const CardHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-`;
+  gap: 8px;
+`
 
 export const InsideCardContainer = styled.div`
   width: 100%;
   height: 90%;
   display: flex;
   flex-direction: row;
-`;
+`
 
 export const InsideCard = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "primary" && prop !== "large",
+  shouldForwardProp: (prop) => prop !== 'primary' && prop !== 'large',
 })<CardProps>`
   display: flex;
   flex-direction: column;
@@ -132,10 +135,10 @@ export const InsideCard = styled.div.withConfig({
     padding: 8px 6px;
     font-size: 0.8rem;
   }
-`;
+`
 
 export const MyCard = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "primary",
+  shouldForwardProp: (prop) => prop !== 'primary',
 })<CardProps>`
   position: fixed;
   flex-direction: row;
@@ -170,4 +173,4 @@ export const MyCard = styled.div.withConfig({
     padding: 4px 2vw;
     aspect-ratio: unset;
   }
-`;
+`
