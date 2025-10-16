@@ -4,9 +4,10 @@ import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import { MyPet, PetContainer } from '../components/MyPet'
 import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
-import PetSateHeader from '../components/PetStateHeader'
+import PetStateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardState } from '../maps/dashboardMap'
+import Food from '../components/Food'
 
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
@@ -82,7 +83,9 @@ function DashboardPageView({
   return (
     <DashboardWrapper>
       <Header primary />
-      <PetSateHeader name={petName} health={petHealth} />
+      <div>
+        <PetStateHeader name={petName} health={petHealth} />
+      </div>
       <DashboardBody>
         <LeftDashboard>
           <ToDoListCard
@@ -106,6 +109,7 @@ function DashboardPageView({
         <PetContainer>
           <MyPet health={petHealth} color={petColor} />
         </PetContainer>
+        <Food foodCount={2} />
       </DashboardCatFooter>
       <Footer />
     </DashboardWrapper>

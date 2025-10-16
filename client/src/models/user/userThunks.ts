@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getErrorMessage } from '../../utils/errorHandling'
-import { login, signup } from '../../api/auth'
+import { login, signup, verifyToken } from '../../api/auth'
+import userStorePrefix from './userStorePrefix'
 
 interface Credentials {
   email: string
@@ -14,7 +15,7 @@ interface SignupCredentials {
 }
 
 export const userLoginThunk = createAsyncThunk(
-  'users/login',
+  `${userStorePrefix}/login`,
   async (credentials: Credentials, { rejectWithValue }) => {
     try {
       return await login(credentials.email, credentials.pass)
@@ -25,10 +26,25 @@ export const userLoginThunk = createAsyncThunk(
 )
 
 export const userSignupThunk = createAsyncThunk(
-  'users/signup',
+  `${userStorePrefix}/signup`,
   async (credentials: SignupCredentials, { rejectWithValue }) => {
     try {
-      return await signup(credentials.email, credentials.password, credentials.name)
+      return await signup(
+        credentials.email,
+        credentials.password,
+        credentials.name
+      )
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error))
+    }
+  }
+)
+
+export const userVerifyThunk = createAsyncThunk(
+  `${userStorePrefix}/token`,
+  async (_, { rejectWithValue }) => {
+    try {
+      await verifyToken()
     } catch (error) {
       return rejectWithValue(getErrorMessage(error))
     }

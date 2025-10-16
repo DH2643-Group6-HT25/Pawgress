@@ -20,3 +20,15 @@ export async function signup(email: string, password: string, name: string) {
   })
   return res.json()
 }
+
+export async function verifyToken() {
+  const res = await fetch(API_URL + '/token', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  if (res.status == 200 && res?.ok) return
+
+  throw new Error('Invalid Token')
+}
