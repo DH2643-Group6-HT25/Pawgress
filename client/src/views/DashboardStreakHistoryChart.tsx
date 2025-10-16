@@ -34,7 +34,7 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
     // dynamic height for y-axis
     const maxTodoValue = d3.max(streakHistory, (d) => d.finishedTodos)!
 
-    const tickYInterval = 10
+    const tickYInterval = 20
     const height = Math.max(defaultheight, maxTodoValue * tickYInterval)
 
     console.log(width)
