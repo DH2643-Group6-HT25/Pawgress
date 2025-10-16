@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getErrorMessage } from '../../utils/errorHandling'
-import { login, signup, verifyToken } from '../../api/auth'
+import { login, logout, signup, verifyToken } from '../../api/auth'
 import userStorePrefix from './userStorePrefix'
 
 interface Credentials {
@@ -34,6 +34,17 @@ export const userSignupThunk = createAsyncThunk(
         credentials.password,
         credentials.name
       )
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error))
+    }
+  }
+)
+
+export const userLogoutThunk = createAsyncThunk(
+  `${userStorePrefix}/logout`,
+  async (_, { rejectWithValue }) => {
+    try {
+      await logout()
     } catch (error) {
       return rejectWithValue(getErrorMessage(error))
     }

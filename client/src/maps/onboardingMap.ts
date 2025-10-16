@@ -7,11 +7,12 @@ export interface OnboardingState {
   petColor: string
   isLoading: boolean
   petError: string | null
+  hasPet: boolean
 }
 
 export interface InitialOnboardingState extends OnboardingState {
-  isInitialProtectedRender: boolean
   isCredentialLoading: boolean
+  isSessionError: boolean
 }
 
 export function mapStateToOnboardingProps(
@@ -22,8 +23,9 @@ export function mapStateToOnboardingProps(
     petColor: state.pet.color,
     isLoading: state.pet.loading,
     petError: state.pet.error,
-    isInitialProtectedRender: state.user.isInitialProtectedRender,
     isCredentialLoading: state.user.isCredentialLoading,
+    isSessionError: state.user.sessionError != null,
+    hasPet: state.user.hasPet,
   }
 }
 

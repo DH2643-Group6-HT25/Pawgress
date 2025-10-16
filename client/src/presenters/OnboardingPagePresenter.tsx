@@ -1,27 +1,31 @@
 import { connect } from 'react-redux'
-import OnboardingPageView from '../views/OnboardingPageView'
 import {
   mapDispatchToOnboardingProps,
   mapStateToOnboardingProps,
   type InitialOnboardingDispatch,
   type InitialOnboardingState,
 } from '../maps/onboardingMap'
-import SuspenseView from '../views/SuspenseView'
+import OnboardingPageView from '../views/OnboardingPageView'
+import LoadingPageView from '../views/LoadingPageView'
+import { useRef } from 'react'
 
 interface PropTypes extends InitialOnboardingState, InitialOnboardingDispatch {}
 
 function OnboardingPresenter({
-  isInitialProtectedRender,
   isCredentialLoading,
   verifyUserACB,
+  isSessionError,
   ...props
 }: PropTypes) {
-  if (isInitialProtectedRender && !isCredentialLoading) {
+  const initialRender = useRef(true)
+
+  if (initialRender.current && !isCredentialLoading) {
+    initialRender.current = false
     verifyUserACB()
     return
   }
 
-  if (isCredentialLoading) return <SuspenseView />
+  if (isCredentialLoading) return <LoadingPageView isError={isSessionError} />
 
   return <OnboardingPageView {...props} />
 }

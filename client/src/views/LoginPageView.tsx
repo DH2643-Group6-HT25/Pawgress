@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { Navigate } from "react-router-dom";
-import Header from "../components/Header";
-import { MyButton } from "../components/MyButton";
+import { useMemo } from 'react'
+import { Navigate } from 'react-router-dom'
+import Header from '../components/Header'
+import { MyButton } from '../components/MyButton'
 import {
   Background,
   SquaresContainer,
@@ -14,17 +14,19 @@ import {
   SmallText,
   ErrorMsg,
   RegisterLink,
-} from "../components/AuthUI";
+} from '../components/AuthUI'
 
 export type LoginPageViewProps = {
-  email: string;
-  setEmail: (v: string) => void;
-  password: string;
-  setPassword: (v: string) => void;
-  msg: string;
-  loggedIn: boolean;
-  handleSubmit: (e: React.FormEvent, email: string, password: string) => void;
-};
+  email: string
+  setEmail: (v: string) => void
+  password: string
+  setPassword: (v: string) => void
+  msg: string
+  loggedIn: boolean
+  handleSubmit: (e: React.FormEvent, email: string, password: string) => void
+  sessionError: string
+  hasPet: boolean
+}
 
 const LoginPageView: React.FC<LoginPageViewProps> = ({
   email,
@@ -34,6 +36,8 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
   msg,
   loggedIn,
   handleSubmit,
+  hasPet,
+  sessionError,
 }) => {
   const squares = useMemo(
     () =>
@@ -42,10 +46,11 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
         left: `${Math.random() * 95}%`,
       })),
     []
-  );
+  )
 
   if (loggedIn) {
-    return <Navigate to="/dashboard" replace />;
+    if (hasPet) return <Navigate to="/dashboard" replace />
+    return <Navigate to="/onboarding" replace />
   }
 
   return (
@@ -85,10 +90,10 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
             primary
             type="submit"
             style={{
-              width: "100%",
-              marginTop: "10px",
-              height: "40px",
-              fontSize: "1.1rem",
+              width: '100%',
+              marginTop: '10px',
+              height: '40px',
+              fontSize: '1.1rem',
             }}
           >
             Login
@@ -99,9 +104,10 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
           <RegisterLink to="/signup">Sign Up</RegisterLink>
         </SmallText>
         {msg && <ErrorMsg>{msg}</ErrorMsg>}
+        {sessionError && <ErrorMsg>{sessionError}</ErrorMsg>}
       </Card>
     </Background>
-  );
-};
+  )
+}
 
-export default LoginPageView;
+export default LoginPageView

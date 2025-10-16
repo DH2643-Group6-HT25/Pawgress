@@ -36,10 +36,10 @@ router.post('/login', async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     })
 
-    res.json({
+    res.status(200).json({
       message: 'Login successful',
       user: { name: user.name, email: user.email, id: user._id },
-      hasPet: !!user.pet,
+      hasPet: user?.pet,
     })
   } catch (err) {
     console.error('Login error:', err)
@@ -47,9 +47,9 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.post('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   res.clearCookie('token')
-  res.json({ message: 'Logged out' })
+  res.status(200).json({ message: 'Logged out' })
 })
 
 router.post('/signup', async (req, res) => {
@@ -63,6 +63,18 @@ router.post('/signup', async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10)
     const user = await UserModel.create({ email, name, passwordHash })
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    })
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    })
+
     res.status(201).json({
       message: 'Signup successful',
       user: { name: user.name, email: user.email, id: user._id },
@@ -78,6 +90,7 @@ router.get('/token', async (req, res) => {
   if (userId) {
     res.status(200).json({ ok: true })
   } else {
+    res.clearCookie('token')
     res.status(401).json({ error: 'Invalid Token' })
   }
 })

@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { userLoginThunk, userSignupThunk, userVerifyThunk } from './userThunks'
+import {
+  userLoginThunk,
+  userLogoutThunk,
+  userSignupThunk,
+  userVerifyThunk,
+} from './userThunks'
 import userStorePrefix from './userStorePrefix'
 
 interface UserState {
@@ -10,15 +15,10 @@ interface UserState {
   userID: string | null
   loading: boolean
   loggedIn: boolean
-  isInitialProtectedRender: boolean
   isCredentialLoading: boolean
   sessionError: string | null
+  hasPet: boolean
 }
-
-// next create listener
-// create thunk to check credential
-// middleware to redirect
-// apply suspense on protected presenters
 
 const initialState: UserState = {
   email: '',
@@ -28,9 +28,9 @@ const initialState: UserState = {
   userID: null,
   loading: false,
   loggedIn: false,
-  isInitialProtectedRender: true,
   isCredentialLoading: false,
   sessionError: null,
+  hasPet: false,
 }
 
 export const userSlice = createSlice({
@@ -49,15 +49,14 @@ export const userSlice = createSlice({
     setMsg: (state, action) => {
       state.msg = action.payload
     },
-    logout: (state) => {
-      state.loggedIn = false
-      state.email = ''
-      state.password = ''
-      state.name = ''
-      state.msg = ''
+    setSessionError: (state) => {
+      state.sessionError = 'Please sign up / log in again'
     },
     clearSessionError: (state) => {
       state.sessionError = null
+    },
+    setPetOwned: (state) => {
+      state.hasPet = true
     },
   },
   extraReducers: (builder) => {
@@ -68,9 +67,11 @@ export const userSlice = createSlice({
       })
       .addCase(userLoginThunk.fulfilled, (state, action) => {
         state.loading = false
-        state.msg = action.payload.message || 'Login successful'
+        state.msg = ''
         state.loggedIn = true
         state.userID = action.payload.user?.id || null
+        state.password = ''
+        state.hasPet = action.payload.user?.hasPet || false
       })
       .addCase(userLoginThunk.rejected, (state, action) => {
         state.loading = false
@@ -82,9 +83,10 @@ export const userSlice = createSlice({
       })
       .addCase(userSignupThunk.fulfilled, (state, action) => {
         state.loading = false
-        state.msg = action.payload.message || 'Signup successful'
+        state.msg = ''
         state.loggedIn = true
         state.userID = action.payload.user?.id || null
+        state.password = ''
       })
       .addCase(userSignupThunk.rejected, (state, action) => {
         state.loading = false
@@ -92,18 +94,42 @@ export const userSlice = createSlice({
       })
       .addCase(userVerifyThunk.pending, (state) => {
         state.isCredentialLoading = true
-        state.isInitialProtectedRender = false
       })
       .addCase(userVerifyThunk.fulfilled, (state) => {
         state.isCredentialLoading = false
+        state.loggedIn = true
       })
       .addCase(userVerifyThunk.rejected, (state) => {
         state.isCredentialLoading = false
-        state.sessionError = 'Please sign up / log in again'
+        state.userID = initialState.userID
+        state.loggedIn = initialState.loggedIn
+      })
+      .addCase(userLogoutThunk.pending, (state) => {
+        state.isCredentialLoading = true
+      })
+      .addCase(userLogoutThunk.fulfilled, (state) => {
+        state.isCredentialLoading = false
+        state.userID = initialState.userID
+        state.loggedIn = initialState.loggedIn
+        state.loading = initialState.loading
+        state.name = initialState.name
+        state.email = initialState.email
+        state.hasPet = initialState.hasPet
+      })
+      .addCase(userLogoutThunk.rejected, (state) => {
+        state.isCredentialLoading = false
+        state.msg = 'Logout Unsucessful'
       })
   },
 })
 
-export const { setEmail, setPassword, setName, setMsg, logout } =
-  userSlice.actions
+export const {
+  setEmail,
+  setPassword,
+  setName,
+  setMsg,
+  setSessionError,
+  clearSessionError,
+  setPetOwned,
+} = userSlice.actions
 export default userSlice.reducer
