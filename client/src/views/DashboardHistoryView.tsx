@@ -27,7 +27,7 @@ const DashboardHistoryView = ({
   }, [getStreakACB])
 
   if (isLoading) {
-    return <SuspenseView />
+    return <SuspenseView modelName="Streak" />
   }
 
   return (
