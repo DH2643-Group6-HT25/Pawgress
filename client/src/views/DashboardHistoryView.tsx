@@ -45,14 +45,22 @@ const DashboardHistoryView = ({
               <InsideCardContainerVertical>
                 <InsideCardTitle>Best Streak</InsideCardTitle>
                 <CardImage src={streakImg} alt="Streak" />
-                <InsideCardText>{bestStreak}-Day Streak</InsideCardText>
+                {isStreakNewUser ? (
+                  <InsideCardText> No Streak</InsideCardText>
+                ) : (
+                  <InsideCardText>{bestStreak}-Day Streak</InsideCardText>
+                )}
               </InsideCardContainerVertical>
             </InsideCard>
             <InsideCard primary>
               <InsideCardContainerVertical>
                 <InsideCardTitle>Current Streak</InsideCardTitle>
                 <CardImage src={streakImg} alt="Streak" />
-                <InsideCardText>{currentStreak}-Day Streak</InsideCardText>
+                {isStreakNewUser ? (
+                  <InsideCardText> No Streak</InsideCardText>
+                ) : (
+                  <InsideCardText>{currentStreak}-Day Streak</InsideCardText>
+                )}
               </InsideCardContainerVertical>
             </InsideCard>
           </LeftColumnWrapper>
