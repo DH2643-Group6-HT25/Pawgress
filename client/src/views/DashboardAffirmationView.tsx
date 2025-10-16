@@ -1,23 +1,16 @@
-import { useEffect } from "react";
-import { MenuCard } from "../components/MenuCard";
+import { MenuCard } from '../components/MenuCard'
 
 interface DashboardAffirmationViewProps {
-  affirmation: string | null;
-  loading: boolean;
-  error: string | null;
-  fetchAffirmation: () => void;
+  affirmation: string | null
+  loading: boolean
+  error: string | null
 }
 
 function DashboardAffirmationView({
   affirmation,
   loading,
   error,
-  fetchAffirmation,
 }: DashboardAffirmationViewProps) {
-  useEffect(() => {
-    fetchAffirmation(); // Fetch affirmation on mount
-  }, [fetchAffirmation]);
-
   return (
     <MenuCard
       title="Affirmation"
@@ -25,10 +18,10 @@ function DashboardAffirmationView({
       linkCloseButton="/dashboard"
     >
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {!loading && !error && <p>{affirmation}</p>}
     </MenuCard>
-  );
+  )
 }
 
-export default DashboardAffirmationView;
+export default DashboardAffirmationView
