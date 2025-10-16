@@ -5,7 +5,13 @@ import cat2 from '../assets/cat_normal_2.png'
 import styled from 'styled-components'
 import { MyCard } from '../components/CardComponents'
 
-export default function SuspenseView() {
+interface SuspenseViewProps {
+  modelName: string
+}
+
+export default function SuspenseView({
+  modelName,
+}: Readonly<SuspenseViewProps>) {
   const [shownImg, setShownImg] = useState(true)
   useEffect(() => {
     const timer = setInterval(() => {
@@ -16,6 +22,7 @@ export default function SuspenseView() {
   return (
     <MyCard>
       <SuspenseViewContainer>
+        <SuspenseText> {modelName} is loading...</SuspenseText>
         <SuspenseViewImg
           key="cat1"
           src={cat1}
@@ -54,7 +61,22 @@ const SuspenseViewImg = styled(motion.img)`
   /*Prevent images from being stretched*/
   width: auto;
   height: auto;
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 70%;
+  max-height: 70%;
   object-fit: contain;
+`
+const SuspenseText = styled.p`
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-family: ${(props) => props.theme.fonts.pixel};
+  text-transform: lowercase;
+  font-size: 1.4rem;
+  word-break: break-word;
+  width: max-content;
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+  }
 `

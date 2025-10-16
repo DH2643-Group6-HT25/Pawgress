@@ -66,7 +66,7 @@ const ReactRoot = () => {
         },
         {
           path: 'onsuspense',
-          element: <SuspenseView />, //TODO: delete it after finishing dashboard
+          element: <SuspenseView modelName="Test model" />, //TODO: delete it after finishing dashboard
         },
         {
           path: 'onboarding',
