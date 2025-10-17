@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Journal } from './journalType';
-import { saveJournalEntry, fetchJournalsForUser } from './journalThunks';
+import { saveJournalEntry, fetchJournalsForUser, deleteJournalById } from './journalThunks';
 
 interface JournalState {
   journals: Journal[];
@@ -50,7 +50,15 @@ export const journalSlice = createSlice({
         state.loading = false;
         state.error = action.payload || 'Failed to save journal';
       })
-      // Add fetchJournalsForUser cases
+  // Add fetchJournalsForUser cases
+      // Handle deleteJournalById
+      .addCase(deleteJournalById.fulfilled, (state, action) => {
+        state.journals = state.journals.filter(j => j._id !== action.payload);
+        // If deleted journal was today, clear today
+        if (state.today && state.today._id === action.payload) {
+          state.today = null;
+        }
+      })
       .addCase(fetchJournalsForUser.pending, (state) => {
         state.loading = true;
         state.error = null;

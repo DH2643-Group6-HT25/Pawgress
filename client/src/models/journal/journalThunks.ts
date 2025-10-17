@@ -1,7 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { Journal } from './journalType';
-import { saveJournal } from '../../api/journal';
-import { getJournalsForUser } from '../../api/journal';
+import { saveJournal, deleteJournal, getJournalsForUser } from '../../api/journal';
+
+// Delete a journal by ID
+export const deleteJournalById = createAsyncThunk<
+  string, // return deleted journal id
+  { id: string; userId: string },
+  { rejectValue: string }
+>(
+  'journal/deleteJournalById',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      await deleteJournal(id);
+      return id;
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Network error');
+    }
+  }
+);
 
 // Save (create or update) today's journal entry
 export const saveJournalEntry = createAsyncThunk<

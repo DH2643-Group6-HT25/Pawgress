@@ -11,20 +11,20 @@ export const MyButton = styled.button.withConfig({
   display: inline-flex;       
   align-items: center;         
   justify-content: center;   
-  height: 20px;              
-  padding: 0 20px;            
+  height: 30px;              
+  padding: 8px 15px;            
   white-space: nowrap;        
 
   font-family: ${(props) => props.theme.fonts.pixel};
+  font-size: 0.9rem;
   border: ${(props) => props.theme.border.thickness} solid ${(props) => props.theme.colors.black};
   border-radius: 10px;
   box-shadow: ${(props) => props.theme.border.shadowOffset} ${(props) => props.theme.border.shadowOffset} 0 ${(props) => props.theme.colors.black}; 
   background-color: ${(props) => (props.primary ? props.theme.colors.dark_grey : props.theme.colors.light_grey)};
   color: ${(props) => props.theme.colors.black};
-  padding: 10px 20px;
   cursor: pointer;
   text-transform: undercase;
-  margin: 5px;       
+  margin: 3px;       
 
   &:active {
     transform: translate(2px, 2px);

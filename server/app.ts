@@ -35,7 +35,7 @@ app.use(cookieParser())
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')))
+app.use('/images/uploads', express.static(path.join(__dirname, 'public/images/uploads')));
 
 
 app.use((req, _res, next) => {
