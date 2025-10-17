@@ -1,5 +1,7 @@
 import type { Journal } from '../../models/journal/journalType';
 import moment from 'moment';
+import { sortBy } from 'lodash/fp';
+import { filter } from 'lodash/fp';
 import { 
   JournalEntryCard, 
   JournalListContainer, 
@@ -25,9 +27,12 @@ interface Props {
 }
 
 export default function JournalHistory({ journals, onDelete }: Props) {
+  // Filter out invalid journals and sort by date descending (newest first)
+  const validJournals = filter((j: Journal) => !!j.date && !!j.journal, journals);
+  const sortedJournals = sortBy('date', validJournals).reverse();
   return (
     <JournalListContainer>
-      {journals.map((j: Journal) => (
+      {sortedJournals.map((j: Journal) => (
         <JournalEntryCard key={j._id} style={{ position: 'relative' }}>
           <CardDate>{moment(j.date).format('DD/MM/YYYY')}</CardDate>
           <CardText>{renderFormattedText(j)}</CardText>

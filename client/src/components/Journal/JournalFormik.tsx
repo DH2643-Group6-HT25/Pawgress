@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { MyButton } from '../MyButton';
 import type { Journal } from '../../models/journal/journalType';
 import { 
@@ -21,17 +21,24 @@ interface Props {
 	saveJournalEntry?: (data: any) => void;
 }
 
-
 export default function JournalFormik({ userId, today, loading, error, saveJournalEntry }: Props) {
 	const editorRef = useRef<HTMLDivElement>(null);
 	const [image, setImage] = useState<File | null>(null);
 	const [imagePreview, setImagePreview] = useState<string | null>(today?.imageUrl || null);
 	const [formatting, setFormatting] = useState<any[]>([]); // [{start, end, type}]
 	const [success, setSuccess] = useState(false);
+	const [showMessage, setShowMessage] = useState(false);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	// Sync editor and image preview when today changes
+	useEffect(() => {
+		setImagePreview(today?.imageUrl || null);
+		if (editorRef.current) editorRef.current.innerHTML = today?.journal || '';
+	}, [today]);
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setSuccess(false);
+		setShowMessage(false);
 		const data = {
 			journal: editorRef.current?.innerHTML || '',
 			userId: userId || today?.userId || '',
@@ -39,15 +46,24 @@ export default function JournalFormik({ userId, today, loading, error, saveJourn
 			...(image ? { image } : {}),
 		};
 		if (typeof saveJournalEntry === 'function') {
-			Promise.resolve(saveJournalEntry(data)).then(() => {
-				setSuccess(true);
-				setImage(null);
-				setImagePreview(null);
-				setFormatting([]);
-				if (editorRef.current) editorRef.current.innerHTML = '';
-			});
+			await Promise.resolve(saveJournalEntry(data));
+			setSuccess(true);
+			setShowMessage(true);
+			setImage(null);
+			setFormatting([]);
+			// Redux will update today prop, which triggers useEffect above
 		}
 	};
+// Hide message after 5 seconds
+useEffect(() => {
+	if (showMessage || error) {
+		const timer = setTimeout(() => {
+			setSuccess(false);
+			setShowMessage(false);
+		}, 5000);
+		return () => clearTimeout(timer);
+	}
+}, [showMessage, error]);
 
 	// Hantera rich text-formattering
 	const handleFormat = (cmd: 'bold' | 'italic' | 'underline') => {
@@ -86,52 +102,52 @@ export default function JournalFormik({ userId, today, loading, error, saveJourn
 		}
 	};
 
-		return (
-			<EditorContainer>
-				<InsideCardTitle>Edit today's Journal</InsideCardTitle>
-				<form onSubmit={handleSubmit}>
-					<Toolbar>
-						<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('bold'); }}><b>B</b></FormatMyButton>
-						<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('italic'); }}><i>I</i></FormatMyButton>
-						<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('underline'); }}><u>U</u></FormatMyButton>
-					</Toolbar>
-					<Editor
-						ref={editorRef}
-						contentEditable
-						suppressContentEditableWarning
-						onInput={handleInput}
-						aria-label="Journal text editor"
-					/>
-					<ImageRow>
-						<div>
-							<input
-								type="file"
-								accept="image/*"
-								id="journal-image-upload"
-								style={{ display: 'none' }}
-								onChange={handleImageChange}
-							/>
-							<label htmlFor="journal-image-upload">
-								<ImageMyButton type='button' as='span' style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}}>
-									{image ? 'Change image' : 'Upload image'}
-								</ImageMyButton>
-							</label>
-						</div>
-						<PreviewImage src={imagePreview || PLACEHOLDER} alt="Preview" />
-					</ImageRow>
-					<div style={{ display: 'flex', justifyContent: 'left', marginTop: 10 }}>
-						<MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={loading}>
-							{loading ? 'Saving...' : 'Save'}
-						</MyButton>
+	return (
+		<EditorContainer>
+			<InsideCardTitle>Edit today's Journal</InsideCardTitle>
+			<form onSubmit={handleSubmit}>
+				<Toolbar>
+					<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('bold'); }}><b>B</b></FormatMyButton>
+					<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('italic'); }}><i>I</i></FormatMyButton>
+					<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('underline'); }}><u>U</u></FormatMyButton>
+				</Toolbar>
+				<Editor
+					ref={editorRef}
+					contentEditable
+					suppressContentEditableWarning
+					onInput={handleInput}
+					aria-label="Journal text editor"
+				/>
+				<ImageRow>
+					<div>
+						<input
+							type="file"
+							accept="image/*"
+							id="journal-image-upload"
+							style={{ display: 'none' }}
+							onChange={handleImageChange}
+						/>
+						<label htmlFor="journal-image-upload">
+							<ImageMyButton type='button' as='span' style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}}>
+								{image ? 'Change image' : 'Upload image'}
+							</ImageMyButton>
+						</label>
 					</div>
-					{error && (
-						<div style={{ marginTop: 3, color: 'red', fontSize: '0.8em' }}>{error}</div>
-					)}
-					{success && !error && (
-						<div style={{ marginTop: 3, color: 'green', fontSize: '0.8em' }}>Journal saved!</div>
-					)}
-				</form>
-			</EditorContainer>
-		);
+					<PreviewImage src={imagePreview || PLACEHOLDER} alt="Preview" />
+				</ImageRow>
+				<div style={{ display: 'flex', justifyContent: 'left', marginTop: 10 }}>
+					<MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={loading}>
+						{loading ? 'Saving...' : 'Save'}
+					</MyButton>
+				</div>
+				{(error && showMessage) && (
+					<div style={{ marginTop: 3, color: 'red', fontSize: '0.8em' }}>{error}</div>
+				)}
+				{(success && !error && showMessage) && (
+					<div style={{ marginTop: 3, color: 'green', fontSize: '0.8em' }}>Journal saved!</div>
+				)}
+			</form>
+		</EditorContainer>
+	);
 }
 
