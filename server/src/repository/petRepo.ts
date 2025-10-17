@@ -1,7 +1,5 @@
 import moment from 'moment'
 import PetModel from '../model/Pets'
-import { Types } from 'mongoose'
-import UserModel from '../model/Users'
 
 export const getPetByUserId = async (userId: string) => {
   return PetModel.findOne({ userId })
@@ -16,7 +14,6 @@ export const createPet = async (
   color: string,
   name: string
 ) => {
-  console.log(userId)
   return PetModel.create({
     userId,
     name: name,

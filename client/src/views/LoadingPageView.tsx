@@ -1,17 +1,26 @@
-import styled from "styled-components";
-import cat1 from "../assets/cat_happy_1.png";
-import cat2 from "../assets/cat_happy_2.png";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import styled from 'styled-components'
+import cat1 from '../assets/cat_happy_1.png'
+import cat2 from '../assets/cat_happy_2.png'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Navigate } from 'react-router'
 
-function DashboardPageView() {
-  const [shownImg, setShownImg] = useState(true);
+interface PropTypes {
+  isError: boolean
+}
+
+function LoadingPageView({ isError }: PropTypes) {
+  const [shownImg, setShownImg] = useState(true)
   useEffect(() => {
-    const timer = setInterval(() => {
-      setShownImg((prev) => !prev);
-    }, 500);
-    return () => clearInterval(timer);
-  }, []);
+    if (!isError) {
+      const timer = setInterval(() => {
+        setShownImg((prev) => !prev)
+      }, 500)
+      return () => clearInterval(timer)
+    }
+  }, [shownImg, isError])
+
+  if (isError) return <Navigate to="/login" replace />
   return (
     <Wrapper>
       <Content>
@@ -35,10 +44,10 @@ function DashboardPageView() {
         <AffirmationCard>Here you will have an affirmation</AffirmationCard>
       </Content>
     </Wrapper>
-  );
+  )
 }
 
-export default DashboardPageView;
+export default LoadingPageView
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -48,7 +57,7 @@ const Wrapper = styled.div`
   align-items: center;
   background: linear-gradient(180deg, #f4f1df 0%, #cddcd8 100%);
   padding: 16px;
-`;
+`
 
 const Headline = styled.h1`
   font-size: clamp(28px, 5vw, 48px);
@@ -56,7 +65,7 @@ const Headline = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0 0 16px 0;
-`;
+`
 
 const AnimContainer = styled.div`
   position: relative;
@@ -66,7 +75,7 @@ const AnimContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const MyPet = styled(motion.img)`
   position: absolute;
@@ -76,7 +85,7 @@ const MyPet = styled(motion.img)`
   height: 100%;
   transform: translate(-50%, -50%);
   object-fit: contain;
-`;
+`
 const AffirmationCard = styled.div`
   text-align: center;
   width: 100%;
@@ -84,7 +93,7 @@ const AffirmationCard = styled.div`
   padding: 16px;
   border-radius: 12px;
   background-color: ${(props) => props.theme.colors.light_grey};
-`;
+`
 
 const Content = styled.div`
   display: flex;
@@ -93,4 +102,4 @@ const Content = styled.div`
   justify-content: center;
   gap: 16px;
   width: 100%;
-`;
+`

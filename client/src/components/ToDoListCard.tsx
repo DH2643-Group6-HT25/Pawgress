@@ -88,7 +88,9 @@ const ToDoListCard: React.FC<Props> = ({
       </CardHeader>
 
       <InsideCardContainer style={{ flexDirection: 'column' }}>
-        {!isAdding && !loading && todos.length === 0 && <Empty>no todos yet</Empty>}
+        {!isAdding && !loading && todos.length === 0 && (
+          <Empty>no todos yet</Empty>
+        )}
 
         <DndContext sensors={sensors} onDragEnd={onDragEnd}>
           <TodoList>
@@ -113,22 +115,29 @@ const ToDoListCard: React.FC<Props> = ({
                 initialValues={{ text: '' }}
                 validate={(v) => (!v.text.trim() ? { text: 'Required' } : {})}
                 onSubmit={async (values, { resetForm }) => {
-									try {
-										console.log("SUBMIT →", values);
-										await addTodo(values.text.trim());
-										console.log("SUBMIT OK");
-										resetForm();
-										setIsAdding(false);
-									} catch (e) {
-										cosole.error("SUBMIT FEL:", e);
-									}
-								}}
-                  
+                  try {
+                    console.log('SUBMIT →', values)
+                    await addTodo(values.text.trim())
+                    console.log('SUBMIT OK')
+                    resetForm()
+                    setIsAdding(false)
+                  } catch (e) {
+                    console.error('SUBMIT FEL:', e)
+                  }
+                }}
               >
                 {({ isSubmitting, errors }) => (
                   <Form style={{ display: 'flex', gap: 12, width: '100%' }}>
-                    <Input as={Field} name="text" placeholder="Your todo..." autoFocus />
-                    <Save type="submit" disabled={isSubmitting || !!errors.text}>
+                    <Input
+                      as={Field}
+                      name="text"
+                      placeholder="Your todo..."
+                      autoFocus
+                    />
+                    <Save
+                      type="submit"
+                      disabled={isSubmitting || !!errors.text}
+                    >
                       Save
                     </Save>
                     <Back type="button" onClick={() => setIsAdding(false)}>
@@ -140,7 +149,12 @@ const ToDoListCard: React.FC<Props> = ({
             ) : (
               <>
                 <FooterButton type="button" onClick={() => setIsAdding(true)}>
-                  <CardIcon src={plusIcon} alt="Add" style={{ marginRight: 6 }} /> Add
+                  <CardIcon
+                    src={plusIcon}
+                    alt="Add"
+                    style={{ marginRight: 6 }}
+                  />{' '}
+                  Add
                 </FooterButton>
                 <TrashDrop id="trash">
                   <CardIcon src={trashIcon} alt="Delete" />
@@ -157,8 +171,15 @@ const ToDoListCard: React.FC<Props> = ({
 export default ToDoListCard
 
 /* ---------- Sortable wrapper ---------- */
-function SortableTodo({ id, children }: { id: string; children: React.ReactNode }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+function SortableTodo({
+  id,
+  children,
+}: {
+  id: string
+  children: React.ReactNode
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id })
   const style = { transform: CSS.Transform.toString(transform), transition }
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>

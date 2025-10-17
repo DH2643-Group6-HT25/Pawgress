@@ -4,9 +4,10 @@ import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import { MyPet, PetContainer } from '../components/MyPet'
 import Header from '../components/Header'
 import DashboardMenu from '../components/DashboardMenu'
-import PetSateHeader from '../components/PetStateHeader'
+import PetStateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
-import type { DashboardState } from '../maps/dashboardMap'
+import type { DashboardActions, DashboardState } from '../maps/dashboardMap'
+import Food from '../components/Food'
 
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
@@ -55,17 +56,7 @@ const DashboardCatFooter = styled.div`
   z-index: 2;
 `
 
-type Actions = {
-  fetchTodos: () => any
-  addTodo: (name: string) => any
-  deleteTodo: (id: string) => any
-  reorderLocal: (from: number, to: number) => any
-  reorderTodosBulk: (items: { id: string; order: number }[]) => any
-}
-
-interface PropTypes extends DashboardState, Actions {
-  loading: boolean
-}
+interface PropTypes extends DashboardState, DashboardActions {}
 
 function DashboardPageView({
   petName,
@@ -81,8 +72,10 @@ function DashboardPageView({
 }: PropTypes) {
   return (
     <DashboardWrapper>
-      <Header primary />
-      <PetSateHeader name={petName} health={petHealth} />
+      <Header />
+      <div>
+        <PetStateHeader name={petName} health={petHealth} />
+      </div>
       <DashboardBody>
         <LeftDashboard>
           <ToDoListCard
@@ -106,6 +99,7 @@ function DashboardPageView({
         <PetContainer>
           <MyPet health={petHealth} color={petColor} />
         </PetContainer>
+        <Food foodCount={2} />
       </DashboardCatFooter>
       <Footer />
     </DashboardWrapper>

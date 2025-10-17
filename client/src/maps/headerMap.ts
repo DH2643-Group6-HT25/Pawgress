@@ -1,14 +1,14 @@
-import type { RootState } from "../models";
-import { logout } from "../models/user/userReducer";
+import type { AppThunkDispatch, RootState } from '../models'
+import { userLogoutThunk } from '../models/user/userThunks'
 
 export function mapStateToHeaderProps(state: RootState) {
   return {
     loggedIn: state.user.loggedIn,
-  };
+  }
 }
 
-export function mapDispatchToHeaderProps(dispatch: any) {
+export function mapDispatchToHeaderProps(dispatch: AppThunkDispatch) {
   return {
-    onLogout: () => dispatch(logout()),
-  };
+    onLogout: () => dispatch(userLogoutThunk()),
+  }
 }

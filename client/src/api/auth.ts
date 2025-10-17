@@ -8,7 +8,10 @@ export async function login(email: string, password: string) {
     body: JSON.stringify({ email, password }),
     credentials: 'include',
   })
-  return res.json()
+
+  if (res.status == 200) return res.json()
+
+  throw new Error('Unsuccessful Login')
 }
 
 export async function signup(email: string, password: string, name: string) {
@@ -18,5 +21,32 @@ export async function signup(email: string, password: string, name: string) {
     body: JSON.stringify({ email, password, name }),
     credentials: 'include',
   })
-  return res.json()
+
+  if (res.status == 201) return res.json()
+
+  throw new Error('Unsuccessful Signup')
+}
+
+export async function verifyToken() {
+  const res = await fetch(API_URL + '/token', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  if (res.status == 200 && res?.ok) return
+
+  throw new Error('Invalid Token')
+}
+
+export async function logout() {
+  const res = await fetch(API_URL + '/logout', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  if (res.status == 200) return
+
+  throw new Error('Unsuccessful Logout')
 }

@@ -1,21 +1,28 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import cat1 from "../assets/cat_normal_1.png";
-import cat2 from "../assets/cat_normal_2.png";
-import styled from "styled-components";
-import { MyCard } from "../components/CardComponents";
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import cat1 from '../assets/cat_normal_1.png'
+import cat2 from '../assets/cat_normal_2.png'
+import styled from 'styled-components'
+import { MyCard } from '../components/CardComponents'
 
-export default function SuspenseView() {
-  const [shownImg, setShownImg] = useState(true);
+interface SuspenseViewProps {
+  modelName: string
+}
+
+export default function SuspenseView({
+  modelName,
+}: Readonly<SuspenseViewProps>) {
+  const [shownImg, setShownImg] = useState(true)
   useEffect(() => {
     const timer = setInterval(() => {
-      setShownImg((prev) => !prev);
-    }, 500);
-    return () => clearInterval(timer);
-  }, []);
+      setShownImg((prev) => !prev)
+    }, 500)
+    return () => clearInterval(timer)
+  }, [])
   return (
     <MyCard>
       <SuspenseViewContainer>
+        <SuspenseText> {modelName} is loading...</SuspenseText>
         <SuspenseViewImg
           key="cat1"
           src={cat1}
@@ -32,7 +39,7 @@ export default function SuspenseView() {
         />
       </SuspenseViewContainer>
     </MyCard>
-  );
+  )
 }
 
 const SuspenseViewContainer = styled.div`
@@ -43,7 +50,7 @@ const SuspenseViewContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const SuspenseViewImg = styled(motion.img)`
   position: absolute;
@@ -54,7 +61,22 @@ const SuspenseViewImg = styled(motion.img)`
   /*Prevent images from being stretched*/
   width: auto;
   height: auto;
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 70%;
+  max-height: 70%;
   object-fit: contain;
-`;
+`
+const SuspenseText = styled.p`
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-family: ${(props) => props.theme.fonts.pixel};
+  text-transform: lowercase;
+  font-size: 1.4rem;
+  word-break: break-word;
+  width: max-content;
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+  }
+`

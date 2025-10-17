@@ -1,6 +1,7 @@
 import express from 'express'
 import { assignPet, getPet } from '../service/petService'
 import { decodeAuth } from '../utils/authUtils'
+import { getPetByUserId } from '../repository/petRepo'
 
 const router = express.Router()
 
@@ -12,18 +13,17 @@ class NoPetFoundError extends Error {
 }
 
 router.get('/', async (req, res) => {
-  const { id } = req.query
-  if (!id) return res.status(400).json({ error: 'pet id required' })
-
+  const userId = decodeAuth(req)
+  if (!userId) return res.status(403).json({ error: 'Invalid Token' })
   try {
-    const pet = await getPet(id as string)
+    const pet = await getPetByUserId(userId)
     if (!pet) {
-      throw new NoPetFoundError(`No pet with id: ${id}`)
+      throw new NoPetFoundError(`No pet with id for this user`)
     }
     res.status(200).json({ pet })
   } catch (err: any) {
     if (err instanceof NoPetFoundError) {
-      res.status(404).json({ error: err.message })
+      res.status(200).json({ pet: {} })
     }
     res.status(500).json({ error: err.message || 'Server error' })
   }

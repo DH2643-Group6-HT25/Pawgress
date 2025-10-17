@@ -11,6 +11,7 @@ import type { OnboardingDispatch, OnboardingState } from '../maps/onboardingMap'
 import { MyPet, PetContainer } from '../components/MyPet'
 import { MyButton } from '../components/MyButton'
 import { Input } from '../components/AuthUI'
+import { Navigate } from 'react-router'
 
 interface PropTypes extends OnboardingState, OnboardingDispatch {}
 interface Values {
@@ -26,7 +27,9 @@ function OnboardingPageView({
   isLoading,
   petError,
   submitPetInfoACB,
+  hasPet,
 }: PropTypes) {
+  if (hasPet) <Navigate to="/dashboard" replace />
   return (
     <CenteredWrapper>
       <h1>Welcome To Pawgress!</h1>

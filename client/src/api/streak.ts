@@ -1,20 +1,27 @@
-export async function getStreak(userId: string) {
-  const res = await fetch(`/?userId=${userId}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
+import { INTERNAL_API_URL } from './config'
 
-  return res.json();
+const STREAK_URL = INTERNAL_API_URL + '/streak'
+
+export async function getStreak() {
+  const res = await fetch(STREAK_URL + `/`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  if (!res.ok) throw new Error('Fail to fetch streaks')
+
+  return res.json()
 }
 
-export async function updateStreak(userId: string) {
-  const res = await fetch(`/update`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId }),
-    credentials: "include",
-  });
+export async function updateStreak() {
+  const res = await fetch(STREAK_URL + `/update`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
 
-  return res.json();
+  if (!res.ok) throw new Error('Fail to update streaks')
+
+  return res.json()
 }

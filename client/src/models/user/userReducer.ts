@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { userLoginThunk, userSignupThunk } from './userThunks'
+import {
+  userLoginThunk,
+  userLogoutThunk,
+  userSignupThunk,
+  userVerifyThunk,
+} from './userThunks'
+import userStorePrefix from './userStorePrefix'
 
 interface UserState {
   email: string
@@ -9,6 +15,9 @@ interface UserState {
   userID: string | null
   loading: boolean
   loggedIn: boolean
+  isCredentialLoading: boolean
+  sessionError: string | null
+  hasPet: boolean
 }
 
 const initialState: UserState = {
@@ -19,10 +28,13 @@ const initialState: UserState = {
   userID: null,
   loading: false,
   loggedIn: false,
+  isCredentialLoading: false,
+  sessionError: null,
+  hasPet: false,
 }
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: userStorePrefix,
   initialState,
   reducers: {
     setEmail: (state, action) => {
@@ -37,12 +49,14 @@ export const userSlice = createSlice({
     setMsg: (state, action) => {
       state.msg = action.payload
     },
-    logout: (state) => {
-      state.loggedIn = false
-      state.email = ''
-      state.password = ''
-      state.name = ''
-      state.msg = ''
+    setSessionError: (state) => {
+      state.sessionError = 'Please sign up / log in again'
+    },
+    clearSessionError: (state) => {
+      state.sessionError = null
+    },
+    setPetOwned: (state) => {
+      state.hasPet = true
     },
   },
   extraReducers: (builder) => {
@@ -53,9 +67,11 @@ export const userSlice = createSlice({
       })
       .addCase(userLoginThunk.fulfilled, (state, action) => {
         state.loading = false
-        state.msg = action.payload.message || 'Login successful'
+        state.msg = ''
         state.loggedIn = true
-        state.userID = action.payload.user?.id || null;
+        state.userID = action.payload.user?.id || null
+        state.password = ''
+        state.hasPet = action.payload.user?.hasPet || false
       })
       .addCase(userLoginThunk.rejected, (state, action) => {
         state.loading = false
@@ -67,16 +83,53 @@ export const userSlice = createSlice({
       })
       .addCase(userSignupThunk.fulfilled, (state, action) => {
         state.loading = false
-        state.msg = action.payload.message || 'Signup successful'
+        state.msg = ''
         state.loggedIn = true
-        state.userID = action.payload.user?.id || null;
+        state.userID = action.payload.user?.id || null
+        state.password = ''
       })
       .addCase(userSignupThunk.rejected, (state, action) => {
         state.loading = false
         state.msg = action.payload as string
       })
+      .addCase(userVerifyThunk.pending, (state) => {
+        state.isCredentialLoading = true
+      })
+      .addCase(userVerifyThunk.fulfilled, (state) => {
+        state.isCredentialLoading = false
+        state.loggedIn = true
+      })
+      .addCase(userVerifyThunk.rejected, (state) => {
+        state.isCredentialLoading = false
+        state.userID = initialState.userID
+        state.loggedIn = initialState.loggedIn
+      })
+      .addCase(userLogoutThunk.pending, (state) => {
+        state.isCredentialLoading = true
+      })
+      .addCase(userLogoutThunk.fulfilled, (state) => {
+        state.isCredentialLoading = false
+        state.userID = initialState.userID
+        state.loggedIn = initialState.loggedIn
+        state.loading = initialState.loading
+        state.name = initialState.name
+        state.email = initialState.email
+        state.hasPet = initialState.hasPet
+      })
+      .addCase(userLogoutThunk.rejected, (state) => {
+        state.isCredentialLoading = false
+        state.msg = 'Logout Unsucessful'
+      })
   },
 })
 
-export const { setEmail, setPassword, setName, setMsg, logout } = userSlice.actions
+export const {
+  setEmail,
+  setPassword,
+  setName,
+  setMsg,
+  setSessionError,
+  clearSessionError,
+  setPetOwned,
+} = userSlice.actions
 export default userSlice.reducer

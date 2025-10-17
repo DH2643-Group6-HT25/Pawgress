@@ -47,10 +47,19 @@ export const updateStreak = async (userId: string) => {
 
     // update streak history
     streak.streakHistory.push({ date: today, finishedTodos: 1 })
+
+    // sort streak history
+    streak.streakHistory.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
   }
 
   // save streak data
-  await streak.save()
+  await streakRepo.updateStreak(userId, {
+    currentStreak: streak.currentStreak,
+    bestStreak: streak.bestStreak,
+    streakHistory: streak.streakHistory,
+  })
 
   return streak
 }
