@@ -2,16 +2,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { MyButton } from '../MyButton';
 import type { Journal } from '../../models/journal/journalType';
+import { isNil } from 'lodash/fp';
 import { 
 	EditorContainer, 
 	Toolbar, 
 	Editor,
-	PreviewImage, 
 	ImageRow, 
 	ImageMyButton, 
 	FormatMyButton, 
-	PLACEHOLDER} from './JournalCardComponents';
+	JournalImage} from './JournalCardComponents';
 import { InsideCardTitle } from '../CardComponents';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface Props {
 	userId?: string;
@@ -104,7 +105,9 @@ useEffect(() => {
 
 	return (
 		<EditorContainer>
-			<InsideCardTitle>Edit today's Journal</InsideCardTitle>
+			<InsideCardTitle>
+				{isNil(today) ? "Add today's journal" : "Edit today's Journal"}
+			</InsideCardTitle>
 			<form onSubmit={handleSubmit}>
 				<Toolbar>
 					<FormatMyButton type="button" onClick={e => { e.preventDefault(); handleFormat('bold'); }}><b>B</b></FormatMyButton>
@@ -129,14 +132,30 @@ useEffect(() => {
 						/>
 						<label htmlFor="journal-image-upload">
 							<ImageMyButton type='button' as='span' style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}}>
-								{image ? 'Change image' : 'Upload image'}
+								{imagePreview ? 'Change image' : 'Upload image'}
 							</ImageMyButton>
 						</label>
 					</div>
-					<PreviewImage src={imagePreview || PLACEHOLDER} alt="Preview" />
+								<JournalImage
+									style={{
+										width: '50px',
+										height: '50px',
+										borderRadius: '10px',
+										opacity: imagePreview ? 1 : 0,
+										visibility: imagePreview ? 'visible' : 'hidden',
+										transition: 'opacity 0.2s'
+									}}
+									src={imagePreview ? getImageUrl(imagePreview) : undefined}
+									alt="Preview"
+								/>
 				</ImageRow>
 				<div style={{ display: 'flex', justifyContent: 'left', marginTop: 10 }}>
-					<MyButton primary style={{borderWidth: '2px', boxShadow: '2px 2px 0 #000'}} type="submit" disabled={loading}>
+					<MyButton
+						primary
+						style={{ borderWidth: '2px', boxShadow: '2px 2px 0 #000' }}
+						type="submit"
+						disabled={loading || !imagePreview}
+					>
 						{loading ? 'Saving...' : 'Save'}
 					</MyButton>
 				</div>

@@ -1,5 +1,6 @@
 
 import express from "express";
+import { decodeAuth } from "../utils/authUtils";
 import * as journalService from "../service/journalService";
 import multer from "multer";
 import path from "path";
@@ -23,8 +24,8 @@ const upload = multer({ storage });
 // Get all journals for a user, sorted by date desc
 router.get("/", async (req, res) => {
   try {
-    const { userId } = req.query as { userId?: string };
-    if (!userId) return res.status(400).json({ error: "Missing userId" });
+    const userId = decodeAuth(req);
+    if (!userId) return res.status(403).json({ error: "Invalid Token" });
     const journals = await journalService.getJournalsForUser(userId);
     res.json(journals);
   } catch (err) {
@@ -40,7 +41,8 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
   let file;
   try {
-    const { journal, formatting, userId } = req.body as { journal?: string; formatting?: any; userId?: string };
+    const userId = decodeAuth(req);
+    const { journal, formatting } = req.body as { journal?: string; formatting?: any };
     file = (req as any).file;
     // Kontrollera att userId är en giltig ObjectId-sträng
     console.log('POST /journal userId:', userId, 'typeof:', typeof userId);
