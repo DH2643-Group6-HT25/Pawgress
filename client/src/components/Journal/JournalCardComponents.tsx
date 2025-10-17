@@ -52,19 +52,6 @@ export const JournalListContainer = styled.div`
   padding-right: 15px;
 `;
 
-  // Placeholder image (transparent checkerboard)
-export const PLACEHOLDER =
-    'data:image/svg+xml;utf8,<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="%23eee"/><rect width="60" height="60" fill="%23ccc"/><rect x="60" y="60" width="60" height="60" fill="%23ccc"/></svg>';
-
-export const PreviewImage = styled.img`
-    width: 20%;
-    height: 20%;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    object-fit: cover;
-    background: #f6f6f6;
-  `;
-
 export const ImageRow = styled.div`
     display: flex;
     flex-direction: row;

@@ -26,6 +26,10 @@ export const MyButton = styled.button.withConfig({
   text-transform: undercase;
   margin: 3px;       
 
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+
   &:active {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0 0 ${(props) => props.theme.colors.black};

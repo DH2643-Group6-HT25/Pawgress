@@ -1,7 +1,6 @@
 import type { Journal } from '../../models/journal/journalType';
 import moment from 'moment';
-import { sortBy } from 'lodash/fp';
-import { filter } from 'lodash/fp';
+import { sortBy, filter } from 'lodash/fp';
 import { 
   JournalEntryCard, 
   JournalListContainer, 
@@ -14,6 +13,7 @@ import {
 } from '../Journal/JournalCardComponents';
 import { CardIcon } from '../CardComponents';
 import trashIcon from '../../assets/icons/remove.svg';
+import { getImageUrl } from '../../utils/imageUrl';
 
 // Helper to render formatted text (basic bold/italic/underline)
 function renderFormattedText(journal: Journal) {
@@ -38,7 +38,7 @@ export default function JournalHistory({ journals, onDelete }: Props) {
           <CardText>{renderFormattedText(j)}</CardText>
           <CardBottomRow>
             <CardImageWrapper>
-              {j.imageUrl && <JournalImage src={j.imageUrl} alt="journal" />}
+              {j.imageUrl && <JournalImage src={getImageUrl(j.imageUrl)} alt="journal" />}
             </CardImageWrapper>
             {typeof onDelete === 'function' && (
               <TrashWrapper>
