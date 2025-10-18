@@ -6,7 +6,7 @@ export const theme: DefaultTheme = {
     light_grey: '#A4B6B5',
     black: '#000000',
     white: '#ffffffff',
-    highlight: '#B5A4A4',
+    highlight: '#F4EAC5',
   },
 
   fonts: {

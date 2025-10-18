@@ -43,8 +43,8 @@ const GuidanceContent: TabItem[] = [
     title: 'Todo',
     content: (
       <InsideCardText>
-        Use our todo ist to remind yourself of your daily must-dos! Don't forget
-        to complete them on time!
+        Use our todo ist to remind yourself of your daily must-todos! Don't
+        forget to complete them on time!
       </InsideCardText>
     ),
   },
