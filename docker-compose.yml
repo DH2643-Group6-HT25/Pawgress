@@ -10,7 +10,7 @@ services:
     networks:
       - react-express
     ports:
-      - '5173:5173'
+      - "5173:5173"
   server:
     build:
       dockerfile: Dockerfile
@@ -27,19 +27,23 @@ services:
       - express-mongo
       - react-express
     ports:
-      - '3001:3001'
+      - "3001:3001"
 
   mongo:
     restart: always
     image: mongo:8.0.15
     volumes:
       - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pawgress-admin
+      MONGO_INITDB_ROOT_PASSWORD: pwd123456
+    command: ["--auth"]
     networks:
       - express-mongo
     expose:
       - 27017
     ports:
-      - '27017:27017'
+      - "27017:27017"
 
 networks:
   react-express:
