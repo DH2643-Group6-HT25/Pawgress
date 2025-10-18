@@ -34,9 +34,8 @@ services:
     image: mongo:8.0.15
     volumes:
       - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: pawgress-admin
-      MONGO_INITDB_ROOT_PASSWORD: pwd123456
+    env_file:
+      - ./server/.env
     command: ["--auth"]
     networks:
       - express-mongo
