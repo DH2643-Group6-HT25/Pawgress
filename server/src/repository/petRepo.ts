@@ -1,5 +1,5 @@
 import moment from 'moment'
-import PetModel from '../model/Pets'
+import PetModel, { IPet } from '../model/Pets'
 
 export const getPetByUserId = async (userId: string) => {
   return PetModel.findOne({ userId })
@@ -21,4 +21,11 @@ export const createPet = async (
     health: 100,
     lastUpdate: moment.now(),
   })
+}
+
+export const updatePetByUserId = async (
+  userId: string,
+  update: Partial<IPet>
+) => {
+  return PetModel.updateOne({ userId }, { $set: update })
 }

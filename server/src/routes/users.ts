@@ -3,6 +3,9 @@ import UserModel from '../model/Users'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { decodeAuth } from '../utils/authUtils'
+import { getPetByUserId } from '../repository/petRepo'
+import { NoTokenError, NoUserFoundError } from '../utils/errorUtils'
+import { findUserById } from '../repository/usersRepo'
 
 const router = express.Router()
 
@@ -29,6 +32,8 @@ router.post('/login', async (req, res) => {
       expiresIn: '7d',
     })
 
+    const pet = await getPetByUserId(user.id)
+
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -39,7 +44,7 @@ router.post('/login', async (req, res) => {
     res.status(200).json({
       message: 'Login successful',
       user: { name: user.name, email: user.email, id: user._id },
-      hasPet: user?.pet,
+      hasPet: pet ? true : false,
     })
   } catch (err) {
     console.error('Login error:', err)
@@ -86,12 +91,23 @@ router.post('/signup', async (req, res) => {
 })
 
 router.get('/token', async (req, res) => {
-  const userId = decodeAuth(req)
-  if (userId) {
+  try {
+    const userId = decodeAuth(req)
+    if (!userId) throw new NoTokenError('')
+
+    const user = findUserById(userId)
+    if (!user) throw new NoUserFoundError('')
+
     res.status(200).json({ ok: true })
-  } else {
+  } catch (err) {
     res.clearCookie('token')
-    res.status(401).json({ error: 'Invalid Token' })
+    if (err instanceof NoTokenError) {
+      res.status(401).json({ error: 'Invalid Token' })
+    } else if (err instanceof NoUserFoundError) {
+      res.status(401).json({ error: 'Unauthorized User' })
+    } else {
+      res.status(401).json({ error: 'Invalid Token' })
+    }
   }
 })
 
