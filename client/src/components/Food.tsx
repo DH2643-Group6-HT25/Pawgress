@@ -25,14 +25,16 @@ const FoodWrapper = styled.div`
 
 interface PropTypes {
   foodCount: number
+  isLoading?: boolean
 }
 
-function Food({ foodCount }: PropTypes) {
+function Food({ foodCount, isLoading }: PropTypes) {
   const isEmpty = foodCount == 0
   return (
     <FoodWrapper>
       <FishIcon src={isEmpty ? fishIconEaten : fishIcon} alt="Fish" />
-      <MenuLabel $active={!isEmpty}>{foodCount} Fish</MenuLabel>
+      {isLoading && <MenuLabel>Loading...</MenuLabel>}
+      {!isLoading && <MenuLabel $active={!isEmpty}>{foodCount} Fish</MenuLabel>}
     </FoodWrapper>
   )
 }

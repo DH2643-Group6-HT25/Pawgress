@@ -42,6 +42,9 @@ export const streakSlice = createSlice({
     setStreakError(state, action: PayloadAction<string | null>) {
       state.error = action.payload
     },
+    setCurrentStreak(state, action: PayloadAction<number>) {
+      state.currentStreak = action.payload
+    },
   },
 })
 
@@ -51,4 +54,5 @@ export const {
   setIsStreakNewUser,
   setStreakError,
   setBasicStreakInfo,
+  setCurrentStreak,
 } = streakSlice.actions

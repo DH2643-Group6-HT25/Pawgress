@@ -11,5 +11,29 @@ export async function postNewPet(name: string, color: string) {
     body: bodyRequest,
     credentials: 'include',
   })
-  return res.json()
+  if (res.status == 200) return res.json()
+  throw new Error('Failed to create new pet')
+}
+
+export async function getPetInfo() {
+  const res = await fetch(PET_URL, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  const result = await res.json()
+
+  if (res.status == 200) {
+    return {
+      name: result?.pet?.name || '',
+      color: result?.pet?.color || null,
+      health: result?.pet?.health || 0,
+      mood: result?.pet?.mood || null,
+      food: result?.pet?.food || 0,
+      currentStreak: result?.pet?.currentStreak || 0,
+    }
+  }
+
+  throw new Error(result?.error?.message || 'Failed to get pet info')
 }

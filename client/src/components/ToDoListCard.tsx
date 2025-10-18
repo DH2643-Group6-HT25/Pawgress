@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
   MyCard,
   CardHeader,
@@ -31,11 +31,12 @@ import type { TodoObject } from '../models/todo/type'
 type Props = {
   todos: TodoObject[]
   loading: boolean
-  fetchTodos: () => any
-  addTodo: (name: string) => any
-  deleteTodo: (id: string) => any
-  reorderLocal: (from: number, to: number) => any
-  reorderTodosBulk: (items: { id: string; order: number }[]) => any
+  fetchTodos: CallableFunction
+  addTodo: (name: string) => void
+  deleteTodo: (id: string) => void
+  completeTodo: (id: string) => void
+  reorderLocal: (from: number, to: number) => void
+  reorderTodosBulk: (items: { id: string; order: number }[]) => void
 }
 
 const ToDoListCard: React.FC<Props> = ({
@@ -44,14 +45,19 @@ const ToDoListCard: React.FC<Props> = ({
   fetchTodos,
   addTodo,
   deleteTodo,
+  completeTodo,
   reorderLocal,
   reorderTodosBulk,
 }) => {
   const [isAdding, setIsAdding] = useState(false)
+  const isInitialRender = useRef(true)
 
   useEffect(() => {
-    fetchTodos()
-  }, [fetchTodos])
+    if (isInitialRender.current && !loading) {
+      fetchTodos()
+      isInitialRender.current = false
+    }
+  }, [fetchTodos, loading])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -100,7 +106,7 @@ const ToDoListCard: React.FC<Props> = ({
                   <TodoItem>
                     <Checkbox
                       aria-label={`complete ${t.name}`}
-                      onChange={() => deleteTodo(t.id)}
+                      onChange={() => completeTodo(t.id)}
                     />
                     {t.name}
                   </TodoItem>

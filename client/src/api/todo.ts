@@ -35,3 +35,11 @@ export async function reorderTodos(items: { id: string; order: number }[]) {
   if (!r.ok) throw new Error(await r.text())
   return r.json()
 }
+
+export async function completeTodo(id: string) {
+  const r = await fetch(`${INTERNAL_API_URL}/todo/${id}/complete`, {
+    method: 'POST',
+    credentials: 'include',
+  })
+  if (!r.ok) throw new Error(await r.text())
+}

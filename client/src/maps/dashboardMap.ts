@@ -5,9 +5,12 @@ import {
   addTodoThunk,
   deleteTodoThunk,
   reorderTodosBulkThunk,
+  completeTodoThunk,
 } from '../models/todo/todoThunks'
 
 import { reorderLocal } from '../models/todo/todoReducer'
+import { petInfoThunk } from '../models/pet/petThunks'
+import { userVerifyThunk } from '../models/user/userThunks'
 
 export interface DashboardState {
   todos: TodoObject[]
@@ -15,40 +18,66 @@ export interface DashboardState {
   petName: string
   petHealth: number
   petColor: string | null
+  petMood: string
+  food: number
   loading: boolean
+  isPetLoading: boolean
+  currentStreak: number
 }
 
 export interface InitialDashboardState extends DashboardState {
-  isInitialProtectedRender: boolean
-  isCredentialLoading: boolean
-  isSessionError: boolean
+  isPageLoading: boolean
 }
 
-export function mapStateToDashboardProps(state: RootState): DashboardState {
+export function mapStateToDashboardProps(
+  state: RootState
+): InitialDashboardState {
   return {
     todos: state.todo.todoList,
     currentUser: state.user.userID ?? '',
-    petName: state.pet.name ?? 'PetName',
+    petName: state.pet.name ?? '',
     petHealth: state.pet.health ?? 0,
     petColor: state.pet.color,
+    petMood: state.pet.mood,
+    food: state.pet.food,
     loading: state.todo.loading ?? false,
+    isPageLoading: state.user.isCredentialLoading,
+    isPetLoading: state.pet.loading,
+    currentStreak: state.streak.currentStreak,
   }
 }
 
-export type DashboardActions = {
-  fetchTodos: () => AppThunkDispatch
-  addTodo: (name: string) => AppThunkDispatch
-  deleteTodo: (id: string) => AppThunkDispatch
-  reorderLocal: (from: number, to: number) => AppThunkDispatch
-  reorderTodosBulk: (items: { id: string; order: number }[]) => AppThunkDispatch
+export interface DashboardActions {
+  fetchTodos: CallableFunction
+  addTodo: (name: string) => void
+  deleteTodo: (id: string) => void
+  completeTodo: (id: string) => void
+  reorderLocal: (from: number, to: number) => void
+  reorderTodosBulk: (items: { id: string; order: number }[]) => void
 }
 
-export const mapDispatchToDashboardProps = (dispatch: AppThunkDispatch) => ({
-  fetchTodos: () => dispatch(fetchTodosThunk()),
-  addTodo: (name: string) => dispatch(addTodoThunk({ name })),
-  deleteTodo: (id: string) => dispatch(deleteTodoThunk({ id })),
-  reorderLocal: (from: number, to: number) =>
-    dispatch(reorderLocal({ from, to })),
-  reorderTodosBulk: (items: { id: string; order: number }[]) =>
-    dispatch(reorderTodosBulkThunk({ items })),
-})
+export interface InitialDashboardActions extends DashboardActions {
+  verifyUser: CallableFunction
+  fetchPetInfo: CallableFunction
+}
+
+export function mapDispatchToDashboardProps(
+  dispatch: AppThunkDispatch
+): InitialDashboardActions {
+  return {
+    fetchTodos: () => dispatch(fetchTodosThunk()),
+    addTodo: (name: string) => dispatch(addTodoThunk({ name })),
+    deleteTodo: (id: string) => dispatch(deleteTodoThunk({ id })),
+    completeTodo: (id: string) => dispatch(completeTodoThunk({ id })),
+    reorderLocal: (from: number, to: number) =>
+      dispatch(reorderLocal({ from, to })),
+    reorderTodosBulk: (items: { id: string; order: number }[]) =>
+      dispatch(reorderTodosBulkThunk({ items })),
+    fetchPetInfo() {
+      dispatch(petInfoThunk())
+    },
+    verifyUser() {
+      dispatch(userVerifyThunk())
+    },
+  }
+}

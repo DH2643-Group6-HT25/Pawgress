@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Navigate } from 'react-router'
 
 interface PropTypes {
-  isError: boolean
+  isError?: boolean
 }
 
 function LoadingPageView({ isError }: PropTypes) {
@@ -41,7 +41,10 @@ function LoadingPageView({ isError }: PropTypes) {
             transition={{ duration: 0 }}
           />
         </AnimContainer>
-        <AffirmationCard>Here you will have an affirmation</AffirmationCard>
+        <AffirmationCard>
+          Get food by completing 2 ToDos / write journal and don't forget to
+          feed your pet
+        </AffirmationCard>
       </Content>
     </Wrapper>
   )

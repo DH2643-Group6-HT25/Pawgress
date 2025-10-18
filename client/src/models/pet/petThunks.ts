@@ -1,11 +1,13 @@
-import type { Dispatch } from '@reduxjs/toolkit'
+import { createAsyncThunk, type Dispatch } from '@reduxjs/toolkit'
 import {
   petCreationSubmitted,
   petSubmissionFailed,
   startPetSubmission,
   type BasicPetInfo,
 } from './petReducer'
-import { postNewPet } from '../../api/pet'
+import { getPetInfo, postNewPet } from '../../api/pet'
+import petStorePrefix from './petStorePrefix'
+import { getErrorMessage } from '../../utils/errorHandling'
 
 export const createPetThunk =
   (name: string, color: string) => async (dispatch: Dispatch) => {
@@ -32,3 +34,14 @@ export const createPetThunk =
       }
     }
   }
+
+export const petInfoThunk = createAsyncThunk(
+  `${petStorePrefix}/info`,
+  async (_, { rejectWithValue }) => {
+    try {
+      return await getPetInfo()
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error))
+    }
+  }
+)

@@ -22,7 +22,7 @@ const handleStreakAsync = async (
 
     if (data && data.streak) {
       const basicInfo: BasicStreakInfo = {
-        currentStreak: data.streak?.currentStreak || '',
+        currentStreak: data.streak?.currentStreak || 0,
         bestStreak: data.streak?.bestStreak || '',
         streakHistory: data.streak?.streakHistory || [],
       }
