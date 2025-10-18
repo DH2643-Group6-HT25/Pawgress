@@ -12,18 +12,14 @@ import GuidanceContent from '../components/Guidance/GuidanceContent'
 export default function DashboardGuideView() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // get activeTab from url or localStorage
   const tabFromURL = searchParams.get('tab')
-  const savedTab = localStorage.getItem('guideTab')
-  const activeTab = tabFromURL || savedTab || '0'
+  const activeTab = tabFromURL || '0'
 
   useEffect(() => {
-    if (!tabFromURL)
-      setSearchParams({ tab: savedTab || '0' }, { replace: true })
-  }, [tabFromURL, savedTab, setSearchParams])
+    if (!tabFromURL) setSearchParams({ tab: '0' }, { replace: true })
+  }, [tabFromURL, setSearchParams])
 
   const handleActiveTab = (id: number) => {
-    localStorage.setItem('guideTab', id.toString())
     setSearchParams({ tab: id.toString() })
   }
 
