@@ -51,3 +51,8 @@ Icon[
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# No package installation outside client and server folder
+package.json
+package-lock.json
+node_modules/

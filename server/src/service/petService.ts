@@ -1,12 +1,82 @@
+import _ from 'lodash'
 import moment from 'moment'
-import { createPet, getPetById, getPetByUserId } from '../repository/petRepo'
+import {
+  createPet,
+  getPetByUserId,
+  updatePetByUserId,
+} from '../repository/petRepo'
+import { IPet } from '../model/Pets'
+import { getStreak } from './streakService'
+import { findUserById } from '../repository/usersRepo'
+import { NoPetFoundError, NoUserFoundError } from '../utils/errorUtils'
+import { IStreak, IStreakHistory } from '../model/Streaks'
 
-const updatePetHealth = () => {}
+interface PetInfo {
+  name: string
+  color: string
+  health: number
+  mood: string
+  food: number
+  currentStreak: number
+}
 
-export const getPet = async (id: string) => {
-  const pet = await getPetById(id)
+const updatePetHealth = async (
+  pet: IPet,
+  currentStreak: number,
+  streak: IStreak | null
+) => {
+  const userId = pet.userId.toString()
+
+  if (pet.health > 0 && currentStreak < 1) {
+    let declineFactor = 1
+    if (streak?.streakHistory?.length > 0) {
+      const latestStreak = _.maxBy(
+        streak.streakHistory,
+        (value: IStreakHistory) => {
+          return moment(value.date)
+        }
+      )
+      const petLastUpdate = moment(pet.lastUpdate)
+      declineFactor = petLastUpdate.diff(latestStreak.date, 'day')
+    }
+
+    const currentHealth = pet.health - declineFactor * 50
+    pet.health = _.clamp(currentHealth, 0, Infinity)
+  }
+
+  await updatePetByUserId(userId, {
+    lastUpdate: moment().toDate(),
+    health: pet.health,
+  })
+  return pet.health
+}
+
+const getPetMood = (health: number): string => {
+  if (health < 25) return 'sleepy'
+  if (health > 74) return 'happy'
+  return 'normal'
+}
+
+export const getPet = async (userId: string) => {
+  const user = await findUserById(userId)
+  const pet = await getPetByUserId(userId)
+  const streak = await getStreak(userId)
+
+  if (!user) {
+    throw new NoUserFoundError('')
+  }
+
   if (!pet) {
-    return null
+    throw new NoPetFoundError('')
+  }
+
+  const petInfo: PetInfo = {
+    name: pet.name,
+    color: pet.color,
+    health: pet.health,
+    mood: getPetMood(pet.health),
+    food: user.food,
+    currentStreak: streak?.currentStreak || 0,
   }
 
   const isUpdatedBeforeToday = moment(pet.lastUpdate)
@@ -14,11 +84,13 @@ export const getPet = async (id: string) => {
     .isBefore(moment().startOf('day'))
 
   if (isUpdatedBeforeToday) {
-    updatePetHealth()
-    return pet
+    petInfo.health = await updatePetHealth(pet, petInfo.currentStreak, streak)
+    petInfo.mood = getPetMood(petInfo.health)
+
+    return petInfo
   }
 
-  return pet
+  return petInfo
 }
 
 export const assignPet = async (
