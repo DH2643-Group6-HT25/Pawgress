@@ -47,9 +47,10 @@ const StateWrapper = styled.div`
 interface PropTypes {
   name: string
   health: number
+  currentStreak: number
 }
 
-const PetStateHeader = ({ name, health }: PropTypes) => {
+const PetStateHeader = ({ name, health, currentStreak }: PropTypes) => {
   return (
     <HeaderWrapper>
       <Name>{name}</Name>
@@ -57,7 +58,9 @@ const PetStateHeader = ({ name, health }: PropTypes) => {
         <StateIcon src={heartIcon} alt="Heart" />
         <span>{health}%</span>
         <StateIcon src={streakIcon} alt="Streak" />
-        <span>4 days</span>
+        <span>
+          {currentStreak} {currentStreak != 1 ? 'days' : 'day'}
+        </span>
       </StateWrapper>
     </HeaderWrapper>
   )

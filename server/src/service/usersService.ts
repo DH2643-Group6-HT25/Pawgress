@@ -19,3 +19,8 @@ export async function loginUser(email: string, password: string) {
   if (!valid) throw new Error('Invalid email or password')
   return user
 }
+
+export async function updateFood(userId: string) {
+  const user = await usersRepo.findUserById(userId)
+  if (user.dailyJournal.length) return
+}

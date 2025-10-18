@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { petInfoThunk } from './petThunks'
 
 export interface BasicPetInfo {
   name: string | null
@@ -6,6 +7,8 @@ export interface BasicPetInfo {
 }
 interface PetState extends BasicPetInfo {
   health: number | null
+  mood: string
+  food: number
   maxHealth: number
   loading: boolean
   error: string | null
@@ -18,6 +21,8 @@ const initialState: PetState = {
   maxHealth: 100,
   loading: false,
   error: null,
+  mood: 'normal',
+  food: 0,
 }
 
 export const petSlice = createSlice({
@@ -50,6 +55,23 @@ export const petSlice = createSlice({
       state.loading = initialState.loading
       state.error = initialState.error
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(petInfoThunk.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(petInfoThunk.fulfilled, (state, action) => {
+        state.loading = false
+        state.name = action.payload?.name || ''
+        state.color = action.payload?.color || state.color
+        state.health = action.payload.health
+        state.mood = action.payload?.mood || state.mood
+        state.food = action.payload.food
+      })
+      .addCase(petInfoThunk.rejected, (state) => {
+        state.loading = false
+      })
   },
 })
 

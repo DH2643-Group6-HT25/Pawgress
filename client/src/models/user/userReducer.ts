@@ -58,6 +58,9 @@ export const userSlice = createSlice({
     setPetOwned: (state) => {
       state.hasPet = true
     },
+    setLoginSuccess: (state) => {
+      state.loggedIn = true
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -131,5 +134,6 @@ export const {
   setSessionError,
   clearSessionError,
   setPetOwned,
+  setLoginSuccess,
 } = userSlice.actions
 export default userSlice.reducer

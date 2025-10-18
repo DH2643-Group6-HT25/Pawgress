@@ -63,10 +63,13 @@ function DashboardPageView({
   petHealth,
   petColor,
   todos,
+  currentStreak,
+  food,
   loading,
-  fetchTodos,
+  isPetLoading,
   addTodo,
   deleteTodo,
+  completeTodo,
   reorderLocal,
   reorderTodosBulk,
 }: PropTypes) {
@@ -74,16 +77,23 @@ function DashboardPageView({
     <DashboardWrapper>
       <Header />
       <div>
-        <PetStateHeader name={petName} health={petHealth} />
+        {isPetLoading && <div>Loading Pet ...</div>}
+        {!isPetLoading && (
+          <PetStateHeader
+            name={petName}
+            health={petHealth}
+            currentStreak={currentStreak}
+          />
+        )}
       </div>
       <DashboardBody>
         <LeftDashboard>
           <ToDoListCard
             todos={todos}
             loading={loading}
-            fetchTodos={fetchTodos}
             addTodo={addTodo}
             deleteTodo={deleteTodo}
+            completeTodo={completeTodo}
             reorderLocal={reorderLocal}
             reorderTodosBulk={reorderTodosBulk}
           />
@@ -97,9 +107,9 @@ function DashboardPageView({
       </DashboardBody>
       <DashboardCatFooter>
         <PetContainer>
-          <MyPet health={petHealth} color={petColor} />
+          {!isPetLoading && <MyPet health={petHealth} color={petColor} />}
         </PetContainer>
-        <Food foodCount={2} />
+        <Food foodCount={food} isLoading={isPetLoading} />
       </DashboardCatFooter>
       <Footer />
     </DashboardWrapper>

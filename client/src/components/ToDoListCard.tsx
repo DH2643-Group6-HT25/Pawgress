@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   MyCard,
   CardHeader,
@@ -31,27 +31,23 @@ import type { TodoObject } from '../models/todo/type'
 type Props = {
   todos: TodoObject[]
   loading: boolean
-  fetchTodos: () => any
-  addTodo: (name: string) => any
-  deleteTodo: (id: string) => any
-  reorderLocal: (from: number, to: number) => any
-  reorderTodosBulk: (items: { id: string; order: number }[]) => any
+  addTodo: (name: string) => void
+  deleteTodo: (id: string) => void
+  completeTodo: (id: string) => void
+  reorderLocal: (from: number, to: number) => void
+  reorderTodosBulk: (items: { id: string; order: number }[]) => void
 }
 
 const ToDoListCard: React.FC<Props> = ({
   todos,
   loading,
-  fetchTodos,
   addTodo,
   deleteTodo,
+  completeTodo,
   reorderLocal,
   reorderTodosBulk,
 }) => {
   const [isAdding, setIsAdding] = useState(false)
-
-  useEffect(() => {
-    fetchTodos()
-  }, [fetchTodos])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -100,7 +96,7 @@ const ToDoListCard: React.FC<Props> = ({
                   <TodoItem>
                     <Checkbox
                       aria-label={`complete ${t.name}`}
-                      onChange={() => deleteTodo(t.id)}
+                      onChange={() => completeTodo(t.id)}
                     />
                     {t.name}
                   </TodoItem>

@@ -7,7 +7,7 @@ import {
 } from '../maps/onboardingMap'
 import OnboardingPageView from '../views/OnboardingPageView'
 import LoadingPageView from '../views/LoadingPageView'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface PropTypes extends InitialOnboardingState, InitialOnboardingDispatch {}
 
@@ -18,12 +18,12 @@ function OnboardingPresenter({
   ...props
 }: PropTypes) {
   const initialRender = useRef(true)
-
-  if (initialRender.current && !isCredentialLoading) {
-    initialRender.current = false
-    verifyUserACB()
-    return
-  }
+  useEffect(() => {
+    if (initialRender.current && !isCredentialLoading) {
+      verifyUserACB()
+      initialRender.current = false
+    }
+  }, [isCredentialLoading, verifyUserACB])
 
   if (isCredentialLoading) return <LoadingPageView isError={isSessionError} />
 
