@@ -15,10 +15,12 @@ function DashboardPagePresenter({
   isPageLoading,
   verifyUser,
   fetchPetInfo,
+  fetchTodos,
   ...props
 }: PropTypes) {
   const initialPageRender = useRef(true)
   const initialPetRender = useRef(true)
+  const initialToDoRender = useRef(true)
   useEffect(() => {
     if (initialPageRender.current && !isPageLoading) {
       verifyUser()
@@ -26,6 +28,9 @@ function DashboardPagePresenter({
     } else if (initialPetRender.current && !isPageLoading) {
       fetchPetInfo()
       initialPetRender.current = false
+    } else if (initialToDoRender.current && isPageLoading) {
+      fetchTodos()
+      initialToDoRender.current = false
     }
   }, [isPageLoading, fetchPetInfo, verifyUser])
 

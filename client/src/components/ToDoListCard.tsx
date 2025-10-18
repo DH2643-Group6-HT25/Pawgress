@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   MyCard,
   CardHeader,
@@ -31,7 +31,6 @@ import type { TodoObject } from '../models/todo/type'
 type Props = {
   todos: TodoObject[]
   loading: boolean
-  fetchTodos: CallableFunction
   addTodo: (name: string) => void
   deleteTodo: (id: string) => void
   completeTodo: (id: string) => void
@@ -42,7 +41,6 @@ type Props = {
 const ToDoListCard: React.FC<Props> = ({
   todos,
   loading,
-  fetchTodos,
   addTodo,
   deleteTodo,
   completeTodo,
@@ -50,14 +48,6 @@ const ToDoListCard: React.FC<Props> = ({
   reorderTodosBulk,
 }) => {
   const [isAdding, setIsAdding] = useState(false)
-  const isInitialRender = useRef(true)
-
-  useEffect(() => {
-    if (isInitialRender.current && !loading) {
-      fetchTodos()
-      isInitialRender.current = false
-    }
-  }, [fetchTodos, loading])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })

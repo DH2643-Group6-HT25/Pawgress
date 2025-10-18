@@ -48,7 +48,6 @@ export function mapStateToDashboardProps(
 }
 
 export interface DashboardActions {
-  fetchTodos: CallableFunction
   addTodo: (name: string) => void
   deleteTodo: (id: string) => void
   completeTodo: (id: string) => void
@@ -59,6 +58,7 @@ export interface DashboardActions {
 export interface InitialDashboardActions extends DashboardActions {
   verifyUser: CallableFunction
   fetchPetInfo: CallableFunction
+  fetchTodos: CallableFunction
 }
 
 export function mapDispatchToDashboardProps(

@@ -67,7 +67,6 @@ function DashboardPageView({
   food,
   loading,
   isPetLoading,
-  fetchTodos,
   addTodo,
   deleteTodo,
   completeTodo,
@@ -92,7 +91,6 @@ function DashboardPageView({
           <ToDoListCard
             todos={todos}
             loading={loading}
-            fetchTodos={fetchTodos}
             addTodo={addTodo}
             deleteTodo={deleteTodo}
             completeTodo={completeTodo}
