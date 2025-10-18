@@ -55,4 +55,4 @@ Temporary Items
 # No package installation outside client and server folder
 package.json
 package-lock.json
-node_modules*
+node_modules/
