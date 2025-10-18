@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import type { StreakState, StreakDispatch } from '../maps/streakMap'
 import streakImg from '../assets/streak.png'
@@ -9,7 +9,7 @@ import {
   InsideCardContainer,
 } from '../components/CardComponents'
 import { MenuCard } from '../components/MenuCard'
-import DashboardStreakHistoryChart from './DashboardStreakHistoryChart'
+import DashboardStreakHistoryChart from '../components/Streak/DashboardStreakHistoryChart'
 import SuspenseView from './SuspenseView'
 
 interface PropTypes extends StreakState, StreakDispatch {}
@@ -20,14 +20,42 @@ const DashboardHistoryView = ({
   streakHistory,
   isLoading,
   isStreakNewUser,
+  error,
   getStreakACB,
 }: PropTypes) => {
+  const [showMessage, setShowMessage] = useState(false)
+
   useEffect(() => {
     getStreakACB()
   }, [getStreakACB])
 
+  // Hide message after 5 seconds
+  useEffect(() => {
+    if (error) {
+      setShowMessage(true)
+      const timer = setTimeout(() => {
+        setShowMessage(false)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [error])
+
   if (isLoading) {
     return <SuspenseView modelName="Streak" />
+  }
+
+  if (error && showMessage) {
+    return (
+      <MenuCard
+        title="History"
+        isUsingCloseButton
+        isUsingRefreshButton
+        linkCloseButton="/dashboard"
+        linkRefreshButton={handleFetchStreak}
+      >
+        <p style={{ color: 'red' }}>{error}</p>
+      </MenuCard>
+    )
   }
 
   return (
@@ -134,8 +162,10 @@ const RightCardWrapper = styled.div`
 `
 
 const CardImage = styled.img`
-  width: 48px;
-  height: 48px;
+  width: 80%;
+  height: auto;
+  max-width: 48px;
+  object-fit: contain;
 `
 
 const ChartContainer = styled.div`

@@ -1,28 +1,29 @@
-import "styled-components";
+import 'styled-components'
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
-      dark_grey: string;
-      light_grey: string;
-      black: string;
-      white: string;
-    };
+      dark_grey: string
+      light_grey: string
+      black: string
+      white: string
+      highlight: string
+    }
     fonts: {
-      pixel: string;
-    };
+      pixel: string
+    }
     border: {
-      thickness: string;
-      shadowOffset: string;
-    };
+      thickness: string
+      shadowOffset: string
+    }
     size: {
-      card_width: string;
-      card_height: string;
-      small_card_width: string;
-      small_card_height: string;
-      large_card_width: string;
-      large_card_heigth: string;
-      card_border_radius: string;
-    };
+      card_width: string
+      card_height: string
+      small_card_width: string
+      small_card_height: string
+      large_card_width: string
+      large_card_heigth: string
+      card_border_radius: string
+    }
   }
 }

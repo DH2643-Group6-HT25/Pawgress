@@ -1,4 +1,5 @@
 import * as streakRepo from '../repository/streakRepo'
+import _ from 'lodash'
 
 /*Get users streak*/
 export const getStreak = async (userId: string) => {
@@ -49,17 +50,16 @@ export const updateStreak = async (userId: string) => {
     streak.streakHistory.push({ date: today, finishedTodos: 1 })
 
     // sort streak history
-    streak.streakHistory.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    const sortedStreakHistory = _.sortBy(
+      streak.streakHistory,
+      (item) => new Date(item.date)
     )
+
+    await streakRepo.updateStreak(userId, {
+      ...streak,
+      streakHistory: sortedStreakHistory,
+    })
+
+    return { ...streak, sortedStreakHistory }
   }
-
-  // save streak data
-  await streakRepo.updateStreak(userId, {
-    currentStreak: streak.currentStreak,
-    bestStreak: streak.bestStreak,
-    streakHistory: streak.streakHistory,
-  })
-
-  return streak
 }
