@@ -31,12 +31,14 @@ function DashboardAffirmationView({
     }
   }, [selectedCategory])
 
-  // Filter categories based on search text
-  const filteredCategories = isDropdownVisible
-    ? categories // Show all categories when dropdown is open
-    : (categories || []).filter((category) =>
-        category.toLowerCase().includes(searchText.toLowerCase())
-      )
+  const filteredCategories = (categories || []).filter((category) => {
+    // Show all categories if the dropdown is open and searchText is empty
+    if (isDropdownVisible && searchText === '') {
+      return true
+    }
+    // Otherwise, filter categories based on searchText
+    return category.toLowerCase().includes(searchText.toLowerCase())
+  })
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
