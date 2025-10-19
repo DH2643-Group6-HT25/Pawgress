@@ -53,3 +53,23 @@ export async function convertTodoToFood() {
 
   throw new Error(result?.error?.message || 'Failed to convert food from todo')
 }
+
+export async function sendPetFood() {
+  const res = await fetch(PET_URL + '/feed', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  const result = await res.json()
+
+  if (res.status == 200) {
+    return {
+      health: result?.pet?.health || 0,
+      mood: result?.pet?.mood || null,
+      food: result?.pet?.food,
+    }
+  }
+
+  throw new Error(result?.error?.message || 'Pet feeding failed')
+}

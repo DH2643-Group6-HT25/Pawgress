@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { petInfoThunk, petTodoToFoodThunk } from './petThunks'
+import { petFeedingThunk, petInfoThunk, petTodoToFoodThunk } from './petThunks'
 
 export interface BasicPetInfo {
   name: string | null
@@ -13,6 +13,11 @@ interface PetState extends BasicPetInfo {
   maxHealth: number
   loading: boolean
   error: string | null
+  isCurrentlyFeeding: boolean
+  isPooDisplayed: boolean
+  feedingError: string
+  afterFeedingMessage: string
+  isMessageDisplayed: boolean
 }
 
 const initialState: PetState = {
@@ -24,6 +29,11 @@ const initialState: PetState = {
   error: null,
   mood: 'normal',
   food: 0,
+  isCurrentlyFeeding: false,
+  isPooDisplayed: false,
+  feedingError: '',
+  afterFeedingMessage: '',
+  isMessageDisplayed: false,
 }
 
 export const petSlice = createSlice({
@@ -56,6 +66,18 @@ export const petSlice = createSlice({
       state.loading = initialState.loading
       state.error = initialState.error
     },
+    hidePoo(state) {
+      state.isPooDisplayed = false
+    },
+    setPetFeedingError(state, action: PayloadAction<string>) {
+      state.feedingError = action.payload
+    },
+    hideAfterFeedingMessage(state) {
+      state.isMessageDisplayed = false
+    },
+    clearAfterFeedingMessage(state) {
+      state.afterFeedingMessage = ''
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,11 +98,33 @@ export const petSlice = createSlice({
       .addCase(petTodoToFoodThunk.fulfilled, (state, action) => {
         if (action?.payload != null) {
           const food = _.toSafeInteger(action?.payload)
-          console.log(food)
-          if (state.food != food) {
+          if (state.food < food) {
             state.food = food
           }
         }
+      })
+      .addCase(petFeedingThunk.pending, (state) => {
+        state.isCurrentlyFeeding = true
+      })
+      .addCase(petFeedingThunk.fulfilled, (state, action) => {
+        if (state.health == null || action.payload.health > state.health) {
+          state.health = action.payload.health
+        }
+        if (action.payload.food < state.food) {
+          state.food = action.payload.food
+        }
+        if (action.payload.health < state.maxHealth) {
+          state.afterFeedingMessage = '+ Health'
+        } else {
+          state.afterFeedingMessage = 'Max Health ❤︎'
+        }
+        state.mood = action.payload.mood
+        state.isCurrentlyFeeding = false
+        state.isPooDisplayed = true
+        state.isMessageDisplayed = true
+      })
+      .addCase(petFeedingThunk.rejected, (state) => {
+        state.isCurrentlyFeeding = false
       })
   },
 })
@@ -91,5 +135,8 @@ export const {
   petCreationSubmitted,
   setPetHealth,
   resetPet,
+  hidePoo,
+  clearAfterFeedingMessage,
+  hideAfterFeedingMessage,
 } = petSlice.actions
 export default petSlice.reducer

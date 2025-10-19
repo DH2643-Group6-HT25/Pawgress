@@ -5,7 +5,12 @@ import {
   startPetSubmission,
   type BasicPetInfo,
 } from './petReducer'
-import { convertTodoToFood, getPetInfo, postNewPet } from '../../api/pet'
+import {
+  convertTodoToFood,
+  getPetInfo,
+  postNewPet,
+  sendPetFood,
+} from '../../api/pet'
 import petStorePrefix from './petStorePrefix'
 import { getErrorMessage } from '../../utils/errorHandling'
 
@@ -51,6 +56,20 @@ export const petTodoToFoodThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       return await convertTodoToFood()
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error))
+    }
+  }
+)
+
+export const petFeedingThunk = createAsyncThunk(
+  `${petStorePrefix}/feed`,
+  async (_, { rejectWithValue }) => {
+    try {
+      // Delay for 2 seconds (2000 ms) to simulate eating
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      return await sendPetFood()
     } catch (error) {
       return rejectWithValue(getErrorMessage(error))
     }

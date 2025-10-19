@@ -27,11 +27,15 @@ userListenerMiddleware.startListening({
   actionCreator: userLoginThunk.fulfilled,
   effect: function userLoginFulfilledEffect(_, listenerApi) {
     const {
-      user: { sessionError },
+      user: { sessionError, hasPet },
     }: RootState = listenerApi.getState() as RootState
 
     if (sessionError !== null) {
       listenerApi.dispatch(clearSessionError())
+    }
+
+    if (hasPet) {
+      navigationService.navigateTo('/dashboard')
     }
   },
 })

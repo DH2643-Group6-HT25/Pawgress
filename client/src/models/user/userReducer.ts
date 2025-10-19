@@ -74,7 +74,7 @@ export const userSlice = createSlice({
         state.loggedIn = true
         state.userID = action.payload.user?.id || null
         state.password = ''
-        state.hasPet = action.payload.user?.hasPet || false
+        state.hasPet = action.payload?.hasPet || false
       })
       .addCase(userLoginThunk.rejected, (state, action) => {
         state.loading = false

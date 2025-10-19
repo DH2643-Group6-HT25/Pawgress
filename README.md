@@ -38,3 +38,7 @@ By default, the server app runs on `3001` port and the client app runs on `5173`
 - go to http://localhost:3001/ to access server apps
 
 - go to http://localhost:5173/ to access client apps
+
+### Icons
+
+Icons from Pixel Icon Library by HackerNoon

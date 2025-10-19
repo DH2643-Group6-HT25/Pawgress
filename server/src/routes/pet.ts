@@ -1,7 +1,16 @@
 import express from 'express'
-import { assignPet, getPet, increaseFoodByTodo } from '../service/petService'
+import {
+  assignPet,
+  feedPet,
+  getPet,
+  increaseFoodByTodo,
+} from '../service/petService'
 import { decodeAuth } from '../utils/authUtils'
-import { NoPetFoundError, NoUserFoundError } from '../utils/errorUtils'
+import {
+  NoFoodLeftError,
+  NoPetFoundError,
+  NoUserFoundError,
+} from '../utils/errorUtils'
 
 const router = express.Router()
 
@@ -58,8 +67,18 @@ router.patch('/todo-to-food', async (req, res) => {
   }
 })
 
-router.patch('/journal-to-food', async (req, res) => {
+router.patch('/feed', async (req, res) => {
   const userId = decodeAuth(req)
+  try {
+    const petHealth = await feedPet(userId)
+    res.status(200).json({ pet: petHealth })
+  } catch (err: any) {
+    if (err instanceof NoFoodLeftError) {
+      res.status(204).json({ error: 'No Food Left' })
+    } else if (err instanceof NoUserFoundError) {
+      res.status(403).json({ error: 'Unauthorized User' })
+    }
+  }
 })
 
 export default router

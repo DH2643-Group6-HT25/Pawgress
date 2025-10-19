@@ -20,6 +20,7 @@ const Name = styled.p`
   font-weight: bold;
   letter-spacing: 2px;
   margin: 0;
+  font-weight: semibold;
   padding: 0 12px;
   background: none;
   border: none;
@@ -37,7 +38,7 @@ const StateWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 0.95rem;
-  font-weight: bold;
+  font-weight: semibold;
   letter-spacing: 1px;
   background: none;
   border: none;
