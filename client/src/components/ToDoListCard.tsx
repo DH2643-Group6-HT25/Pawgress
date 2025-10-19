@@ -112,9 +112,8 @@ const ToDoListCard: React.FC<Props> = ({
                 validate={(v) => (!v.text.trim() ? { text: 'Required' } : {})}
                 onSubmit={async (values, { resetForm }) => {
                   try {
-                    console.log('SUBMIT →', values)
                     await addTodo(values.text.trim())
-                    console.log('SUBMIT OK')
+
                     resetForm()
                     setIsAdding(false)
                   } catch (e) {

@@ -6,7 +6,6 @@ const mongoDBUrl = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${proces
 export const connectDB = async () => {
   try {
     await mongoose.connect(mongoDBUrl)
-    console.log('Connected to MongoDB successfully.')
   } catch (err) {
     console.error('MongoDB connection error:', err)
     process.exit(1)

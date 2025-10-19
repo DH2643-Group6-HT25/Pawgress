@@ -13,7 +13,6 @@ export async function getTodosForUser(userId: string) {
 }
 
 export async function createTodoAtTop(todo: string, userId: string) {
-  console.log('createTodoAtTop called with:', { todo, userId })
   if (!todo?.trim()) throw new Error('todo required')
   const uid = toObjId(userId)
   await todoRepo.updateMany({ userId: uid }, { $inc: { order: 1 } })
