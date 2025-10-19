@@ -1,8 +1,5 @@
 import type { RootState, AppThunkDispatch } from '../models'
-import {
-  fetchStreakThunk,
-  updateStreakThunk,
-} from '../models/streak/streakThunks'
+import { fetchStreakThunk } from '../models/streak/streakThunks'
 import type { StreakHistoryObject } from '../models/streak/streakType'
 
 export interface StreakState {
@@ -27,7 +24,6 @@ export function mapStateToDashboardHistoryProps(state: RootState): StreakState {
 
 export interface StreakDispatch {
   getStreakACB: CallableFunction
-  updateStreakACB: CallableFunction
 }
 
 export function mapDispatchToStreakProps(
@@ -36,9 +32,6 @@ export function mapDispatchToStreakProps(
   return {
     getStreakACB() {
       dispatch(fetchStreakThunk())
-    },
-    updateStreakACB() {
-      dispatch(updateStreakThunk())
     },
   }
 }

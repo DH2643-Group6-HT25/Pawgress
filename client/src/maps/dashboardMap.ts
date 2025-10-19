@@ -7,6 +7,7 @@ import {
   reorderTodosBulkThunk,
   completeTodoThunk,
 } from '../models/todo/todoThunks'
+import { fetchStreakThunk } from '../models/streak/streakThunks'
 
 import { reorderLocal } from '../models/todo/todoReducer'
 import { petInfoThunk } from '../models/pet/petThunks'
@@ -68,7 +69,10 @@ export function mapDispatchToDashboardProps(
     fetchTodos: () => dispatch(fetchTodosThunk()),
     addTodo: (name: string) => dispatch(addTodoThunk({ name })),
     deleteTodo: (id: string) => dispatch(deleteTodoThunk({ id })),
-    completeTodo: (id: string) => dispatch(completeTodoThunk({ id })),
+    completeTodo: async (id: string) => {
+      await dispatch(completeTodoThunk({ id }))
+      dispatch(fetchStreakThunk())
+    },
     reorderLocal: (from: number, to: number) =>
       dispatch(reorderLocal({ from, to })),
     reorderTodosBulk: (items: { id: string; order: number }[]) =>

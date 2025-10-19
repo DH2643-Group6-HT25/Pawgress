@@ -13,15 +13,3 @@ export async function getStreak() {
 
   return res.json()
 }
-
-export async function updateStreak() {
-  const res = await fetch(STREAK_URL + `/update`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-  })
-
-  if (!res.ok) throw new Error('Fail to update streaks')
-
-  return res.json()
-}

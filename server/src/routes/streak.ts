@@ -35,36 +35,4 @@ router.get('/', async (req, res) => {
   }
 })
 
-/*Update users streak info*/
-router.post('/update', async (req, res) => {
-  const userId = decodeAuth(req)
-  console.log('[decodeAuth] decoded user:', userId)
-  if (!userId) return res.status(400).json({ error: 'userId required' })
-
-  try {
-    const streakInfo = await streakService.updateStreak(userId as string)
-    const streak = {
-      currentStreak: streakInfo.currentStreak,
-      bestStreak: streakInfo.bestStreak,
-      streakHistory: streakInfo.streakHistory.map((item) => ({
-        ...item,
-        date: item.date.toISOString(),
-      })),
-    }
-    console.log(
-      `Current streak: ${streak.currentStreak}, Best streak: ${
-        streak.bestStreak
-      }, Streak History: ${JSON.stringify(streak.streakHistory)}`
-    )
-
-    res.json({
-      message: 'Update streak successfully',
-      streak,
-    })
-  } catch (err) {
-    console.error('Update streak error:', err)
-    res.status(500).json({ error: err.message || 'Server error' })
-  }
-})
-
 export default router
