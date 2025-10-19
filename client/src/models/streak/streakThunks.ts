@@ -1,5 +1,5 @@
 import type { Dispatch } from 'redux'
-import { getStreak, updateStreak } from '../../api/streak'
+import { getStreak } from '../../api/streak'
 import {
   setBasicStreakInfo,
   setStreakLoading,
@@ -55,13 +55,5 @@ export const fetchStreakThunk = () => async (dispatch: Dispatch) => {
     getStreak,
     dispatch,
     'Failed to fetch streak. Please try again.'
-  )
-}
-
-export const updateStreakThunk = () => async (dispatch: Dispatch) => {
-  await handleStreakAsync(
-    updateStreak,
-    dispatch,
-    'Failed to update streak. Please try again.'
   )
 }

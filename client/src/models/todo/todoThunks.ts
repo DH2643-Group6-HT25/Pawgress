@@ -38,9 +38,8 @@ export const fetchTodosThunk = createAsyncThunk<TodoObject[], void>(
 export const addTodoThunk = createAsyncThunk<TodoObject, { name: string }>(
   'todo/add',
   async ({ name }) => {
-    console.log('THUNK addTodo →', name)
     const res = await apiAddTodo(name)
-    console.log('THUNK addTodo OK ←', res)
+
     return mapFromApi(res)
   }
 )

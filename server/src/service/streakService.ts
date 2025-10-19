@@ -1,5 +1,6 @@
 import * as streakRepo from '../repository/streakRepo'
 import _ from 'lodash'
+import moment from 'moment'
 
 /*Get users streak*/
 export const getStreak = async (userId: string) => {
@@ -48,18 +49,18 @@ export const updateStreak = async (userId: string) => {
 
     // update streak history
     streak.streakHistory.push({ date: today, finishedTodos: 1 })
-
-    // sort streak history
-    const sortedStreakHistory = _.sortBy(
-      streak.streakHistory,
-      (item) => new Date(item.date)
-    )
-
-    await streakRepo.updateStreak(userId, {
-      ...streak,
-      streakHistory: sortedStreakHistory,
-    })
-
-    return { ...streak, sortedStreakHistory }
   }
+
+  // sort streak history
+  const sortedStreakHistory = _.sortBy(
+    streak.streakHistory,
+    (item) => new Date(item.date)
+  )
+
+  await streakRepo.updateStreak(userId, {
+    ...streak,
+    streakHistory: sortedStreakHistory,
+  })
+
+  return { ...streak, sortedStreakHistory }
 }
