@@ -37,9 +37,6 @@ const DashboardStreakHistoryChart = ({ streakHistory }: PropTypes) => {
     const tickYInterval = 20
     const height = Math.max(defaultheight, maxTodoValue * tickYInterval)
 
-    console.log(width)
-    console.log(height)
-
     //size of svg
     svg
       .attr('width', width + margin.left + margin.right)
