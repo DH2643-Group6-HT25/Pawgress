@@ -1,5 +1,6 @@
+import _ from 'lodash'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { petInfoThunk } from './petThunks'
+import { petInfoThunk, petTodoToFoodThunk } from './petThunks'
 
 export interface BasicPetInfo {
   name: string | null
@@ -71,6 +72,15 @@ export const petSlice = createSlice({
       })
       .addCase(petInfoThunk.rejected, (state) => {
         state.loading = false
+      })
+      .addCase(petTodoToFoodThunk.fulfilled, (state, action) => {
+        if (action?.payload != null) {
+          const food = _.toSafeInteger(action?.payload)
+          console.log(food)
+          if (state.food != food) {
+            state.food = food
+          }
+        }
       })
   },
 })

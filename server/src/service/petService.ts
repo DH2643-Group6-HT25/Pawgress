@@ -101,3 +101,27 @@ export const assignPet = async (
   const pet = await createPet(userId, color, name)
   return pet
 }
+
+export const increaseFoodByTodo = async (userId: string) => {
+  const user = await findUserById(userId)
+  if (!user) throw new NoUserFoundError('')
+
+  const score = user?.score || 0
+
+  user.score = score + 5
+  user.food = _.toInteger(user.score / 10)
+  await user.save()
+  return user.food
+}
+
+export const increaseFoodByJournal = async (userId: string) => {
+  const user = await findUserById(userId)
+  if (!user) throw new NoUserFoundError('')
+
+  const score = user?.score || 0
+
+  user.score = score + 10
+  user.food = _.toInteger(user.score / 10)
+  await user.save()
+  return user.food
+}

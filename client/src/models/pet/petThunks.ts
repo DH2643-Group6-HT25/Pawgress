@@ -5,7 +5,7 @@ import {
   startPetSubmission,
   type BasicPetInfo,
 } from './petReducer'
-import { getPetInfo, postNewPet } from '../../api/pet'
+import { convertTodoToFood, getPetInfo, postNewPet } from '../../api/pet'
 import petStorePrefix from './petStorePrefix'
 import { getErrorMessage } from '../../utils/errorHandling'
 
@@ -40,6 +40,17 @@ export const petInfoThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       return await getPetInfo()
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error))
+    }
+  }
+)
+
+export const petTodoToFoodThunk = createAsyncThunk(
+  `${petStorePrefix}/todoToFood`,
+  async (_, { rejectWithValue }) => {
+    try {
+      return await convertTodoToFood()
     } catch (error) {
       return rejectWithValue(getErrorMessage(error))
     }

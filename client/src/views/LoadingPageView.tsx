@@ -41,10 +41,7 @@ function LoadingPageView({ isError }: PropTypes) {
             transition={{ duration: 0 }}
           />
         </AnimContainer>
-        <AffirmationCard>
-          Get food by completing 2 ToDos / write journal and don't forget to
-          feed your pet
-        </AffirmationCard>
+        <AffirmationCard>Don't forget to feed your pet</AffirmationCard>
       </Content>
     </Wrapper>
   )

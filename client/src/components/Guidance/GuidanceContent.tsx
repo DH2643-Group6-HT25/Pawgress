@@ -32,7 +32,7 @@ const GuidanceContent: TabItem[] = [
     content: (
       <>
         <InsideCardText>
-          Complete todos and you can get fish! Cats love to eat fish!
+          Complete at least 2 todos and you can get fish! Cats love to eat fish!
         </InsideCardText>
         <TabIMG src={fish} alt="fish" />
       </>

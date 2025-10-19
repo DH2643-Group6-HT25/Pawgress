@@ -32,7 +32,7 @@ function DashboardPagePresenter({
       fetchTodos()
       initialToDoRender.current = false
     }
-  }, [isPageLoading, fetchPetInfo, verifyUser])
+  }, [isPageLoading, fetchPetInfo, verifyUser, fetchTodos])
 
   if (isPageLoading) return <LoadingPageView />
 

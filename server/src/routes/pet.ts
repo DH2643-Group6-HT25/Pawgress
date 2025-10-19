@@ -1,5 +1,5 @@
 import express from 'express'
-import { assignPet, getPet } from '../service/petService'
+import { assignPet, getPet, increaseFoodByTodo } from '../service/petService'
 import { decodeAuth } from '../utils/authUtils'
 import { NoPetFoundError, NoUserFoundError } from '../utils/errorUtils'
 
@@ -41,6 +41,25 @@ router.post('/create', async (req, res) => {
   } else {
     res.status(401).json({ error: 'Invalid Token' })
   }
+})
+
+router.patch('/todo-to-food', async (req, res) => {
+  const userId = decodeAuth(req)
+  try {
+    const remainingFood = await increaseFoodByTodo(userId)
+    res.status(200).json({ food: { remaining: remainingFood } })
+  } catch (err: any) {
+    if (err instanceof NoUserFoundError) {
+      res.status(403).json({ error: 'Unauthorized User' })
+    } else {
+      console.error(err.message)
+      res.status(500).json({ error: err.message || 'Server error' })
+    }
+  }
+})
+
+router.patch('/journal-to-food', async (req, res) => {
+  const userId = decodeAuth(req)
 })
 
 export default router

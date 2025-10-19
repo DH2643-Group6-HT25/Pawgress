@@ -11,7 +11,6 @@ import {
 import closeIcon from '../assets/icons/close.svg'
 import refreshIcon from '../assets/icons/refresh.svg'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router'
 import { RefreshButton, CloseLink } from './MyButton'
 
 interface PropTypes {
