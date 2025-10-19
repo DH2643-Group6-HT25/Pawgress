@@ -9,14 +9,14 @@ export async function fetchAffirmation() {
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include', // Include cookies if needed
+      credentials: 'include',
     })
 
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`)
     }
 
-    return await res.json() // Assuming the API returns { text: "..." }
+    return await res.json()
   } catch (error) {
     console.error('Error fetching affirmation:', error)
     throw error
@@ -34,20 +34,13 @@ export async function fetchCategories() {
       credentials: 'include',
     })
 
-    // Log the raw response object
-    console.log('Raw response:', res)
-
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`)
     }
 
-    // Log the response body as text before parsing
     const responseText = await res.text()
-    console.log('Response text:', responseText)
 
-    // Parse the response as JSON
     const data = JSON.parse(responseText)
-    console.log('Parsed categories:', data) // Log the parsed data
 
     return data.items
   } catch (error) {
@@ -71,7 +64,7 @@ export async function fetchAffirmationByCategory(category: string) {
       throw new Error(`HTTP error! status: ${res.status}`)
     }
 
-    return await res.json() // Assuming the API returns { text: "..." }
+    return await res.json()
   } catch (error) {
     console.error('Error fetching affirmation by category:', error)
     throw error
