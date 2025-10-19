@@ -9,9 +9,16 @@ const FishIcon = styled.img<{ $notEmpty?: boolean }>`
   width: 65px;
   height: 65px;
   filter: brightness(0) saturate(100%);
+  transition-property: width, height, padding-bottom;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+  padding-bottom: 15px;
 
   &:hover {
     cursor: ${({ $notEmpty }) => ($notEmpty ? 'pointer' : 'progress')};
+    width: ${({ $notEmpty }) => ($notEmpty ? '75px' : '65px')};
+    height: ${({ $notEmpty }) => ($notEmpty ? '75px' : '65px')};
+    padding-bottom: ${({ $notEmpty }) => ($notEmpty ? '5px' : '15px')};
   }
 `
 const ClockIcon = styled.img`
@@ -19,6 +26,7 @@ const ClockIcon = styled.img`
   height: 30px;
   filter: brightness(0) saturate(100%);
   margin: 15px auto;
+  padding-bottom: 15px;
 
   &:hover {
     cursor: progress;
@@ -32,8 +40,7 @@ const FoodWrapper = styled.div<{ $isDisplayed?: boolean }>`
   position: fixed;
   right: 50px;
   align-items: center;
-  padding-bottom: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   transition: opacity 0.2s;
   width: 85px;
   z-index: 10;
