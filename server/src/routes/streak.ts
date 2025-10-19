@@ -7,7 +7,6 @@ const router = express.Router()
 /* GET users streak info. */
 router.get('/', async (req, res) => {
   const userId = decodeAuth(req)
-  console.log('[decodeAuth] decoded user:', userId)
 
   if (!userId) return res.status(400).json({ error: 'userId required' })
 
@@ -21,8 +20,6 @@ router.get('/', async (req, res) => {
         date: item.date.toISOString(),
       })),
     }
-
-    console.log(`streakArrays:`, streak)
 
     // transfer date to string for front-end
     res.json({
