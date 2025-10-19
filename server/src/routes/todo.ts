@@ -99,7 +99,7 @@ router.post('/:id/complete', async (req, res, next) => {
     if (!userId) return res.status(401).json({ error: 'Unauthorized' })
 
     const { id } = req.params
-    const deleted = await todoService.removeTodo(id)
+    const deleted = await todoService.completeTodo(id, userId)
     if (!deleted) return res.status(404).json({ error: 'Not found' })
     res.json({ message: 'Todo completed' })
   } catch (err) {

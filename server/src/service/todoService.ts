@@ -1,5 +1,6 @@
 import { Types } from 'mongoose'
 import * as todoRepo from '../repository/todoRepo'
+import * as streakService from '../service/streakService'
 
 const toObjId = (id: string) => {
   if (!Types.ObjectId.isValid(id)) throw new Error('Invalid ObjectId')
@@ -62,7 +63,9 @@ export async function removeTodo(id: string) {
   return todoRepo.findByIdAndDelete(_id.toString())
 }
 
-export async function completeTodo(id: string) {
+export async function completeTodo(id: string, userId: string) {
   const _id = toObjId(id)
+
+  await streakService.updateStreak(userId)
   return todoRepo.findByIdAndDelete(_id.toString())
 }
