@@ -1,14 +1,32 @@
 import { useEffect, useState, useRef } from 'react'
 import DashboardAffirmationView from '../views/DashboardAffirmationView'
-import { fetchAffirmation } from '../api/affirmation'
+import {
+  fetchAffirmation,
+  fetchCategories,
+  fetchAffirmationByCategory,
+} from '../api/affirmation'
 
 function DashboardAffirmationPresenter() {
   const [affirmation, setAffirmation] = useState<string | null>(null)
+  const [categories, setCategories] = useState<string[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>('random')
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Ref to track if the fetch has already been called
   const isInitialRender = useRef(true)
+
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      try {
+        const data = await fetchCategories()
+        setCategories(data)
+      } catch (err: any) {
+        console.error('Failed to fetch categories:', err)
+      }
+    }
+
+    fetchCategoryData()
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,8 +34,13 @@ function DashboardAffirmationPresenter() {
       setError(null)
 
       try {
-        const data = await fetchAffirmation() // Call the API
-        setAffirmation(data.text) // Assuming the API returns { text: "..." }
+        let data
+        if (selectedCategory === 'random') {
+          data = await fetchAffirmation()
+        } else {
+          data = await fetchAffirmationByCategory(selectedCategory)
+        }
+        setAffirmation(data.text)
       } catch (err: any) {
         setError('Failed to fetch affirmation. Please try again.')
         console.error(err)
@@ -26,16 +49,20 @@ function DashboardAffirmationPresenter() {
       }
     }
 
-    // Only call fetchData if it's the initial render
     if (isInitialRender.current) {
-      isInitialRender.current = false // Set the flag to false after the first render
-      fetchData() // Fetch affirmation on mount
+      isInitialRender.current = false
+      return
     }
-  }, [])
+
+    fetchData()
+  }, [selectedCategory])
 
   return (
     <DashboardAffirmationView
       affirmation={affirmation}
+      categories={categories}
+      selectedCategory={selectedCategory}
+      setSelectedCategory={setSelectedCategory}
       loading={loading}
       error={error}
     />

@@ -1,29 +1,27 @@
-import { Link } from "react-router";
-import styled from "styled-components";
+import { Link } from 'react-router'
+import styled from 'styled-components'
+import { MyButton } from '../components/MyButton'
 
-import { MyButton } from "../components/MyButton";
-
-// 🔽 import your pixel icons (replace paths)
-import cat from "../assets/cat_happy_2.png";
-import heart from "../assets/heart_5.png";
-import fish from "../assets/fish.png";
-import poop from "../assets/poop.png";
+import cat from '../assets/cat_happy_2.png'
+import heart from '../assets/heart_5.png'
+import fish from '../assets/fish.png'
+import poop from '../assets/poop.png'
 
 const sizes = {
-  cat: "clamp(48px, 8vw, 120px)", // smaller
-  poop: "clamp(40px, 6vw, 90px)", // smaller
-  fish: "clamp(64px, 10vw, 160px)", // bigger, matches heart/visual weight
-  heart: "clamp(52px, 8vw, 120px)", // unchanged, still ~same as fish now
-};
+  cat: 'clamp(48px, 8vw, 120px)',
+  poop: 'clamp(40px, 6vw, 90px)',
+  fish: 'clamp(64px, 10vw, 160px)',
+  heart: 'clamp(52px, 8vw, 120px)',
+}
 
 type DecoItem = {
-  src: string;
-  xPct: number; // left %
-  yPct: number; // top %
-  size?: string; // css size (use clamp)
-  rotate?: number;
-  flipX?: boolean;
-};
+  src: string
+  xPct: number
+  yPct: number
+  size?: string
+  rotate?: number
+  flipX?: boolean
+}
 
 const decorations: DecoItem[] = [
   { src: cat, xPct: 7, yPct: 10, size: sizes.cat },
@@ -39,7 +37,7 @@ const decorations: DecoItem[] = [
   { src: poop, xPct: 71, yPct: 82, size: sizes.poop },
   { src: heart, xPct: 81, yPct: 66, size: sizes.heart },
   { src: cat, xPct: 90, yPct: 85, size: sizes.cat },
-];
+]
 
 function WelcomePage() {
   return (
@@ -58,7 +56,7 @@ function WelcomePage() {
           style={{
             left: `${d.xPct}%`,
             top: `${d.yPct}%`,
-            width: d.size ?? "clamp(32px, 5vw, 64px)",
+            width: d.size ?? 'clamp(32px, 5vw, 64px)',
             transform: `translate(-50%, -50%) rotate(${d.rotate ?? 0}deg) scaleX(${d.flipX ? -1 : 1})`,
           }}
         />
@@ -93,10 +91,10 @@ function WelcomePage() {
         </MyButton>
       </div>
     </Wrapper>
-  );
+  )
 }
 
-export default WelcomePage;
+export default WelcomePage
 
 /* ---------- styles ---------- */
 const Wrapper = styled.div`
@@ -105,14 +103,14 @@ const Wrapper = styled.div`
   display: grid;
   place-items: center;
   background: linear-gradient(180deg, #f4f1df 0%, #cddcd8 100%);
-`;
+`
 
 const Content = styled.div`
   text-align: center;
   max-width: 820px;
   padding: 0 24px;
   z-index: 1;
-`;
+`
 
 const Headline = styled.h1`
   font-size: 48px;
@@ -120,19 +118,19 @@ const Headline = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0 0 16px 0;
-`;
+`
 
 const SubHeadline = styled.p`
   font-size: 20px;
   line-height: 1.5;
   opacity: 0.85;
   margin: 0 0 28px 0;
-`;
+`
 
 const ButtonRow = styled.div`
   display: inline-flex;
   gap: 12px;
-`;
+`
 
 const BaseBtn = styled.button`
   padding: 14px 24px;
@@ -142,23 +140,23 @@ const BaseBtn = styled.button`
   border: 0;
   cursor: pointer;
   text-decoration: none;
-`;
+`
 
 const Primary = styled(BaseBtn)`
   background: #111;
   color: #fff;
-`;
+`
 
 const Secondary = styled(BaseBtn)`
   background: #444;
   color: #fff;
   opacity: 0.95;
-`;
+`
 
 const Deco = styled.img`
   position: absolute;
   pointer-events: none;
-`;
+`
 
 const Header = styled.div`
   position: absolute;
@@ -167,4 +165,4 @@ const Header = styled.div`
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.08em;
-`;
+`
