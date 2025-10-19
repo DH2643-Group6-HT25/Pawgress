@@ -10,7 +10,7 @@ import {
 import { fetchStreakThunk } from '../models/streak/streakThunks'
 
 import { reorderLocal } from '../models/todo/todoReducer'
-import { petInfoThunk } from '../models/pet/petThunks'
+import { petFeedingThunk, petInfoThunk } from '../models/pet/petThunks'
 import { userVerifyThunk } from '../models/user/userThunks'
 
 export interface DashboardState {
@@ -24,6 +24,10 @@ export interface DashboardState {
   loading: boolean
   isPetLoading: boolean
   currentStreak: number
+  isCurrentlyFeeding: boolean
+  isPooDisplayed: boolean
+  afterFeedingMessage: string
+  isAfterFeedingMessageDisplayed: boolean
 }
 
 export interface InitialDashboardState extends DashboardState {
@@ -45,6 +49,10 @@ export function mapStateToDashboardProps(
     isPageLoading: state.user.isCredentialLoading,
     isPetLoading: state.pet.loading,
     currentStreak: state.streak.currentStreak,
+    isCurrentlyFeeding: state.pet.isCurrentlyFeeding,
+    isPooDisplayed: state.pet.isPooDisplayed,
+    afterFeedingMessage: state.pet.afterFeedingMessage,
+    isAfterFeedingMessageDisplayed: state.pet.isMessageDisplayed,
   }
 }
 
@@ -54,6 +62,7 @@ export interface DashboardActions {
   completeTodo: (id: string) => void
   reorderLocal: (from: number, to: number) => void
   reorderTodosBulk: (items: { id: string; order: number }[]) => void
+  feedPet: CallableFunction
 }
 
 export interface InitialDashboardActions extends DashboardActions {
@@ -82,6 +91,9 @@ export function mapDispatchToDashboardProps(
     },
     verifyUser() {
       dispatch(userVerifyThunk())
+    },
+    feedPet() {
+      dispatch(petFeedingThunk())
     },
   }
 }

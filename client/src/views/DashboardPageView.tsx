@@ -8,6 +8,11 @@ import PetStateHeader from '../components/PetStateHeader'
 import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardActions, DashboardState } from '../maps/dashboardMap'
 import Food from '../components/Food'
+import { Poo } from '../components/Pet/Poo'
+import {
+  PetAfterFeedingBubble,
+  PetFeedingBubble,
+} from '../components/Pet/PetMessage'
 
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
@@ -66,12 +71,17 @@ function DashboardPageView({
   currentStreak,
   food,
   loading,
+  afterFeedingMessage,
   isPetLoading,
+  isCurrentlyFeeding,
+  isPooDisplayed,
+  isAfterFeedingMessageDisplayed,
   addTodo,
   deleteTodo,
   completeTodo,
   reorderLocal,
   reorderTodosBulk,
+  feedPet,
 }: PropTypes) {
   return (
     <DashboardWrapper>
@@ -106,10 +116,21 @@ function DashboardPageView({
         </RightDashboard>
       </DashboardBody>
       <DashboardCatFooter>
+        <Poo isDisplayed={isPooDisplayed} />
+        <PetAfterFeedingBubble
+          isDisplayed={isAfterFeedingMessageDisplayed}
+          message={afterFeedingMessage}
+        />
         <PetContainer>
           {!isPetLoading && <MyPet health={petHealth} color={petColor} />}
         </PetContainer>
-        <Food foodCount={food} isLoading={isPetLoading} />
+        <PetFeedingBubble isDisplayed={isCurrentlyFeeding} />
+        <Food
+          feedPet={feedPet}
+          foodCount={food}
+          isLoading={isPetLoading}
+          isCurrentlyFeeding={isCurrentlyFeeding}
+        />
       </DashboardCatFooter>
       <Footer />
     </DashboardWrapper>

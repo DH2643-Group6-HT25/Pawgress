@@ -28,11 +28,11 @@ function DashboardPagePresenter({
     } else if (initialPetRender.current && !isPageLoading) {
       fetchPetInfo()
       initialPetRender.current = false
-    } else if (initialToDoRender.current && isPageLoading) {
+    } else if (initialToDoRender.current && !isPageLoading) {
       fetchTodos()
       initialToDoRender.current = false
     }
-  }, [isPageLoading, fetchPetInfo, verifyUser])
+  }, [isPageLoading, fetchPetInfo, verifyUser, fetchTodos])
 
   if (isPageLoading) return <LoadingPageView />
 

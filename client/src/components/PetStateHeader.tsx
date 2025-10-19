@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import streakIcon from '../assets/streak.png'
 import heartIcon from '../assets/heart_5.png'
+import { NumberLabel } from './NumberLabel'
 
 const HeaderWrapper = styled.header`
   width: 100%;
@@ -19,6 +20,7 @@ const Name = styled.p`
   font-weight: bold;
   letter-spacing: 2px;
   margin: 0;
+  font-weight: semibold;
   padding: 0 12px;
   background: none;
   border: none;
@@ -36,7 +38,7 @@ const StateWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 0.95rem;
-  font-weight: bold;
+  font-weight: semibold;
   letter-spacing: 1px;
   background: none;
   border: none;
@@ -56,11 +58,11 @@ const PetStateHeader = ({ name, health, currentStreak }: PropTypes) => {
       <Name>{name}</Name>
       <StateWrapper>
         <StateIcon src={heartIcon} alt="Heart" />
-        <span>{health}%</span>
+        <NumberLabel>{health}</NumberLabel>
+        <span>%</span>
         <StateIcon src={streakIcon} alt="Streak" />
-        <span>
-          {currentStreak} {currentStreak != 1 ? 'days' : 'day'}
-        </span>
+        <NumberLabel>{currentStreak}</NumberLabel>
+        <span> {currentStreak != 1 ? 'days' : 'day'}</span>
       </StateWrapper>
     </HeaderWrapper>
   )

@@ -1,12 +1,17 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit'
-import { petCreationSubmitted } from './petReducer'
+import {
+  clearAfterFeedingMessage,
+  hideAfterFeedingMessage,
+  hidePoo,
+  petCreationSubmitted,
+} from './petReducer'
 import navigationService from '../../utils/navigationService'
 import {
   setLoginSuccess,
   setPetOwned,
   setSessionError,
 } from '../user/userReducer'
-import { petInfoThunk } from './petThunks'
+import { petFeedingThunk, petInfoThunk } from './petThunks'
 import { setCurrentStreak } from '../streak/streakReducer'
 
 export const petListenerMiddleware = createListenerMiddleware()
@@ -18,6 +23,7 @@ petListenerMiddleware.startListening({
     navigationService.navigateTo('/dashboard')
   },
 })
+
 petListenerMiddleware.startListening({
   actionCreator: petInfoThunk.rejected,
   effect: async function petInfoRejectedEffectACB(action, listenerApi) {
@@ -32,9 +38,21 @@ petListenerMiddleware.startListening({
 
 petListenerMiddleware.startListening({
   actionCreator: petInfoThunk.fulfilled,
-  effect: async function petInfoFulfilledACB(action, listenerApi) {
+  effect: async function petInfoFulfilledEffect(action, listenerApi) {
     listenerApi.dispatch(setCurrentStreak(action.payload.currentStreak))
     listenerApi.dispatch(setPetOwned())
     listenerApi.dispatch(setLoginSuccess())
+  },
+})
+
+petListenerMiddleware.startListening({
+  actionCreator: petFeedingThunk.fulfilled,
+  effect: async function petFeedingFulfilledEffect(_, listenerApi) {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    listenerApi.dispatch(hideAfterFeedingMessage())
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    listenerApi.dispatch(hidePoo())
+    listenerApi.dispatch(clearAfterFeedingMessage())
   },
 })

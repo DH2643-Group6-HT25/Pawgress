@@ -31,3 +31,14 @@ export class NoPetFoundError extends Error {
     this.name = 'NoPetFoundError'
   }
 }
+
+export class NoFoodLeftError extends Error {
+  constructor(message: string) {
+    if (message != '') {
+      super(message)
+    } else {
+      super('No food left!')
+    }
+    this.name = 'NoFoodLeftError'
+  }
+}

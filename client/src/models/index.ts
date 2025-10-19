@@ -11,6 +11,7 @@ import affirmationReducer from './affirmation/affirmationReducer'
 import journalReducer from './journal/journalReducer'
 import { petListenerMiddleware } from './pet/petListener'
 import { userListenerMiddleware } from './user/userListener'
+import { todoListenerMiddleware } from './todo/todoListener'
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware()
       .prepend(userListenerMiddleware.middleware)
+      .prepend(todoListenerMiddleware.middleware)
       .prepend(petListenerMiddleware.middleware)
   },
 })

@@ -37,3 +37,39 @@ export async function getPetInfo() {
 
   throw new Error(result?.error?.message || 'Failed to get pet info')
 }
+
+export async function convertTodoToFood() {
+  const res = await fetch(PET_URL + '/todo-to-food', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  const result = await res.json()
+
+  if (res.status == 200) {
+    return result?.food?.remaining || null
+  }
+
+  throw new Error(result?.error?.message || 'Failed to convert food from todo')
+}
+
+export async function sendPetFood() {
+  const res = await fetch(PET_URL + '/feed', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  const result = await res.json()
+
+  if (res.status == 200) {
+    return {
+      health: result?.pet?.health || 0,
+      mood: result?.pet?.mood || null,
+      food: result?.pet?.food,
+    }
+  }
+
+  throw new Error(result?.error?.message || 'Pet feeding failed')
+}

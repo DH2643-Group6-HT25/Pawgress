@@ -8,15 +8,21 @@ import {
 import { IPet } from '../model/Pets'
 import { getStreak } from './streakService'
 import { findUserById } from '../repository/usersRepo'
-import { NoPetFoundError, NoUserFoundError } from '../utils/errorUtils'
+import {
+  NoFoodLeftError,
+  NoPetFoundError,
+  NoUserFoundError,
+} from '../utils/errorUtils'
 import { IStreak, IStreakHistory } from '../model/Streaks'
 
-interface PetInfo {
-  name: string
-  color: string
+interface PetHealthInfo {
   health: number
   mood: string
   food: number
+}
+interface PetInfo extends PetHealthInfo {
+  name: string
+  color: string
   currentStreak: number
 }
 
@@ -100,4 +106,41 @@ export const assignPet = async (
 ) => {
   const pet = await createPet(userId, color, name)
   return pet
+}
+
+export const increaseFoodByTodo = async (userId: string) => {
+  const user = await findUserById(userId)
+  if (!user) throw new NoUserFoundError('')
+
+  const score = user?.score || 0
+
+  user.score = score + 5
+  user.food = _.toInteger(user.score / 10)
+  await user.save()
+  return user.food
+}
+
+export const feedPet = async (userId: string) => {
+  const user = await findUserById(userId)
+  if (!user) throw new NoUserFoundError('')
+
+  const pet = await getPetByUserId(userId)
+  if (!pet) throw new NoPetFoundError('')
+
+  if (user?.food > 0) {
+    user.food -= 1
+    user.score -= 10
+    pet.health = _.clamp(pet.health + 25, 0, 100)
+    pet.lastUpdate = moment().toDate()
+
+    await user.save()
+    await pet.save()
+    return {
+      health: pet.health,
+      mood: getPetMood(pet.health),
+      food: user.food,
+    } as PetHealthInfo
+  }
+
+  throw new NoFoodLeftError('')
 }
