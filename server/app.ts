@@ -20,7 +20,7 @@ import petRouter from './src/routes/pet'
 import { connectDB } from './src/service/databaseService'
 
 const app = express()
-const port = 3001
+const port = process.env.PORT || 3001
 
 const corsCfg = {
   origin: 'http://localhost:5173',
