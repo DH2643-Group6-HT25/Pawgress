@@ -16,4 +16,11 @@ export default defineConfig({
       'pawgress-c3gtbwgednfbeagt.swedencentral-01.azurewebsites.net',
     ],
   },
+  build: {
+    rollupOptions: {
+      treeshake: {
+        preset: 'recommended',
+      },
+    },
+  },
 })
