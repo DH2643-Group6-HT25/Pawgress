@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router'
+import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 import DashboardWrapper from '../components/Wrappers/DashboardWrapper'
 import { MyPet, PetContainer } from '../components/MyPet'
@@ -9,11 +9,9 @@ import ToDoListCard from '../components/ToDoListCard'
 import type { DashboardActions, DashboardState } from '../maps/dashboardMap'
 import Food from '../components/Food'
 import { Poo } from '../components/Pet/Poo'
-import {
-  PetAfterFeedingBubble,
-  PetFeedingBubble,
-} from '../components/Pet/PetMessage'
+import { PetAfterFeedingBubble, PetFeedingBubble } from '../components/Pet/PetMessage'
 
+/* ---------- styled components ---------- */
 const LeftDashboard = styled.div`
   flex: 0 0 35%;
   display: flex;
@@ -61,7 +59,9 @@ const DashboardCatFooter = styled.div`
   z-index: 2;
 `
 
-interface PropTypes extends DashboardState, DashboardActions {}
+/* ---------- props-typer (utan reorder-funktionerna) ---------- */
+type ActionsNoReorder = Omit<DashboardActions, 'reorderLocal' | 'reorderTodosBulk'>
+interface PropTypes extends DashboardState, ActionsNoReorder {}
 
 function DashboardPageView({
   petName,
@@ -79,8 +79,6 @@ function DashboardPageView({
   addTodo,
   deleteTodo,
   completeTodo,
-  reorderLocal,
-  reorderTodosBulk,
   feedPet,
 }: PropTypes) {
   return (
@@ -89,13 +87,10 @@ function DashboardPageView({
       <div>
         {isPetLoading && <div>Loading Pet ...</div>}
         {!isPetLoading && (
-          <PetStateHeader
-            name={petName}
-            health={petHealth}
-            currentStreak={currentStreak}
-          />
+          <PetStateHeader name={petName} health={petHealth} currentStreak={currentStreak} />
         )}
       </div>
+
       <DashboardBody>
         <LeftDashboard>
           <ToDoListCard
@@ -104,17 +99,18 @@ function DashboardPageView({
             addTodo={addTodo}
             deleteTodo={deleteTodo}
             completeTodo={completeTodo}
-            reorderLocal={reorderLocal}
-            reorderTodosBulk={reorderTodosBulk}
           />
         </LeftDashboard>
+
         <MiddleDashboard>
           <Outlet />
         </MiddleDashboard>
+
         <RightDashboard>
           <DashboardMenu />
         </RightDashboard>
       </DashboardBody>
+
       <DashboardCatFooter>
         <Poo isDisplayed={isPooDisplayed} />
         <PetAfterFeedingBubble
@@ -132,6 +128,7 @@ function DashboardPageView({
           isCurrentlyFeeding={isCurrentlyFeeding}
         />
       </DashboardCatFooter>
+
       <Footer />
     </DashboardWrapper>
   )
