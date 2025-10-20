@@ -54,6 +54,7 @@ jobs:
 
   docker-build-and-deploy:
     runs-on: ubuntu-latest
+    environment: production
     needs: npm-build
     if: ${{ github.event.inputs.run_npm_builds == 'false' || success() }}
     steps:
