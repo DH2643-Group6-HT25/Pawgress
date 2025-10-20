@@ -119,7 +119,11 @@ jobs:
           sed -i "s|^ *image: .*server:.*$| image: ${SERVER_NEW_VERSION}|" docker-compose-azure.yml
           sed -i 's|\$MONGO_USERNAME|${{ secrets.MONGO_USERNAME }}|g' docker-compose-azure.yml
           sed -i 's|\$MONGO_PASSWORD|${{ secrets.MONGO_PASSWORD }}|g' docker-compose-azure.yml
-
+      - name: Azure login with UAMI
+        uses: azure/login@v2
+        with:
+          auth-type: IDENTITY
+          client-id: ${{ secrets.UAMI_CLIENT_ID }}
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
