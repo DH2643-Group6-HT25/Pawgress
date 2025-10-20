@@ -15,18 +15,11 @@ import {
   ErrorMsg,
   RegisterLink,
 } from '../components/AuthUI'
+import type { DispatchToLoginProps, StateToLoginProps } from '../maps/loginMap'
 
-export type LoginPageViewProps = {
-  email: string
-  setEmail: (v: string) => void
-  password: string
-  setPassword: (v: string) => void
-  msg: string
-  loggedIn: boolean
-  handleSubmit: (e: React.FormEvent, email: string, password: string) => void
-  sessionError: string
-  hasPet: boolean
-}
+export interface LoginPageViewProps
+  extends StateToLoginProps,
+    DispatchToLoginProps {}
 
 const LoginPageView: React.FC<LoginPageViewProps> = ({
   email,

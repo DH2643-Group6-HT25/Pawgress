@@ -1,8 +1,18 @@
 import type { AppThunkDispatch, RootState } from '../models'
 import { userLoginThunk } from '../models/user/userThunks'
-import { setEmail, setPassword, setMsg } from '../models/user/userReducer'
+import { setEmail, setPassword } from '../models/user/userReducer'
 
-export function mapStateToLoginProps(state: RootState) {
+export interface StateToLoginProps {
+  email: string
+  password: string
+  msg: string
+  loggedIn: boolean
+  sessionError: string | null
+  loading: boolean
+  hasPet: boolean
+}
+
+export function mapStateToLoginProps(state: RootState): StateToLoginProps {
   return {
     email: state.user.email,
     password: state.user.password,
@@ -14,11 +24,16 @@ export function mapStateToLoginProps(state: RootState) {
   }
 }
 
+export interface DispatchToLoginProps {
+  setEmail: CallableFunction
+  setPassword: CallableFunction
+  handleSubmit: CallableFunction
+}
+
 export function mapDispatchToLoginProps(dispatch: AppThunkDispatch) {
   return {
-    setEmail: (email: string) => dispatch(setEmail(email)),
-    setPassword: (password: string) => dispatch(setPassword(password)),
-    setMsg: (msg: string) => dispatch(setMsg(msg)),
+    setEmail: (v: string) => dispatch(setEmail(v)),
+    setPassword: (v: string) => dispatch(setPassword(v)),
     handleSubmit: (e: React.FormEvent, email: string, password: string) => {
       e.preventDefault()
       dispatch(userLoginThunk({ email, pass: password }))
