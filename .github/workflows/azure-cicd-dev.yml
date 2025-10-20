@@ -105,10 +105,10 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker build -t ${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f client/Dockerfile .
-          docker push ${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
-          docker build -t ${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f server/Dockerfile .
-          docker push ${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
+          docker build -t ${{ secrets.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f client/Dockerfile ./client
+          docker push ${{ secrets.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
+          docker build -t ${{ secrets.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f server/Dockerfile ./server
+          docker push ${{ secrets.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
 
       - name: Update the Dockercompose file
         env:
