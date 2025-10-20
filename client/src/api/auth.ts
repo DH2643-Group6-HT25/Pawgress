@@ -11,7 +11,7 @@ export async function login(email: string, password: string) {
 
   if (res.status == 200) return res.json()
 
-  throw new Error('Unsuccessful Login')
+  throw new Error('Unsuccessful Login, try sign up')
 }
 
 export async function signup(email: string, password: string, name: string) {

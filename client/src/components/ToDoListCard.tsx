@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import {
   MyCard,
   CardHeader,
@@ -10,180 +10,9 @@ import styled from 'styled-components'
 import plusIcon from '../assets/icons/plus.svg'
 import trashIcon from '../assets/icons/remove.svg'
 import { Formik, Form, Field } from 'formik'
-
-import {
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-  arrayMove,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-
 import type { TodoObject } from '../models/todo/type'
 
-type Props = {
-  todos: TodoObject[]
-  loading: boolean
-  addTodo: (name: string) => void
-  deleteTodo: (id: string) => void
-  completeTodo: (id: string) => void
-  reorderLocal: (from: number, to: number) => void
-  reorderTodosBulk: (items: { id: string; order: number }[]) => void
-}
-
-const ToDoListCard: React.FC<Props> = ({
-  todos,
-  loading,
-  addTodo,
-  deleteTodo,
-  completeTodo,
-  reorderLocal,
-  reorderTodosBulk,
-}) => {
-  const [isAdding, setIsAdding] = useState(false)
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  )
-
-  const ids = useMemo(() => todos.map((t) => t.id), [todos])
-
-  const onDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e
-    if (!over) return
-
-    if (over.id === 'trash') {
-      deleteTodo(String(active.id))
-      return
-    }
-
-    if (active.id !== over.id) {
-      const oldIndex = ids.indexOf(String(active.id))
-      const newIndex = ids.indexOf(String(over.id))
-      if (oldIndex < 0 || newIndex < 0) return
-
-      reorderLocal(oldIndex, newIndex)
-
-      const newList = arrayMove(todos, oldIndex, newIndex)
-      const payload = newList.map((t, i) => ({ id: t.id, order: i }))
-      reorderTodosBulk(payload)
-    }
-  }
-
-  return (
-    <MyCard primary style={{ left: '100px' }}>
-      <CardHeader>
-        <CardTitle>TODO</CardTitle>
-      </CardHeader>
-
-      <InsideCardContainer style={{ flexDirection: 'column' }}>
-        {!isAdding && !loading && todos.length === 0 && (
-          <Empty>no todos yet</Empty>
-        )}
-
-        <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-          <TodoList>
-            <SortableContext items={ids} strategy={verticalListSortingStrategy}>
-              {todos.map((t) => (
-                <SortableTodo key={t.id} id={t.id}>
-                  <TodoItem>
-                    <Checkbox
-                      aria-label={`complete ${t.name}`}
-                      onChange={() => completeTodo(t.id)}
-                    />
-                    {t.name}
-                  </TodoItem>
-                </SortableTodo>
-              ))}
-            </SortableContext>
-          </TodoList>
-
-          <CardFooter>
-            {isAdding ? (
-              <Formik
-                initialValues={{ text: '' }}
-                validate={(v) => (!v.text.trim() ? { text: 'Required' } : {})}
-                onSubmit={async (values, { resetForm }) => {
-                  try {
-                    await addTodo(values.text.trim())
-
-                    resetForm()
-                    setIsAdding(false)
-                  } catch (e) {
-                    console.error('SUBMIT FEL:', e)
-                  }
-                }}
-              >
-                {({ isSubmitting, errors }) => (
-                  <Form style={{ display: 'flex', gap: 12, width: '100%' }}>
-                    <Input
-                      as={Field}
-                      name="text"
-                      placeholder="Your todo..."
-                      autoFocus
-                    />
-                    <Save
-                      type="submit"
-                      disabled={isSubmitting || !!errors.text}
-                    >
-                      Save
-                    </Save>
-                    <Back type="button" onClick={() => setIsAdding(false)}>
-                      Go back
-                    </Back>
-                  </Form>
-                )}
-              </Formik>
-            ) : (
-              <>
-                <FooterButton type="button" onClick={() => setIsAdding(true)}>
-                  <CardIcon
-                    src={plusIcon}
-                    alt="Add"
-                    style={{ marginRight: 6 }}
-                  />{' '}
-                  Add
-                </FooterButton>
-                <TrashDrop id="trash">
-                  <CardIcon src={trashIcon} alt="Delete" />
-                </TrashDrop>
-              </>
-            )}
-          </CardFooter>
-        </DndContext>
-      </InsideCardContainer>
-    </MyCard>
-  )
-}
-
-export default ToDoListCard
-
-/* ---------- Sortable wrapper ---------- */
-function SortableTodo({
-  id,
-  children,
-}: {
-  id: string
-  children: React.ReactNode
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id })
-  const style = { transform: CSS.Transform.toString(transform), transition }
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  )
-}
-
-/* ---------- styles ---------- */
+/* ---------- styles first ---------- */
 const TodoList = styled.ul`
   list-style: none;
   padding: 0;
@@ -199,10 +28,29 @@ const TodoItem = styled.li`
   font-family: ${(props) => props.theme.fonts.pixel};
   font-size: 1rem;
 `
+const TodoName = styled.span`
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
 const Checkbox = styled.input.attrs({ type: 'checkbox' })`
   width: 24px;
   height: 24px;
   margin-right: 16px;
+`
+const DeleteButton = styled.button`
+  background: none;
+  border: 2px solid ${(p) => p.theme.colors.black};
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: grid;
+  place-items: center;
+  min-width: 56px;
+  min-height: 40px;
+  cursor: pointer;
+  user-select: none;
+  &:hover { opacity: 0.9; }
 `
 const Empty = styled.div`
   opacity: 0.7;
@@ -211,7 +59,7 @@ const Empty = styled.div`
 `
 const CardFooter = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   margin-top: auto;
@@ -227,16 +75,6 @@ const FooterButton = styled.button`
   font-size: 1rem;
   color: ${(props) => props.theme.colors.black};
   cursor: pointer;
-`
-const TrashDrop = styled.div.attrs({ role: 'button' })`
-  border: 2px dashed ${(p) => p.theme.colors.black};
-  border-radius: 10px;
-  padding: 6px 10px;
-  display: grid;
-  place-items: center;
-  min-width: 56px;
-  min-height: 40px;
-  user-select: none;
 `
 const Input = styled(Field)`
   flex: 1;
@@ -261,3 +99,88 @@ const Back = styled.button`
   background: ${(p) => p.theme.colors.light_grey};
   font-family: ${(p) => p.theme.fonts.pixel};
 `
+
+/* ---------- props (no required reorder props) ---------- */
+type Props = {
+  todos: TodoObject[]
+  loading: boolean
+  addTodo: (name: string) => void
+  deleteTodo: (id: string) => void
+  completeTodo: (id: string) => void
+  // optional to avoid breaking callers that still pass them
+  reorderLocal?: (from: number, to: number) => void
+  reorderTodosBulk?: (items: { id: string; order: number }[]) => void
+}
+
+const ToDoListCard: React.FC<Props> = ({
+  todos,
+  loading,
+  addTodo,
+  deleteTodo,
+  completeTodo,
+}) => {
+  const [isAdding, setIsAdding] = useState(false)
+
+  return (
+    <MyCard primary style={{ left: '100px' }}>
+      <CardHeader>
+        <CardTitle>TODO</CardTitle>
+      </CardHeader>
+
+      <InsideCardContainer style={{ flexDirection: 'column' }}>
+        {!isAdding && !loading && todos.length === 0 && (
+          <Empty>no todos yet</Empty>
+        )}
+
+        <TodoList>
+          {todos.map((t) => (
+            <TodoItem key={t.id}>
+              <Checkbox
+                aria-label={`complete ${t.name}`}
+                onChange={() => completeTodo(t.id)}
+              />
+              <TodoName>{t.name}</TodoName>
+              <DeleteButton
+                type="button"
+                aria-label={`delete ${t.name}`}
+                title="Delete"
+                onClick={() => deleteTodo(t.id)}
+              >
+                <CardIcon src={trashIcon} alt="Delete" />
+              </DeleteButton>
+            </TodoItem>
+          ))}
+        </TodoList>
+
+        <CardFooter>
+          {isAdding ? (
+            <Formik
+              initialValues={{ text: '' }}
+              validate={(v) => (!v.text.trim() ? { text: 'Required' } : {})}
+              onSubmit={async (values, { resetForm }) => {
+                await addTodo(values.text.trim())
+                resetForm()
+                setIsAdding(false)
+              }}
+            >
+              {({ isSubmitting, errors }) => (
+                <Form style={{ display: 'flex', gap: 12, width: '100%' }}>
+                  <Input as={Field} name="text" placeholder="Your todo..." autoFocus />
+                  <Save type="submit" disabled={isSubmitting || !!errors.text}>Save</Save>
+                  <Back type="button" onClick={() => setIsAdding(false)}>Go back</Back>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            <FooterButton type="button" onClick={() => setIsAdding(true)}>
+              <CardIcon src={plusIcon} alt="Add" style={{ marginRight: 6 }} /> Add
+            </FooterButton>
+          )}
+        </CardFooter>
+      </InsideCardContainer>
+    </MyCard>
+  )
+}
+
+export default ToDoListCard
+
