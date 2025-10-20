@@ -18,7 +18,6 @@ export interface Journal {
 
 const JOURNAL_API_URL = INTERNAL_API_URL + '/journal';
 
-// Get all journals for a user (sorted by date desc)
 export async function getJournalsForUser(userId: string): Promise<Journal[]> {
   const res = await fetch(`${JOURNAL_API_URL}?userId=${userId}`, {
     credentials: 'include',
@@ -27,7 +26,6 @@ export async function getJournalsForUser(userId: string): Promise<Journal[]> {
   return res.json();
 }
 
-// Save (create or update) journal, supports both FormData (with image) and JSON (without image)
 export async function saveJournal(
   data: { journal: string; formatting?: Formatting[]; userId: string; image?: File }
 ): Promise<Journal> {
@@ -59,7 +57,6 @@ export async function saveJournal(
   return res.json();
 }
 
-// Delete journal by ID
 export async function deleteJournal(id: string): Promise<void> {
   const res = await fetch(`${JOURNAL_API_URL}/${id}`, {
     method: 'DELETE',
