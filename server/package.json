@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "tsc && node dist/app.js",
-    "dev": "npx nodemon --legacy-watch - exec"
+    "start": "node dist/app.js",
+    "dev": "npx nodemon --legacy-watch - exec",
+    "build": "tsc -b"
   },
   "dependencies": {
     "@types/mongoose": "^5.11.96",
