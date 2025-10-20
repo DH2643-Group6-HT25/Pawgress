@@ -1,18 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Journal } from './journalType'
-import {
-  saveJournalEntry,
-  fetchJournalsForUser,
-  deleteJournalById,
-} from './journalThunks'
+import { saveJournalEntry, fetchJournalsForUser, deleteJournalById } from './journalThunks'
 
-interface JournalState {
-  journals: Journal[]
-  today: Journal | null
-  loading: boolean
-  error: string | null
-}
+type JournalState = {
+  journals: Journal[];
+  today: Journal | null;
+  loading: boolean;
+  error: string | null;
+};
 
 const initialState: JournalState = {
   journals: [],
@@ -42,9 +38,7 @@ export const journalSlice = createSlice({
         state.loading = false
         state.error = null
         state.today = action.payload
-        const idx = state.journals.findIndex(
-          (j) => j._id === action.payload._id
-        )
+        const idx = state.journals.findIndex((j: Journal) => j._id === action.payload._id)
         if (idx !== -1) {
           state.journals[idx] = action.payload
         } else {
@@ -55,11 +49,8 @@ export const journalSlice = createSlice({
         state.loading = false
         state.error = action.payload || 'Failed to save journal'
       })
-      // Add fetchJournalsForUser cases
-      // Handle deleteJournalById
       .addCase(deleteJournalById.fulfilled, (state, action) => {
-        state.journals = state.journals.filter((j) => j._id !== action.payload)
-        // If deleted journal was today, clear today
+        state.journals = state.journals.filter((j: Journal) => j._id !== action.payload)
         if (state.today && state.today._id === action.payload) {
           state.today = null
         }
@@ -86,7 +77,6 @@ export default journalSlice.reducer
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '..'
 
-// Custom hook to access journal state and dispatch
 export function useJournal() {
   const journalList = useSelector((state: RootState) => state.journal.journals)
   const dispatch = useDispatch()

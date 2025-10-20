@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { MenuCard } from '../components/MenuCard'
 import JournalFormik from '../components/Journal/JournalFormik'
 import JournalHistory from '../components/Journal/JournalHistory'
@@ -26,8 +25,6 @@ function DashboardJournalView({
   fetchJournalsForUser,
   deleteJournal,
 }: Props) {
-  const dispatch = useDispatch()
-
   useEffect(() => {
     if (userId && fetchJournalsForUser) {
       fetchJournalsForUser(userId)
@@ -36,7 +33,7 @@ function DashboardJournalView({
 
   const handleDelete = async (id: string) => {
     if (!userId) return
-    dispatch(deleteJournal(id, userId))
+    await deleteJournal(id, userId)
     if (fetchJournalsForUser) fetchJournalsForUser(userId)
   }
 

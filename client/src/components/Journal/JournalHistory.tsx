@@ -1,25 +1,14 @@
 import type { Journal } from '../../models/journal/journalType';
 import moment from 'moment';
 import { sortBy, filter } from 'lodash/fp';
-import { 
-  JournalEntryCard, 
-  JournalListContainer, 
-  CardDate, 
-  CardText,
-  CardBottomRow,
-  CardImageWrapper,
-  JournalImage,
-  TrashWrapper
-} from '../Journal/JournalCardComponents';
+import { JournalEntryCard, JournalListContainer, CardDate, CardText, CardBottomRow, CardImageWrapper, JournalImage, TrashWrapper } from '../Journal/JournalCardComponents';
 import { CardIcon } from '../CardComponents';
 import trashIcon from '../../assets/icons/remove.svg';
 import { getImageUrl } from '../../utils/imageUrl';
 
-// Helper to render formatted text (basic bold/italic/underline)
 function renderFormattedText(journal: Journal) {
   return <span dangerouslySetInnerHTML={{ __html: journal.journal }} />;
 }
-
 
 interface Props {
   journals: Journal[];
@@ -27,7 +16,6 @@ interface Props {
 }
 
 export default function JournalHistory({ journals, onDelete }: Props) {
-  // Filter out invalid journals and sort by date descending (newest first)
   const validJournals = filter((j: Journal) => !!j.date && !!j.journal, journals);
   const sortedJournals = sortBy('date', validJournals).reverse();
   return (

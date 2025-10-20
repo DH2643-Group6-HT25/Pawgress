@@ -35,21 +35,13 @@ router.get("/", async (req, res) => {
 
 // Add or update today's journal for a user (one per day), with optional image
 router.post("/", upload.single("image"), async (req, res) => {
-  console.log('POST /journal body:', req.body);
-  if ((req as any).file) {
-    console.log('POST /journal file:', (req as any).file.originalname, (req as any).file.mimetype);
-  }
   let file;
   try {
     const userId = decodeAuth(req);
     const { journal, formatting } = req.body as { journal?: string; formatting?: any };
     file = (req as any).file;
-    // Kontrollera att userId är en giltig ObjectId-sträng
-    console.log('POST /journal userId:', userId, 'typeof:', typeof userId);
-    const isValidObjectId = userId && typeof userId === 'string' && userId.match(/^[a-f\d]{24}$/i);
-    if (!journal) console.log('Validation fail: journal saknas eller tom');
-    if (!userId) console.log('Validation fail: userId saknas eller tom');
-    if (!isValidObjectId) console.log('Validation fail: userId är inte giltig ObjectId');
+  // Kontrollera att userId är en giltig ObjectId-sträng
+  const isValidObjectId = userId && typeof userId === 'string' && userId.match(/^[a-f\d]{24}$/i);
     if (!journal || !userId || !isValidObjectId) {
       if (file && file.path) {
         fs.unlink(file.path, () => {});

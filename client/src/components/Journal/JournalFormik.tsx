@@ -2,15 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { MyButton } from '../MyButton'
 import type { Journal } from '../../models/journal/journalType'
 import { isNil } from 'lodash/fp'
-import {
-  EditorContainer,
-  Toolbar,
-  Editor,
-  ImageRow,
-  ImageMyButton,
-  FormatMyButton,
-  JournalImage,
-} from './JournalCardComponents'
+import { EditorContainer, Toolbar, Editor, ImageRow, ImageMyButton, FormatMyButton, JournalImage } from './JournalCardComponents'
 import { InsideCardTitle } from '../CardComponents'
 import { getImageUrl } from '../../utils/imageUrl'
 
@@ -40,11 +32,10 @@ export default function JournalFormik({
   const [imagePreview, setImagePreview] = useState<string | null>(
     today?.imageUrl || null
   )
-  const [formatting, setFormatting] = useState<FormatData[]>([]) // [{start, end, type}]
+  const [formatting, setFormatting] = useState<FormatData[]>([])
   const [success, setSuccess] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
 
-  // Sync editor and image preview when today changes
   useEffect(() => {
     setImagePreview(today?.imageUrl || null)
     if (editorRef.current) editorRef.current.innerHTML = today?.journal || ''
@@ -66,10 +57,9 @@ export default function JournalFormik({
       setShowMessage(true)
       setImage(null)
       setFormatting([])
-      // Redux will update today prop, which triggers useEffect above
     }
   }
-  // Hide message after 5 seconds
+
   useEffect(() => {
     if (showMessage || error) {
       const timer = setTimeout(() => {
@@ -80,11 +70,9 @@ export default function JournalFormik({
     }
   }, [showMessage, error])
 
-  // Hantera rich text-formattering
   const handleFormat = (cmd: 'bold' | 'italic' | 'underline') => {
     document.execCommand(cmd, false)
     if (editorRef.current) {
-      // Spara formateringsinfo (exempel: hela texten får formatet)
       const selection = window.getSelection()
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0)
@@ -100,12 +88,8 @@ export default function JournalFormik({
     }
   }
 
-  // Hantera input i contentEditable (kan användas för framtida validering)
-  const handleInput = () => {
-    // Kan lägga till validering här om du vill
-  }
+  const handleInput = () => {}
 
-  // Hantera bildval och preview
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0]
     if (file) {

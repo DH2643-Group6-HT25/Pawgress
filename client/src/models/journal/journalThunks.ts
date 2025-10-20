@@ -1,15 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { Journal } from './journalType'
-import {
-  saveJournal,
-  deleteJournal,
-  getJournalsForUser,
-} from '../../api/journal'
+import { saveJournal, deleteJournal, getJournalsForUser } from '../../api/journal'
 import { getErrorMessage } from '../../utils/errorHandling'
 
-// Delete a journal by ID
 export const deleteJournalById = createAsyncThunk<
-  string, // return deleted journal id
+  string,
   { id: string; userId: string },
   { rejectValue: string }
 >('journal/deleteJournalById', async ({ id }, { rejectWithValue }) => {
@@ -21,7 +16,6 @@ export const deleteJournalById = createAsyncThunk<
   }
 })
 
-// Save (create or update) today's journal entry
 export const saveJournalEntry = createAsyncThunk<
   Journal,
   { journal: string; formatting?: never[]; userId: string; image?: File },
@@ -35,7 +29,6 @@ export const saveJournalEntry = createAsyncThunk<
   }
 })
 
-// Fetch all journals for a user
 export const fetchJournalsForUser = createAsyncThunk<
   Journal[],
   string,
