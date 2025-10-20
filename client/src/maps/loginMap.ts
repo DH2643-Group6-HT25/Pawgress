@@ -1,4 +1,4 @@
-import type { RootState } from '../models'
+import type { AppThunkDispatch, RootState } from '../models'
 import { userLoginThunk } from '../models/user/userThunks'
 import { setEmail, setPassword, setMsg } from '../models/user/userReducer'
 
@@ -14,7 +14,7 @@ export function mapStateToLoginProps(state: RootState) {
   }
 }
 
-export function mapDispatchToLoginProps(dispatch: any) {
+export function mapDispatchToLoginProps(dispatch: AppThunkDispatch) {
   return {
     setEmail: (email: string) => dispatch(setEmail(email)),
     setPassword: (password: string) => dispatch(setPassword(password)),

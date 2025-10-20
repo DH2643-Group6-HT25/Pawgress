@@ -5,6 +5,7 @@ import {
   fetchCategories,
   fetchAffirmationByCategory,
 } from '../api/affirmation'
+import { getErrorMessage } from '../utils/errorHandling'
 
 function DashboardAffirmationPresenter() {
   const [affirmation, setAffirmation] = useState<string | null>(null)
@@ -20,8 +21,8 @@ function DashboardAffirmationPresenter() {
       try {
         const data = await fetchCategories()
         setCategories(data)
-      } catch (err: any) {
-        console.error('Failed to fetch categories:', err)
+      } catch (err) {
+        console.error('Failed to fetch categories:', getErrorMessage(err))
       }
     }
 
@@ -41,9 +42,9 @@ function DashboardAffirmationPresenter() {
           data = await fetchAffirmationByCategory(selectedCategory)
         }
         setAffirmation(data.text)
-      } catch (err: any) {
+      } catch (err) {
         setError('Failed to fetch affirmation. Please try again.')
-        console.error(err)
+        console.error(getErrorMessage(err))
       } finally {
         setLoading(false)
       }

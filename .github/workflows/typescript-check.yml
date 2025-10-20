@@ -31,9 +31,9 @@ jobs:
         working-directory: client
         run: npx tsc --noEmit
 
-      - name: Lint (optional)
+      - name: Run ESLint
         working-directory: client
-        run: npm run lint --if-present
+        run: npm run lint
 
   typecheck-server:
     runs-on: ubuntu-latest
@@ -56,6 +56,6 @@ jobs:
         working-directory: server
         run: npx tsc --noEmit
 
-      - name: Lint (optional)
+      - name: Run ESLint
         working-directory: server
-        run: npm run lint --if-present
+        run: npm run lint

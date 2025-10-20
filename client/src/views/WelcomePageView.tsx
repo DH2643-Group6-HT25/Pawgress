@@ -78,18 +78,6 @@ function WelcomePage() {
           </MyButton>
         </ButtonRow>
       </Content>
-
-      <div>
-        <MyButton primary as={Link} to="/dashboard">
-          Dashboard
-        </MyButton>
-        <MyButton primary as={Link} to="/loading">
-          Loading Page
-        </MyButton>
-        <MyButton primary as={Link} to="/onsuspense">
-          Suspense View
-        </MyButton>
-      </div>
     </Wrapper>
   )
 }
@@ -130,27 +118,6 @@ const SubHeadline = styled.p`
 const ButtonRow = styled.div`
   display: inline-flex;
   gap: 12px;
-`
-
-const BaseBtn = styled.button`
-  padding: 14px 24px;
-  font-size: 16px;
-  font-weight: 700;
-  border-radius: 10px;
-  border: 0;
-  cursor: pointer;
-  text-decoration: none;
-`
-
-const Primary = styled(BaseBtn)`
-  background: #111;
-  color: #fff;
-`
-
-const Secondary = styled(BaseBtn)`
-  background: #444;
-  color: #fff;
-  opacity: 0.95;
 `
 
 const Deco = styled.img`
