@@ -22,15 +22,20 @@ function DashboardPagePresenter({
   const initialPetRender = useRef(true)
   const initialToDoRender = useRef(true)
   useEffect(() => {
-    if (initialPageRender.current && !isPageLoading) {
-      verifyUser()
-      initialPageRender.current = false
-    } else if (initialPetRender.current && !isPageLoading) {
-      fetchPetInfo()
-      initialPetRender.current = false
-    } else if (initialToDoRender.current && !isPageLoading) {
-      fetchTodos()
-      initialToDoRender.current = false
+    if (!isPageLoading) {
+      if (initialPageRender.current) {
+        verifyUser()
+        initialPageRender.current = false
+      } else {
+        if (initialPetRender.current) {
+          fetchPetInfo()
+          initialPetRender.current = false
+        }
+        if (initialToDoRender.current) {
+          fetchTodos()
+          initialToDoRender.current = false
+        }
+      }
     }
   }, [isPageLoading, fetchPetInfo, verifyUser, fetchTodos])
 
