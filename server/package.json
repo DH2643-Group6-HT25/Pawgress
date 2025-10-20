@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "npx nodemon --legacy-watch - exec",
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "serve": "tsc -b && node dist/app.js"
   },
   "dependencies": {
     "@types/mongoose": "^5.11.96",
