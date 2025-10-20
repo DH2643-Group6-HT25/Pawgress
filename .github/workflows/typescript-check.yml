@@ -1,0 +1,61 @@
+name: TypeScript Check on PR
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+      - 'server/**'
+      - '.github/workflows/typescript-check.yml'
+
+jobs:
+  typecheck-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: TypeScript check
+        working-directory: client
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        working-directory: client
+        run: npm run lint --if-present
+
+  typecheck-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: TypeScript check
+        working-directory: server
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        working-directory: server
+        run: npm run lint --if-present

@@ -8,16 +8,12 @@ import {
   type BasicStreakInfo,
 } from './streakReducer'
 
-const handleStreakAsync = async (
-  apiCall: () => Promise<any>,
-  dispatch: Dispatch,
-  errorMessage: string
-) => {
+const handleStreakAsync = async (dispatch: Dispatch, errorMessage: string) => {
   dispatch(setStreakLoading(true))
   dispatch(setStreakError(null))
 
   try {
-    const data = await apiCall()
+    const data = await getStreak()
 
     if (data && data.streak) {
       const basicInfo: BasicStreakInfo = {
@@ -51,9 +47,5 @@ const handleStreakAsync = async (
 }
 
 export const fetchStreakThunk = () => async (dispatch: Dispatch) => {
-  await handleStreakAsync(
-    getStreak,
-    dispatch,
-    'Failed to fetch streak. Please try again.'
-  )
+  await handleStreakAsync(dispatch, 'Failed to fetch streak. Please try again.')
 }

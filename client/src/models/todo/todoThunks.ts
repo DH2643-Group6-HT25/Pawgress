@@ -9,7 +9,20 @@ import {
 } from '../../api/todo'
 import type { TodoObject } from './type'
 
-const mapFromApi = (t: any): TodoObject => ({
+interface API_DATA {
+  id: string
+  _id?: string
+  todo: string
+  name: string
+  text: string
+  isDone: boolean
+  done: boolean
+  createdAt: string
+  date: string
+  doneAt: string
+  order: string
+}
+const mapFromApi = (t: API_DATA): TodoObject => ({
   id: t.id ?? t._id,
   name: t.name ?? t.todo ?? t.text ?? '',
   isDone: Boolean(t.isDone ?? t.done ?? false),
