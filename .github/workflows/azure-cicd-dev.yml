@@ -1,0 +1,158 @@
+name: DEV compose build and deploy to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      run_npm_builds:
+        description: 'Run npm builds'
+        required: true
+        type: choice
+        default: 'false'
+        options:
+          - 'true'
+          - 'false'
+      additional_string_for_docker_tag:
+        description: 'Additional string for Docker tag'
+        required: false
+        type: string
+
+jobs:
+  npm-build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_npm_builds == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create client .env file
+        run: |
+          cat > client/.env << EOF
+          NODE_ENV=${{ vars.SERVER_NODE_ENV }}
+          EOF
+
+      - name: Create server .env file
+        run: |
+          cat > server/.env << EOF
+          NODE_ENV=${{ vars.SERVER_NODE_ENV }}
+          PORT=${{ secrets.SERVER_PORT }}
+          EOF
+
+      - name: Build client
+        run: |
+          cd client
+          npm ci
+          npm run build
+
+      - name: Build server
+        run: |
+          cd server
+          npm ci
+          npm run build
+
+  docker-build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: npm-build
+    if: ${{ github.event.inputs.run_npm_builds == 'false' || success() }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Create client .env file
+        run: |
+          cat > client/.env << EOF
+          NODE_ENV=${{ vars.CLIENT_NODE_ENV }}
+          VITE_SERVER_URL=${{ secrets.SERVER_URL }}
+          EOF
+
+      - name: Create server .env file
+        run: |
+          cat > server/.env << EOF
+          NODE_ENV=${{ vars.SERVER_NODE_ENV }}
+          MONGO_HOST=${{ secrets.MONGODB_HOST }}
+          MONGO_PORT=${{ secrets.MONGODB_PORT }}
+          MONGO_DB=${{ secrets.MONGODB_DB }}
+          MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_USERNAME }}
+          MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_PASSWORD }}
+          AFFIRMATION_KEY=${{ secrets.AFFIRMATION_KEY }}
+          AFFIRMATION_HOST=${{ secrets.AFFIRMATION_HOST }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          EOF
+
+      - name: ACR Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ vars.ACR_REPO }}
+          username: ${{ secrets.DOCKERIO_USERNAME }}
+          password: ${{ secrets.DOCKERIO_PASSWORD }}
+
+      - name: Set variables
+        id: vars
+        run: |
+          echo "::set-output name=docker_tag::$(git rev-parse --short HEAD)-$(TZ='Europe/Paris' date +%Y-%m-%d-%H-%M)"
+          echo "::set-output name=agent_ip::$(dig +short myip.opendns.com @resolver1.opendns.com)"
+
+      - name: Whitelist agent ip
+        run: |
+          if [ -z "$(az acr network-rule list --name ${{ vars.ACR_REPO_SHORT }} --resource-group ${{ vars.ACR_REPO_RG }} | grep ${{ steps.vars.outputs.agent_ip }} )"]
+          then
+            echo "Adding agent IP ${{ steps.vars.outputs.agent_ip }} to Azure Container Registry firewall whitelist"
+            az acr network-rule add --name ${{ vars.ACR_REPO_SHORT }} --resource-group ${{ vars.ACR_REPO_RG }} --ip-address ${{ steps.vars.outputs.agent_ip }}
+          else
+            echo "Agent is already whitelisted; skipping."
+          fi
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ vars.ACR_REPO }}
+          username: ${{ secrets.DOCKERIO_USERNAME }}
+          password: ${{ secrets.DOCKERIO_PASSWORD }}
+
+      - name: Build and push Docker images
+        run: |
+          docker build -t ${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f client/Dockerfile .
+          docker push ${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
+          docker build -t ${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f server/Dockerfile .
+          docker push ${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
+
+      - name: Remove whitelisted agent ip
+        if: always()
+        run: |
+          echo "Removing agent IP ${{ steps.vars.outputs.agent_ip }} from Azure Container Registry firewall whitelist"
+          az acr network-rule remove --name ${{ vars.ACR_REPO_SHORT }} --resource-group ${{ vars.ACR_REPO_RG }} --ip-address ${{ steps.vars.outputs.agent_ip }} --only-show-errors --output none
+
+      - name: Update the Dockercompose file
+        env:
+          CLIENT_NEW_VERSION: '${{ vars.ACR_REPO }}\/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}'
+          SERVER_NEW_VERSION: '${{ vars.ACR_REPO }}\/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}'
+        run: |
+          sed -i 's/^ *image: .*client:.*$/ image: '$CLIENT_NEW_VERSION'/' docker-compose-azure-dev.yml
+          sed -i 's/^ *image: .*server:.*$/ image: '$SERVER_NEW_VERSION'/' docker-compose-azure-dev.yml
+          sed -i 's|\$MONGO_USERNAME|${{ secrets.MONGO_USERNAME }}|g' docker-compose-azure-dev.yml
+          sed -i 's|\$MONGO_PASSWORD|${{ secrets.MONGO_PASSWORD }}|g' docker-compose-azure-dev.yml
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.DEV_APP_NAME }}
+          configuration-file: 'docker-compose-azure-dev.yml'
+
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Bump versions in docker-compose-azure" docker-compose-azure-dev.yml
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT }}
+
+      - name: AZ CLI logout
+        if: always()
+        run: |
+          az logout
