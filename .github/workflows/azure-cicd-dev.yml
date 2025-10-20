@@ -105,32 +105,32 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker build -t ${{ secrets.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f client/Dockerfile ./client
-          docker push ${{ secrets.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
-          docker build -t ${{ secrets.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f server/Dockerfile ./server
-          docker push ${{ secrets.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
+          docker build -t ${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f client/Dockerfile ./client
+          docker push ${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
+          docker build -t ${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }} -f server/Dockerfile ./server
+          docker push ${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}
 
       - name: Update the Dockercompose file
         env:
-          CLIENT_NEW_VERSION: '${{ vars.ACR_REPO }}\/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}'
-          SERVER_NEW_VERSION: '${{ vars.ACR_REPO }}\/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}'
+          CLIENT_NEW_VERSION: '${{ vars.ACR_REPO }}/client:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}'
+          SERVER_NEW_VERSION: '${{ vars.ACR_REPO }}/server:${{ steps.vars.outputs.docker_tag }}${{ github.event.inputs.additional_string_for_docker_tag }}'
         run: |
-          sed -i 's/^ *image: .*client:.*$/ image: '$CLIENT_NEW_VERSION'/' docker-compose-azure-dev.yml
-          sed -i 's/^ *image: .*server:.*$/ image: '$SERVER_NEW_VERSION'/' docker-compose-azure-dev.yml
-          sed -i 's|\$MONGO_USERNAME|${{ secrets.MONGO_USERNAME }}|g' docker-compose-azure-dev.yml
-          sed -i 's|\$MONGO_PASSWORD|${{ secrets.MONGO_PASSWORD }}|g' docker-compose-azure-dev.yml
+          sed -i "s|^ *image: .*client:.*$| image: ${CLIENT_NEW_VERSION}|" docker-compose-azure.yml
+          sed -i "s|^ *image: .*server:.*$| image: ${SERVER_NEW_VERSION}|" docker-compose-azure.yml
+          sed -i 's|\$MONGO_USERNAME|${{ secrets.MONGO_USERNAME }}|g' docker-compose-azure.yml
+          sed -i 's|\$MONGO_PASSWORD|${{ secrets.MONGO_PASSWORD }}|g' docker-compose-azure.yml
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ vars.DEV_APP_NAME }}
-          configuration-file: 'docker-compose-azure-dev.yml'
+          configuration-file: 'docker-compose-azure.yml'
 
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "Bump versions in docker-compose-azure" docker-compose-azure-dev.yml
+          git commit -m "Bump versions in docker-compose-azure" docker-compose-azure.yml
 
       - name: Push changes
         uses: ad-m/github-push-action@master
