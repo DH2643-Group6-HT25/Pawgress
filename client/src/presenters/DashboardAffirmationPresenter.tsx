@@ -1,73 +1,65 @@
-import { useEffect, useState, useRef } from 'react'
-import DashboardAffirmationView from '../views/DashboardAffirmationView'
+import { useEffect, useRef } from 'react'
+import { connect } from 'react-redux'
 import {
-  fetchAffirmation,
+  mapStateToAffirmationProps,
+  mapDispatchToAffirmationProps,
+  type AffirmationState,
+  type AffirmationDispatch,
+} from '../maps/affirmationMap'
+import DashboardAffirmationView from '../views/DashboardAffirmationView'
+
+interface DashboardAffirmationPresenterProps
+  extends AffirmationState,
+    AffirmationDispatch {}
+
+function DashboardAffirmationPresenter({
+  affirmation,
+  loading,
+  error,
+  categories,
+  selectedCategory,
   fetchCategories,
+  fetchRandomAffirmation,
   fetchAffirmationByCategory,
-} from '../api/affirmation'
-import { getErrorMessage } from '../utils/errorHandling'
-
-function DashboardAffirmationPresenter() {
-  const [affirmation, setAffirmation] = useState<string | null>(null)
-  const [categories, setCategories] = useState<string[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string>('random')
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
-
+}: DashboardAffirmationPresenterProps) {
   const isInitialRender = useRef(true)
 
+  // Fetch categories on initial render
   useEffect(() => {
-    const fetchCategoryData = async () => {
-      try {
-        const data = await fetchCategories()
-        setCategories(data)
-      } catch (err) {
-        console.error('Failed to fetch categories:', getErrorMessage(err))
-      }
-    }
+    fetchCategories()
+  }, [fetchCategories])
 
-    fetchCategoryData()
-  }, [])
-
+  // Fetch affirmations based on the selected category
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        let data
-        if (selectedCategory === 'random') {
-          data = await fetchAffirmation()
-        } else {
-          data = await fetchAffirmationByCategory(selectedCategory)
-        }
-        setAffirmation(data.text)
-      } catch (err) {
-        setError('Failed to fetch affirmation. Please try again.')
-        console.error(getErrorMessage(err))
-      } finally {
-        setLoading(false)
-      }
-    }
-
     if (isInitialRender.current) {
       isInitialRender.current = false
       return
     }
 
-    fetchData()
-  }, [selectedCategory])
+    if (selectedCategory === 'random') {
+      fetchRandomAffirmation() // Fetch a random affirmation
+    } else {
+      fetchAffirmationByCategory(selectedCategory) // Fetch affirmation by category
+    }
+  }, [fetchRandomAffirmation, fetchAffirmationByCategory, selectedCategory])
 
   return (
     <DashboardAffirmationView
       affirmation={affirmation}
-      categories={categories}
       selectedCategory={selectedCategory}
-      setSelectedCategory={setSelectedCategory}
+      setSelectedCategory={(category) =>
+        category === 'random'
+          ? fetchRandomAffirmation()
+          : fetchAffirmationByCategory(category)
+      }
       loading={loading}
       error={error}
+      categories={categories}
     />
   )
 }
 
-export const DashboardAffirmation = DashboardAffirmationPresenter
+export const DashboardAffirmation = connect(
+  mapStateToAffirmationProps,
+  mapDispatchToAffirmationProps
+)(DashboardAffirmationPresenter)
