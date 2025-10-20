@@ -120,12 +120,12 @@ jobs:
           sed -i 's|\$MONGO_USERNAME|${{ secrets.MONGO_USERNAME }}|g' docker-compose-azure.yml
           sed -i 's|\$MONGO_PASSWORD|${{ secrets.MONGO_PASSWORD }}|g' docker-compose-azure.yml
 
-      - name: Azure login with UAMI
+      - name: Azure Login with OIDC
         uses: azure/login@v2
         with:
-          auth-type: IDENTITY
-          client-id: ${{ secrets.UAMI_CLIENT_ID }}
-          allow-no-subscriptions: true
+          client-id: ${{ secrets.AZ_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZ_TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
