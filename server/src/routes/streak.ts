@@ -8,7 +8,7 @@ const router = express.Router()
 router.get('/', async (req, res) => {
   const userId = decodeAuth(req)
 
-  if (!userId) return res.status(400).json({ error: 'userId required' })
+  if (!userId) return res.status(401).json({ error: 'Invalid Token' })
 
   try {
     const streakInfo = await streakService.getStreak(userId as string)
