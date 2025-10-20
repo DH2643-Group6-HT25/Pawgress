@@ -31,7 +31,7 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-public/images/uploads/
+
 
 # Dependency directories
 node_modules/
@@ -58,6 +58,7 @@ typings/
 # dotenv environment variables file
 .env
 
-# next.js build output
-.next
+# build output
+dist/
+public/images/uploads/
 
