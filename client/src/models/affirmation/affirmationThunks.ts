@@ -16,7 +16,7 @@ export const fetchCategoriesThunk = () => async (dispatch: Dispatch) => {
   try {
     const data = await fetchCategories()
     dispatch(setCategories(data))
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Failed to fetch categories:', err)
     dispatch(setError('Failed to fetch categories.'))
   }
@@ -29,7 +29,7 @@ export const fetchAffirmationThunk = () => async (dispatch: Dispatch) => {
   try {
     const data = await fetchAffirmation()
     dispatch(setAffirmation(data.text))
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Failed to fetch affirmation:', err)
     dispatch(setError('Failed to fetch affirmation. Please try again.'))
   } finally {
@@ -45,7 +45,7 @@ export const fetchAffirmationByCategoryThunk =
     try {
       const data = await fetchAffirmationByCategory(category)
       dispatch(setAffirmation(data.text))
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to fetch affirmation by category:', err)
       dispatch(setError('Failed to fetch affirmation. Please try again.'))
     } finally {
