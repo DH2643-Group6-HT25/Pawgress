@@ -1,6 +1,5 @@
 import * as streakRepo from '../repository/streakRepo'
 import _ from 'lodash'
-import moment from 'moment'
 
 /*Get users streak*/
 export const getStreak = async (userId: string) => {
