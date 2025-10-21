@@ -4,6 +4,8 @@ WORKDIR /server
 
 COPY package*.json .
 
+ENV NODE_ENV=production
+
 RUN echo "NODE_ENV before: $NODE_ENV"
 RUN npm i
 
@@ -11,4 +13,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "serve"]
