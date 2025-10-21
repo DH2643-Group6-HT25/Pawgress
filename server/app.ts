@@ -25,7 +25,7 @@ const envPort = toSafeInteger(process.env.PORT)
 const port = envPort != 0 ? envPort : 3001
 
 const corsCfg = {
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_WHITELIST || 'http://localhost:5173',
   credentials: true,
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

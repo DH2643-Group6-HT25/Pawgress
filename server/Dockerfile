@@ -11,6 +11,6 @@ RUN npm i
 
 COPY . .
 
-EXPOSE 5173
+EXPOSE 3001
 
 CMD ["npm", "run", "dev"]
