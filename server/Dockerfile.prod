@@ -8,9 +8,10 @@ ENV NODE_ENV=production
 
 RUN echo "NODE_ENV before: $NODE_ENV"
 RUN npm i
+RUN npm run build
 
 COPY . .
 
 EXPOSE 3001
 
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "start"]
