@@ -10,6 +10,7 @@ const mongoDBUrl =
 // connect mongodb to server
 export const connectDB = async () => {
   try {
+    console.log('connection to mongo ' + mongoDBUrl)
     await mongoose.connect(mongoDBUrl)
   } catch (err) {
     console.error('MongoDB connection error:', err)
