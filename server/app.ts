@@ -18,12 +18,14 @@ import journalRouter from './src/routes/journal'
 import petRouter from './src/routes/pet'
 
 import { connectDB } from './src/service/databaseService'
+import { toSafeInteger } from 'lodash'
 
 const app = express()
-const port = process.env.PORT || 3001
+const envPort = toSafeInteger(process.env.PORT)
+const port = envPort != 0 ? envPort : 3001
 
 const corsCfg = {
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_WHITELIST || 'http://localhost:5173',
   credentials: true,
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -79,6 +81,6 @@ io.on('connection', (socket) => {
 /* (frivillig) liten POST-probe för att testa efter preflight */
 app.post('/_probe', (req, res) => res.json({ ok: true, body: req.body }))
 
-server.listen(port, () =>
+server.listen(port, '0.0.0.0', 5, () =>
   console.log(`Server + WS on http://localhost:${port}`)
 )
