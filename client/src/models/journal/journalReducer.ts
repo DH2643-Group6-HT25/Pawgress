@@ -1,14 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Journal } from './journalType'
-import { saveJournalEntry, fetchJournalsForUser, deleteJournalById } from './journalThunks'
+import {
+  saveJournalEntry,
+  fetchJournalsForUser,
+  deleteJournalById,
+} from './journalThunks'
 
 type JournalState = {
-  journals: Journal[];
-  today: Journal | null;
-  loading: boolean;
-  error: string | null;
-};
+  journals: Journal[]
+  today: Journal | null
+  loading: boolean
+  error: string | null
+}
 
 const initialState: JournalState = {
   journals: [],
@@ -38,7 +42,9 @@ export const journalSlice = createSlice({
         state.loading = false
         state.error = null
         state.today = action.payload
-        const idx = state.journals.findIndex((j: Journal) => j._id === action.payload._id)
+        const idx = state.journals.findIndex(
+          (j: Journal) => j._id === action.payload._id
+        )
         if (idx !== -1) {
           state.journals[idx] = action.payload
         } else {
@@ -50,7 +56,9 @@ export const journalSlice = createSlice({
         state.error = action.payload || 'Failed to save journal'
       })
       .addCase(deleteJournalById.fulfilled, (state, action) => {
-        state.journals = state.journals.filter((j: Journal) => j._id !== action.payload)
+        state.journals = state.journals.filter(
+          (j: Journal) => j._id !== action.payload
+        )
         if (state.today && state.today._id === action.payload) {
           state.today = null
         }
@@ -66,7 +74,11 @@ export const journalSlice = createSlice({
       })
       .addCase(fetchJournalsForUser.rejected, (state, action) => {
         state.loading = false
-        state.error = action.payload || 'Failed to fetch journals'
+        if (typeof action.payload == 'string') {
+          state.error = action.payload
+        } else {
+          state.error = 'Failed to fetch journals'
+        }
       })
   },
 })
