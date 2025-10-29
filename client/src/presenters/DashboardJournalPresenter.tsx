@@ -10,22 +10,20 @@ import { useEffect, useRef } from 'react'
 function DashboardJournalPresenter({
   loading,
   fetchJournalsForUser,
-  userId,
   ...props
 }: JournalMaptoPropTypes) {
   const initialRender = useRef(true)
   useEffect(() => {
     if (initialRender.current && !loading) {
-      fetchJournalsForUser(userId)
+      fetchJournalsForUser()
       initialRender.current = false
     }
-  }, [loading, userId, fetchJournalsForUser])
+  }, [loading, fetchJournalsForUser])
 
   return (
     <DashboardJournalView
       {...props}
       loading={loading}
-      userId={userId}
       fetchJournalsForUser={fetchJournalsForUser}
     />
   )

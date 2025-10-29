@@ -30,16 +30,13 @@ export function mapStateToDashboardJournalProps(state: RootState) {
     today: todayJournal || null,
     loading: state.journal.loading,
     error: state.journal.error,
-    userId: state.user.userID,
   }
 }
 
 export function mapDispatchToDashboardJournalProps(dispatch: AppThunkDispatch) {
   return {
     saveJournalEntry: (data: never) => dispatch(saveJournalEntry(data)),
-    fetchJournalsForUser: (userId: string) =>
-      dispatch(fetchJournalsForUser(userId)),
-    deleteJournal: (id: string, userId: string) =>
-      dispatch(deleteJournalById({ id, userId })),
+    fetchJournalsForUser: () => dispatch(fetchJournalsForUser()),
+    deleteJournal: (id: string) => dispatch(deleteJournalById({ id })),
   }
 }

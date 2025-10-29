@@ -14,9 +14,9 @@ function DashboardJournalView({
   deleteJournal,
 }: JournalMaptoPropTypes) {
   const handleDelete = async (id: string) => {
-    if (!userId) return
-    await deleteJournal(id, userId)
-    if (fetchJournalsForUser) fetchJournalsForUser(userId)
+    if (loading) return
+    await deleteJournal(id)
+    if (fetchJournalsForUser) fetchJournalsForUser()
   }
 
   return (
