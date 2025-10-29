@@ -25,6 +25,7 @@ export type SignupPageViewProps = {
   password: string;
   setPassword: (v: string) => void;
   msg: string;
+  loading: boolean;
   loggedIn: boolean;
   handleSubmit: (e: FormEvent, email: string, password: string, name: string) => void;
 };
@@ -37,6 +38,7 @@ export const SignupPageView: React.FC<SignupPageViewProps> = ({
   password,
   setPassword,
   msg,
+  loading,
   loggedIn,
   handleSubmit,
 }) => {
@@ -108,7 +110,7 @@ export const SignupPageView: React.FC<SignupPageViewProps> = ({
               fontSize: "1.1rem",
             }}
           >
-            Sign Up
+            {loading ? 'Loading...' : 'Sign up'}
           </MyButton>
         </StyledForm>
         <SmallText>

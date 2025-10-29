@@ -27,6 +27,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
   password,
   setPassword,
   msg,
+  loading,
   loggedIn,
   handleSubmit,
   hasPet,
@@ -89,7 +90,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
               fontSize: '1.1rem',
             }}
           >
-            Login
+            {loading ? 'Loading...' : 'Log in'}
           </MyButton>
         </StyledForm>
         <SmallText>
