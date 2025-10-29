@@ -166,7 +166,7 @@ export default function JournalFormik({
                 as="span"
                 style={{ borderWidth: '2px', boxShadow: '2px 2px 0 #000' }}
               >
-                {imagePreview ? 'Change image *' : 'Upload image'}
+                {imagePreview ? 'Change image' : 'Upload image *'}
               </ImageMyButton>
             </label>
           </div>
