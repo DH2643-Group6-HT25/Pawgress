@@ -1,11 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { Journal } from './journalType'
-import { saveJournal, deleteJournal, getJournalsForUser } from '../../api/journal'
+import {
+  saveJournal,
+  deleteJournal,
+  getJournalsForUser,
+} from '../../api/journal'
 import { getErrorMessage } from '../../utils/errorHandling'
 
 export const deleteJournalById = createAsyncThunk<
   string,
-  { id: string; userId: string },
+  { id: string },
   { rejectValue: string }
 >('journal/deleteJournalById', async ({ id }, { rejectWithValue }) => {
   try {
@@ -29,15 +33,14 @@ export const saveJournalEntry = createAsyncThunk<
   }
 })
 
-export const fetchJournalsForUser = createAsyncThunk<
-  Journal[],
-  string,
-  { rejectValue: string }
->('journal/fetchJournalsForUser', async (userId, { rejectWithValue }) => {
-  try {
-    const res = await getJournalsForUser(userId)
-    return res
-  } catch (err) {
-    return rejectWithValue(getErrorMessage(err) || 'Network error')
+export const fetchJournalsForUser = createAsyncThunk(
+  'journal/fetchJournalsForUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getJournalsForUser()
+      return res
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err) || 'Network error')
+    }
   }
-})
+)
