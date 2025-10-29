@@ -25,6 +25,7 @@ function DashboardJournalPresenter({
     <DashboardJournalView
       {...props}
       loading={loading}
+      userId={userId}
       fetchJournalsForUser={fetchJournalsForUser}
     />
   )
