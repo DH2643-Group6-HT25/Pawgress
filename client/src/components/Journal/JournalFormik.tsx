@@ -2,7 +2,15 @@ import React, { useRef, useState, useEffect } from 'react'
 import { MyButton } from '../MyButton'
 import type { Journal } from '../../models/journal/journalType'
 import { isNil } from 'lodash/fp'
-import { EditorContainer, Toolbar, Editor, ImageRow, ImageMyButton, FormatMyButton, JournalImage } from './JournalCardComponents'
+import {
+  EditorContainer,
+  Toolbar,
+  Editor,
+  ImageRow,
+  ImageMyButton,
+  FormatMyButton,
+  JournalImage,
+} from './JournalCardComponents'
 import { InsideCardTitle } from '../CardComponents'
 import { getImageUrl } from '../../utils/imageUrl'
 
@@ -158,7 +166,7 @@ export default function JournalFormik({
                 as="span"
                 style={{ borderWidth: '2px', boxShadow: '2px 2px 0 #000' }}
               >
-                {imagePreview ? 'Change image' : 'Upload image'}
+                {imagePreview ? 'Change image *' : 'Upload image'}
               </ImageMyButton>
             </label>
           </div>
