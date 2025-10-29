@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useMemo, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import { MyButton } from '../components/MyButton'
 import {
@@ -27,10 +27,9 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
   password,
   setPassword,
   msg,
-  loggedIn,
+  userID,
+  loading,
   handleSubmit,
-  hasPet,
-  sessionError,
 }) => {
   const squares = useMemo(
     () =>
@@ -41,9 +40,20 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
     []
   )
 
-  if (loggedIn) {
-    if (hasPet) return <Navigate to="/dashboard" replace />
-    return <Navigate to="/onboarding" replace />
+  const navigate = useNavigate()
+
+  // Navigate on successful login
+  useEffect(() => {
+    if (userID) {
+      navigate('/dashboard')
+    }
+  }, [userID, navigate])
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    handleSubmit(email, password).catch(() => {
+      // error handled by msg prop
+    })
   }
 
   return (
@@ -56,7 +66,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
       <Header />
       <Card>
         <Title>Login</Title>
-        <StyledForm onSubmit={(e) => handleSubmit(e, email, password)}>
+        <StyledForm onSubmit={onSubmit}>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -66,6 +76,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div>
@@ -77,11 +88,13 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <MyButton
             primary
             type="submit"
+            disabled={loading}
             style={{
               width: '100%',
               marginTop: '10px',
@@ -89,7 +102,7 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
               fontSize: '1.1rem',
             }}
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </MyButton>
         </StyledForm>
         <SmallText>
@@ -97,7 +110,6 @@ const LoginPageView: React.FC<LoginPageViewProps> = ({
           <RegisterLink to="/signup">Sign Up</RegisterLink>
         </SmallText>
         {msg && <ErrorMsg>{msg}</ErrorMsg>}
-        {sessionError && <ErrorMsg>{sessionError}</ErrorMsg>}
       </Card>
     </Background>
   )
